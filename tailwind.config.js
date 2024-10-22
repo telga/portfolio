@@ -1,7 +1,5 @@
 module.exports = {
-  content: [
-    // ... your content sources
-  ],
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -47,6 +45,9 @@ module.exports = {
         'text-secondary': 'var(--text-secondary)',
         'accent': 'var(--accent)',
         'accent-hover': 'var(--accent-hover)',
+      },
+      fontFamily: {
+        mono: ['"Noto Sans Mono"', '"Noto Sans JP"', 'monospace'],
       },
     },
   },
