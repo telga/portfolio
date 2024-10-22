@@ -24,4 +24,5 @@ try {
   app.mount('#app')
 } catch (error) {
   console.error('Error initializing app:', error)
+  console.error('Error stack:', error.stack)
 }
