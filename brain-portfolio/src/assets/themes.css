@@ -1,0 +1,17 @@
+.theme-nord {
+  --bg-primary: theme('colors.nord.polar-night-1');
+  --bg-secondary: theme('colors.nord.polar-night-2');
+  --text-primary: theme('colors.nord.snow-storm-1');
+  --text-secondary: theme('colors.nord.snow-storm-2');
+  --accent: theme('colors.nord.frost-2');
+  --accent-hover: theme('colors.nord.frost-1');
+}
+
+.theme-solarized {
+  --bg-primary: theme('colors.solarized.base03');
+  --bg-secondary: theme('colors.solarized.base02');
+  --text-primary: theme('colors.solarized.base0');
+  --text-secondary: theme('colors.solarized.base1');
+  --accent: theme('colors.solarized.blue');
+  --accent-hover: theme('colors.solarized.cyan');
+}

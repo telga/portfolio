@@ -1,0 +1,37 @@
+{
+    "siteName": "サイト名",
+    "nav": {
+        "home": "ホーム",
+        "about": "私について",
+        "projects": "プロジェクト",
+        "experiences": "経験",
+        "skills": "スキル",
+        "resume": "履歴書"
+    },
+    "footer": {
+        "copyright": "ガキ開発"
+    },
+    "home": {
+        "name": "ブライアン・グエン",
+        "title": "僕はいろいろなものをいじくり回して、結果的に何かを作り上げるのが好きです。",
+        "intro": "僕はウェブ開発者で、ちょっとクールなデジタル体験の構築（そして時々デザイン）を専門としています。",
+        "viewProjects": "プロジェクトを見る"
+    },
+    "about": {
+        "title": "私について",
+        "bio": "自己紹介",
+        "skills": "スキル"
+    },
+    "projects": {
+        "title": "プロジェクト"
+    },
+    "experiences": {
+        "title": "経験"
+    },
+    "skills": {
+        "title": "スキル"
+    },
+    "resume": {
+        "title": "履歴書"
+    }
+}
