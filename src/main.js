@@ -16,9 +16,12 @@ const i18n = createI18n({
   messages: { en, jp }
 })
 
-const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-app.use(i18n)
-createApp(App).use(router).mount('#app')
+try {
+  const app = createApp(App)
+  app.use(createPinia())
+  app.use(router)
+  app.use(i18n)
+  app.mount('#app')
+} catch (error) {
+  console.error('Error initializing app:', error)
+}

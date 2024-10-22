@@ -8,12 +8,14 @@ module.exports = defineConfig({
     output: {
       filename: 'js/[name].[contenthash].js',
       chunkFilename: 'js/[name].[contenthash].js'
-    }
+    },
+    devtool: 'source-map'
   },
   css: {
     extract: {
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[name].[contenthash].css'
     }
-  }
+  },
+  productionSourceMap: true
 })
