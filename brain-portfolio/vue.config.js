@@ -7,8 +7,14 @@ module.exports = defineConfig({
   // Add this configuration
   configureWebpack: {
     output: {
-      filename: '[name].[contenthash].js',
-      chunkFilename: '[name].[contenthash].js'
+      filename: 'js/[name].[contenthash].js',
+      chunkFilename: 'js/[name].[contenthash].js'
+    }
+  },
+  css: {
+    extract: {
+      filename: 'css/[name].[contenthash].css',
+      chunkFilename: 'css/[name].[contenthash].css'
     }
   }
 })
