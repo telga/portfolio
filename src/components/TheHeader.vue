@@ -83,11 +83,10 @@
         <div class="px-2 py-3 border-t border-bg-primary flex justify-between items-center">
           <!-- Theme Toggle Button (Mobile) -->
           <button @click="toggleTheme" :class="[
-            'theme-toggle-btn p-1 rounded-full transition-colors duration-300 focus:outline-none',
-            'border-2',
-            currentTheme === 'solarized' 
-              ? 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1' 
-              : 'bg-solarized-base03 text-solarized-base1 border-solarized-base1',
+            'theme-toggle-btn p-1 ring-2 hover:ring-accent-hover focus:ring-accent rounded-full transition-colors duration-300 focus:outline-none',
+            currentTheme === 'nord' 
+              ? 'bg-solarized-base03 text-solarized-base1 border-solarized-base1' 
+              : 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1',
             'hover:border-accent active:border-accent-secondary'
           ]">
             <svg v-if="currentTheme === 'nord'" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
