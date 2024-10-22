@@ -4,7 +4,7 @@
       <router-link to="/" class="text-xl font-bold text-accent">{{ $t('siteName') }}</router-link>
       
       <!-- Mobile menu button -->
-      <button @click="isMenuOpen = !isMenuOpen" class="md:hidden text-text-primary hover:text-accent">
+      <button @click="isMenuOpen = !isMenuOpen" class="lg:hidden text-text-primary hover:text-accent">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -12,7 +12,7 @@
       </button>
 
       <!-- Desktop menu -->
-      <div class="hidden md:flex space-x-4">
+      <div class="hidden lg:flex space-x-4">
         <router-link 
           v-for="item in navItems" 
           :key="item.to" 
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Theme and Language toggles -->
-      <div class="hidden md:flex items-center space-x-4">
+      <div class="hidden lg:flex items-center space-x-4">
         <!-- Theme Toggle Button -->
         <button @click="toggleTheme" :class="[
           'theme-toggle-btn p-1 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary focus:ring-accent',
@@ -86,7 +86,7 @@
       leave-from-class="transform translate-y-0 opacity-100"
       leave-to-class="transform -translate-y-full opacity-0"
     >
-      <div v-if="isMenuOpen" class="md:hidden bg-bg-secondary">
+      <div v-if="isMenuOpen" class="lg:hidden bg-bg-secondary">
         <div class="px-2 pt-2 pb-3 space-y-1">
           <router-link 
             v-for="item in navItems" 
@@ -185,6 +185,8 @@ const currentLanguage = computed(() => {
 
 const changeLanguage = (langCode) => {
   locale.value = langCode
+  isMenuOpen.value = false // Close the mobile menu
+  open.value = false // Close the language dropdown
 }
 </script>
 

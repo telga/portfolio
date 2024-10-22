@@ -10,7 +10,7 @@
           <component :is="link.icon" class="w-6 h-6" />
         </a>
       </div>
-      <router-link to="/projects" class="bg-accent text-bg-primary px-6 py-3 rounded-full hover:bg-accent-hover transition-colors">
+      <router-link to="/ProjectsPage" class="bg-accent text-bg-primary px-6 py-3 rounded-full hover:bg-accent-hover transition-colors text-sm sm:text-base">
         {{ $t('home.viewProjects') }}
       </router-link>
     </div>
