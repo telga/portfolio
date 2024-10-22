@@ -4,7 +4,6 @@ module.exports = defineConfig({
   publicPath: process.env.NODE_ENV === 'production'
     ? '/portfolio/'
     : '/',
-  // Add this configuration
   configureWebpack: {
     output: {
       filename: 'js/[name].[contenthash].js',
