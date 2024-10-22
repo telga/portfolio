@@ -1,14 +1,25 @@
 import { defineStore } from 'pinia'
+import projectsData from '@/data/projects.json'
 
 export const usePortfolioStore = defineStore('portfolio', {
   state: () => ({
-    projects: []
+    projects: [],
+    loading: false,
+    error: null
   }),
   actions: {
     async fetchProjects() {
-      // Simulating an API call
-      const response = await fetch('/api/projects')
-      this.projects = await response.json()
+      this.loading = true
+      this.error = null
+      try {
+        await new Promise(resolve => setTimeout(resolve, 500))
+        this.projects = projectsData
+      } catch (e) {
+        console.error("Error fetching projects:", e)
+        this.error = e.message
+      } finally {
+        this.loading = false
+      }
     }
   }
 })

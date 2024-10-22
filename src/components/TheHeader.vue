@@ -35,8 +35,11 @@
       <div class="hidden lg:flex items-center space-x-4">
         <!-- Theme Toggle Button -->
         <button @click="toggleTheme" :class="[
-          'theme-toggle-btn p-1 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary focus:ring-accent',
-          currentTheme === 'nord' ? 'bg-solarized-base03 text-solarized-base1' : 'bg-nord-polar-night-1 text-nord-snow-storm-1'
+          'theme-toggle-btn p-1 ring-2 hover:ring-accent-hover focus:ring-accent rounded-full transition-colors duration-300 focus:outline-none',
+          currentTheme === 'nord' 
+            ? 'bg-solarized-base03 text-solarized-base1 border-solarized-base1' 
+            : 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1',
+          'hover:border-accent active:border-accent-secondary'
         ]">
           <svg v-if="currentTheme === 'nord'" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -45,35 +48,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 14.5L8 18l3.5-3.5L15 18l4.5-4.5M4 10l4-4 4 4 4-4 4 4" />
           </svg>
         </button>
-        <!-- Language Menu -->
-        <Menu as="div" class="relative">
-          <MenuButton class="lang-toggle-btn flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary focus:ring-accent">
-            {{ currentLanguage }}
-            <ChevronDownIcon class="ml-1 h-5 w-5 transition-transform duration-300" :class="{ 'rotate-180': open }" aria-hidden="true" />
-          </MenuButton>
-          <transition
-            enter-active-class="transition ease-out duration-200"
-            enter-from-class="opacity-0 translate-y-1"
-            enter-to-class="opacity-100 translate-y-0"
-            leave-active-class="transition ease-in duration-150"
-            leave-from-class="opacity-100 translate-y-0"
-            leave-to-class="opacity-0 translate-y-1"
-          >
-            <MenuItems class="absolute right-0 mt-2 w-40 origin-top-right bg-bg-secondary shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none rounded-md overflow-hidden">
-              <MenuItem v-for="lang in availableLanguages" :key="lang.code" v-slot="{ active }">
-                <button 
-                  @click="changeLanguage(lang.code)" 
-                  :class="[
-                    active ? 'bg-accent text-bg-primary' : 'text-text-primary',
-                    'block w-full text-left px-4 py-2 text-sm transition-colors duration-150'
-                  ]"
-                >
-                  {{ lang.name }}
-                </button>
-              </MenuItem>
-            </MenuItems>
-          </transition>
-        </Menu>
+        <!-- Language switcher -->
+        <button 
+        @click="toggleLanguage" 
+          class="flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none ring-2 focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary hover:ring-accent-hover focus:ring-accent rounded-full px-3 py-1 bg-bg-primary"
+        >
+          <span class="font-medium">{{ currentLanguage === 'en' ? '日本語' : 'english' }}</span>
+        </button>
       </div>
     </nav>
 
@@ -102,8 +83,12 @@
         <div class="px-2 py-3 border-t border-bg-primary flex justify-between items-center">
           <!-- Theme Toggle Button (Mobile) -->
           <button @click="toggleTheme" :class="[
-            'theme-toggle-btn p-1 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary focus:ring-accent',
-            currentTheme === 'nord' ? 'bg-solarized-base03 text-solarized-base1' : 'bg-nord-polar-night-1 text-nord-snow-storm-1'
+            'theme-toggle-btn p-1 rounded-full transition-colors duration-300 focus:outline-none',
+            'border-2',
+            currentTheme === 'solarized' 
+              ? 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1' 
+              : 'bg-solarized-base03 text-solarized-base1 border-solarized-base1',
+            'hover:border-accent active:border-accent-secondary'
           ]">
             <svg v-if="currentTheme === 'nord'" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -113,34 +98,12 @@
             </svg>
           </button>
           <!-- Language Menu (Mobile) -->
-          <Menu as="div" class="relative">
-            <MenuButton class="lang-toggle-btn flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary focus:ring-accent">
-              {{ currentLanguage }}
-              <ChevronDownIcon class="ml-1 h-5 w-5 transition-transform duration-300" :class="{ 'rotate-180': open }" aria-hidden="true" />
-            </MenuButton>
-            <transition
-              enter-active-class="transition ease-out duration-200"
-              enter-from-class="opacity-0 translate-y-1"
-              enter-to-class="opacity-100 translate-y-0"
-              leave-active-class="transition ease-in duration-150"
-              leave-from-class="opacity-100 translate-y-0"
-              leave-to-class="opacity-0 translate-y-1"
-            >
-              <MenuItems class="absolute right-0 mt-2 w-40 origin-top-right bg-bg-secondary shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none rounded-md overflow-hidden">
-                <MenuItem v-for="lang in availableLanguages" :key="lang.code" v-slot="{ active }">
-                  <button 
-                    @click="changeLanguage(lang.code)" 
-                    :class="[
-                      active ? 'bg-accent text-bg-primary' : 'text-text-primary',
-                      'block w-full text-left px-4 py-2 text-sm transition-colors duration-150'
-                    ]"
-                  >
-                    {{ lang.name }}
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </transition>
-          </Menu>
+          <button 
+          @click="toggleLanguage" 
+            class="flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none ring-2 focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary hover:ring-accent-hover focus:ring-accent rounded-full px-3 py-1 bg-bg-primary"
+          >
+            <span class="font-medium">{{ currentLanguage === 'en' ? '日本語' : 'english' }}</span>
+          </button>
         </div>
       </div>
     </transition>
@@ -148,17 +111,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useTheme } from '@/utils/useTheme'
+import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 
 const route = useRoute()
-const { locale } = useI18n()
 const { currentTheme, toggleTheme } = useTheme()
-const open = ref(false)
+const { currentLanguage, toggleLanguage } = useLanguageSwitcher()
+
 const isMenuOpen = ref(false)
 
 const navItems = [
@@ -174,20 +135,6 @@ const isActiveRoute = (path) => {
   return route.path === path || (path !== '/' && route.path.startsWith(path))
 }
 
-const availableLanguages = [
-  { code: 'en', name: 'english' },
-  { code: 'jp', name: '日本語' },
-]
-
-const currentLanguage = computed(() => {
-  return availableLanguages.find(lang => lang.code === locale.value)?.name
-})
-
-const changeLanguage = (langCode) => {
-  locale.value = langCode
-  isMenuOpen.value = false // Close the mobile menu
-  open.value = false // Close the language dropdown
-}
 </script>
 
 <style scoped>
@@ -202,5 +149,60 @@ const changeLanguage = (langCode) => {
 
 .active-mobile-link {
   color: var(--accent);
+}
+
+.lang-toggle-container {
+  margin-left: 1rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-secondary);
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--text-primary);
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 </style>

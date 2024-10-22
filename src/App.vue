@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-bg-primary">
+  <div id="app" class="min-h-screen bg-bg-primary">
     <Header />
     <main class="container mx-auto px-4 py-8">
       <router-view></router-view>
@@ -17,6 +17,18 @@ export default {
   components: {
     Header,
     Footer
+  },
+  mounted() {
+    this.setFavicon()
+  },
+  methods: {
+    setFavicon() {
+      const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
+      link.type = 'image/x-icon'
+      link.rel = 'shortcut icon'
+      link.href = '/favicon.ico'  // Remove 'public' from the path
+      document.getElementsByTagName('head')[0].appendChild(link)
+    }
   }
 }
 </script>

@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": {
+      "en": "Smile of Compassion Projects Website",
+      "jp": "Smile of Compassion プロジェクトウェブサイト"
+    },
+    "description": {
+      "en": "A website for the Smile of Compassion Projects, a non-profit organization that provides various services to underserved communities.",
+      "jp": "Smile of Compassion プロジェクトのウェブサイトです。非営利団体が、貧困した地域に対して様々なサービスを提供しています。"
+    },
+    "image": "/images/soc.png",
+    "github": "https://github.com/telga/Smile-of-Compassion-New-Site",
+    "demo": "https://telga.github.io/Smile-of-Compassion-New-Site/"
+  }
+]
