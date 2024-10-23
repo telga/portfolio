@@ -1,4 +1,4 @@
-<!doctype html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Kosugi+Maru&display=swap" rel="stylesheet"><title>portfolio</title><style>body {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Kosugi+Maru&display=swap" rel="stylesheet"><title>portfolio</title><style>body {
         font-family: 'Nunito', 'Kosugi Maru', sans-serif;
       }</style><base href="/portfolio/"><script>(function(){
         var redirect = sessionStorage.redirect;
@@ -6,4 +6,10 @@
         if (redirect && redirect != location.href) {
           history.replaceState(null, null, redirect);
         }
-      })();</script><script defer="defer" src="/portfolio/js/chunk-vendors.8d7adcbf7a295626.js"></script><script defer="defer" src="/portfolio/js/app.807969e63a655a46.js"></script><link href="/portfolio/css/app.8fe9e1f6f4f10cf0.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but portfolio doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
+      })();</script><script>(function() {
+        var storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+          document.documentElement.classList.add(storedTheme);
+        }
+        document.documentElement.classList.add('theme-applied');
+      })();</script><script defer="defer" src="/portfolio/js/chunk-vendors.8d7adcbf7a295626.js"></script><script defer="defer" src="/portfolio/js/app.a6465ed5208fff3c.js"></script><link href="/portfolio/css/app.0159e5ec167c4b0e.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but portfolio doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
