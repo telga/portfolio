@@ -21,10 +21,10 @@
 </template>
 
 <script setup>
-import { GlobeAltIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
+import { CodeBracketIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
 
 const socialLinks = [
-  { name: 'GitHub', url: 'https://github.com/telga', icon: GlobeAltIcon },
+  { name: 'GitHub', url: 'https://github.com/telga', icon: CodeBracketIcon },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/bnguy23', icon: UserIcon },
   { name: 'Instagram', url: 'https://instagram.com/br.ainn', icon: CameraIcon },
   { name: 'Email', url: 'mailto:briann2305@gmail.com', icon: EnvelopeIcon },
