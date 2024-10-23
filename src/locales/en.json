@@ -20,10 +20,10 @@
         "intro": "i'm a web developer specializing in building (and occasionally designing) kinda cool things."
     },
     "about": {
-        "title": "About Me",
-        "imageAlt": "Profile picture",
+        "title": "about me",
+        "imageAlt": "profile picture",
         "bio": "Hey there! I'm a web developer on a mission to make the internet a more delightful place—one line of code at a time!\n\nI'm a web developer with a knack for tinkering and a love for exploration! With nearly a decade of experience in the confusing world of computers and software, I've learned that the best solutions often come from a bit of trial and error (okay, maybe a lot of error).\n\nI thrive on diving into projects, poking at every corner until I figure out how to make things work—or at least until I get distracted by the next shiny idea haha. I absolutely love exploring other people's thoughts and ideas; it's like a treasure hunt for inspiration! There are countless ways to tackle a problem, and I'm here to explore them all, one problem at a time.\n\nTo be honest, I still feel like I'm just scratching the surface of what's possible. That's why I'm committed to continuous learning and expansion. Every day is a new chance to mess around, learn, and maybe break a few things (don't worry, I always fix them...almost always).\n\nSo, if you're ready to join me on this complex but satisfying coding adventure, let's connect and see what wonderfully weird things we can build together!",
-        "skills": "Skills"
+        "skills": "skills"
     },
     "projects": {
         "title": "projects"
