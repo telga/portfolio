@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,6 +19,15 @@
         if (redirect && redirect != location.href) {
           history.replaceState(null, null, redirect);
         }
+      })();
+    </script>
+    <script>
+      (function() {
+        var storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+          document.documentElement.classList.add(storedTheme);
+        }
+        document.documentElement.classList.add('theme-applied');
       })();
     </script>
   </head>

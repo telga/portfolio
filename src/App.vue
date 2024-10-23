@@ -20,6 +20,7 @@ export default {
   },
   mounted() {
     this.setFavicon()
+    this.applyStoredTheme()
   },
   methods: {
     setFavicon() {
@@ -28,6 +29,12 @@ export default {
       link.rel = 'shortcut icon'
       link.href = require('/public/images/nordlogo.png')
       document.getElementsByTagName('head')[0].appendChild(link)
+    },
+    applyStoredTheme() {
+      const storedTheme = localStorage.getItem('theme')
+      if (storedTheme) {
+        document.documentElement.classList.add(storedTheme)
+      }
     }
   }
 }
@@ -37,11 +44,21 @@ export default {
 body {
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s ease;
 }
 
 #app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Add this to ensure the theme is applied before the content is rendered */
+html {
+  visibility: hidden;
+}
+
+html.theme-applied {
+  visibility: visible;
 }
 </style>

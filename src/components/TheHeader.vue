@@ -120,7 +120,7 @@ import { useRoute } from 'vue-router'
 import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 import LoadingScreen from '@/components/LoadingScreen.vue'
-import { showLoading, hideLoading } from '@/utils/loadingState'
+import { showLoading } from '@/utils/loadingState'
 
 // Import the logo image
 import nordLogo from '/public/images/nordlogo.png'
@@ -154,11 +154,12 @@ const toggleLanguageWithTransition = () => {
   showLoading()
   setTimeout(() => {
     toggleLanguage()
+    // Store the current theme in localStorage before reloading
+    localStorage.setItem('lastTheme', currentTheme.value)
     setTimeout(() => {
-      hideLoading()
       window.location.reload()
-    }, 300) // Adjust this value to control how long the loading screen is shown after language change
-  }, 200) // Adjust this value to control the initial delay before changing the language
+    }, 300)
+  }, 200)
 }
 
 // Close menu when route changes
@@ -252,5 +253,10 @@ input:checked + .slider:before {
 /* Add this new style for the ガキ text */
 .border-accent {
   border-color: var(--accent);
+}
+
+/* Add this new style */
+body {
+  transition: background-color 0.3s ease;
 }
 </style>
