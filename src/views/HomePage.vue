@@ -1,26 +1,32 @@
 <template>
-  <div class="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-center items-center p-8">
-    <div class="max-w-3xl w-full">
-      <h1 class="text-5xl font-bold mb-2 text-accent animate-slide-in-right">{{ $t('home.name') }}</h1>
-      <p class="text-xl mb-8 animate-slide-in-left">{{ $t('home.intro') }}</p>
+  <div class="h-screen bg-bg-primary text-text-primary flex flex-col items-center justify-center p-8">
+    <div class="max-w-3xl w-full flex flex-col">
+      <div class="mb-auto"></div> <!-- Top spacer -->
+      <h1 class="text-4xl sm:text-5xl font-bold mb-2 text-accent animate-slide-in-right">{{ $t('home.name') }}</h1>
+      <p class="text-lg sm:text-xl mb-8 animate-slide-in-left">{{ $t('home.intro') }}</p>
       <div class="flex space-x-4 mb-12">
-        <a v-for="(link, index) in socialLinks" :key="link.name" :href="link.url" target="_blank" rel="noopener noreferrer"
+        <a v-for="(link, index) in socialLinks" 
+           :key="link.name" 
+           :href="link.url" 
+           target="_blank" 
+           rel="noopener noreferrer"
            class="text-text-secondary hover:text-accent transition-colors hover:scale-110 transform duration-200 animate-slide-in-bottom"
            :style="{ animationDelay: `${index * 100}ms` }">
-          <component :is="link.icon" class="w-6 h-6" />
+          <component :is="link.icon" class="w-5 h-5 sm:w-6 sm:h-6" />
         </a>
       </div>
+      <div class="mb-auto mt-16 sm:mt-24"></div> <!-- Bottom spacer with extra margin -->
     </div>
   </div>
 </template>
 
 <script setup>
-import { GlobeAltIcon, UserIcon, CodeBracketIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
+import { GlobeAltIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
 
 const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/telga', icon: GlobeAltIcon },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/bnguy23', icon: UserIcon },
-  { name: 'Twitter', url: 'https://twitter.com/yourusername', icon: CodeBracketIcon },
+  { name: 'Instagram', url: 'https://instagram.com/br.ainn', icon: CameraIcon },
   { name: 'Email', url: 'mailto:briann2305@gmail.com', icon: EnvelopeIcon },
 ]
 </script>
