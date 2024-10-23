@@ -1,10 +1,10 @@
 <template>
   <div id="app" class="min-h-screen bg-bg-primary">
-    <Header />
+    <Header v-if="!$route.meta.hideHeaderFooter" />
     <main class="container mx-auto px-4 py-8">
       <router-view></router-view>
     </main>
-    <Footer />
+    <Footer v-if="!$route.meta.hideHeaderFooter" />
   </div>
 </template>
 

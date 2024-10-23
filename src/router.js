@@ -6,6 +6,7 @@ import Experiences from './views/ExperiencesPage.vue'
 import Skills from './views/SkillsPage.vue'
 import Resume from './views/ResumePage.vue'
 import Gear from './views/GearPage.vue'
+import BusinessCard from './views/BusinessCard.vue'
 
 const routes = [
   { path: '/', component: Home },
@@ -14,7 +15,12 @@ const routes = [
   { path: '/ExperiencesPage', component: Experiences },
   { path: '/SkillsPage', component: Skills },
   { path: '/ResumePage', component: Resume },
-  { path: '/GearPage', component: Gear }
+  { path: '/GearPage', component: Gear },
+  { 
+    path: '/BusinessCard', 
+    component: BusinessCard,
+    meta: { hideHeaderFooter: true }
+  }
 ]
 
 const router = createRouter({
