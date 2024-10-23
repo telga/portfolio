@@ -9,6 +9,7 @@
     <style>
       body {
         font-family: 'Nunito', 'Kosugi Maru', sans-serif;
+        transition: background-color 0.3s ease;
       }
       /* This style will hide the content initially */
       .js-loading * {
@@ -32,6 +33,8 @@
       (function() {
         var savedTheme = localStorage.getItem('theme') || 'nord';
         document.documentElement.classList.add('theme-' + savedTheme);
+        // Set initial background color based on theme
+        document.body.style.backgroundColor = savedTheme === 'nord' ? '#2E3440' : '#002b36';
       })();
     </script>
   </head>

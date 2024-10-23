@@ -156,6 +156,8 @@ const toggleLanguageWithTransition = () => {
     toggleLanguage()
     // Store the current theme in localStorage before reloading
     localStorage.setItem('lastTheme', currentTheme.value)
+    // Add a class to the body element
+    document.body.classList.add('page-reload')
     setTimeout(() => {
       window.location.reload()
     }, 300)
@@ -258,5 +260,14 @@ input:checked + .slider:before {
 /* Add this new style */
 body {
   transition: background-color 0.3s ease;
+}
+
+body.page-reload {
+  background-color: var(--bg-primary);
+}
+
+/* This style should be in a global CSS file */
+:root {
+  color-scheme: light dark;
 }
 </style>
