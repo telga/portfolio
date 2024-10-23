@@ -4,7 +4,7 @@
     <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <router-link to="/" class="flex items-center">
-          <img src="/images/nordlogo.png" alt="Nord Logo" class="h-8 w-auto max-w-[150px]" />
+          <img :src="nordLogo" alt="Nord Logo" class="h-8 w-auto max-w-[150px]" />
         </router-link>
       </div>
       
@@ -121,6 +121,9 @@ import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 import LoadingScreen from '@/components/LoadingScreen.vue'
 import { showLoading, hideLoading } from '@/utils/loadingState'
+
+// Import the logo image
+import nordLogo from '/public/images/nordlogo.png'
 
 const route = useRoute()
 const { currentTheme, toggleTheme } = useTheme()

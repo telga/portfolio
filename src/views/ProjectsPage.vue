@@ -57,7 +57,8 @@ const updateLocalizedProjects = () => {
   localizedProjects.value = portfolioStore.projects.map(project => ({
     ...project,
     title: project.title[locale.value] || project.title.en,
-    description: project.description[locale.value] || project.description.en
+    description: project.description[locale.value] || project.description.en,
+    image: `/portfolio/images/${project.image}` // Adjust the path here
   }))
 }
 
