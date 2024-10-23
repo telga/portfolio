@@ -1,24 +1,7 @@
-# brain-portfolio
+# Brian Nguyen Personal Website
+Personal portfolio site for me.
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Features
+- Has theme switcher for Nord and Solarized Dark (my two most used themes in most dev environments.)
+- Setup to include English and Japanese locales.
+- Uses Vue.js and Pinia.
