@@ -17,23 +17,25 @@
       </button>
 
       <!-- Desktop menu -->
-      <div class="hidden lg:flex space-x-4">
-        <router-link 
-          v-for="item in navItems" 
-          :key="item.to" 
-          :to="item.to" 
-          class="text-text-primary hover:text-accent text-base transition-colors duration-200 relative group px-2 py-1"
-          :class="{ 'text-accent-secondary': $route.path === item.to }"
-        >
-          <span class="relative z-10">{{ $t(item.label) }}</span>
-          <span 
-            class="absolute inset-0 border-b-2 transition-colors duration-200"
-            :class="{ 
-              'border-accent-hover': $route.path === item.to,
-              'border-accent opacity-0 group-hover:opacity-100': $route.path !== item.to 
-            }"
-          ></span>
-        </router-link>
+      <div class="hidden lg:flex flex-grow justify-center">
+        <div class="flex space-x-4">
+          <router-link 
+            v-for="item in navItems" 
+            :key="item.to" 
+            :to="item.to" 
+            class="text-text-primary hover:text-accent text-base transition-colors duration-200 relative group px-2 py-1"
+            :class="{ 'text-accent-secondary': $route.path === item.to }"
+          >
+            <span class="relative z-10">{{ $t(item.label) }}</span>
+            <span 
+              class="absolute inset-0 border-b-2 transition-colors duration-200"
+              :class="{ 
+                'border-accent-hover': $route.path === item.to,
+                'border-accent opacity-0 group-hover:opacity-100': $route.path !== item.to 
+              }"
+            ></span>
+          </router-link>
+        </div>
       </div>
 
       <!-- Theme and Language toggles -->
@@ -133,7 +135,7 @@ const isMenuOpen = ref(false)
 
 const navItems = [
   { to: '/', label: 'nav.home' },
-  { to: '/AboutPage', label: 'nav.about' },
+  //{ to: '/AboutPage', label: 'nav.about' },
   { to: '/ProjectsPage', label: 'nav.projects' },
   //{ to: '/ExperiencesPage', label: 'nav.experiences' },
   //{ to: '/SkillsPage', label: 'nav.skills' },
