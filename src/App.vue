@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { onMounted } from 'vue'
+import { onMounted, onBeforeMount } from 'vue'
 import Header from './components/TheHeader.vue'
 import Footer from './components/TheFooter.vue'
 import { useTheme } from '@/utils/useTheme'
@@ -23,9 +23,12 @@ export default {
   setup() {
     const { applyStoredTheme } = useTheme()
 
+    onBeforeMount(() => {
+      applyStoredTheme()
+    })
+
     onMounted(() => {
       setFavicon()
-      applyStoredTheme()
       removeJsLoading()
     })
 
@@ -50,10 +53,20 @@ export default {
 </script>
 
 <style>
-body {
+html, body {
   margin: 0;
   padding: 0;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+html.dark {
+  background-color: #1a202c;
+  color: #ffffff;
 }
 
 #app {

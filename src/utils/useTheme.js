@@ -2,23 +2,25 @@ import { ref, watch } from 'vue'
 
 const currentTheme = ref(localStorage.getItem('theme') || 'nord')
 
+function applyTheme(theme) {
+  document.documentElement.classList.remove('theme-nord', 'theme-solarized')
+  document.documentElement.classList.add(`theme-${theme}`)
+  localStorage.setItem('theme', theme)
+  currentTheme.value = theme
+}
+
+function applyStoredTheme() {
+  const storedTheme = localStorage.getItem('theme') || 'nord'
+  applyTheme(storedTheme)
+}
+
+// Apply theme immediately when the script is loaded
+applyStoredTheme()
+
 export function useTheme() {
   const toggleTheme = () => {
-    currentTheme.value = currentTheme.value === 'nord' ? 'solarized' : 'nord'
-    applyTheme(currentTheme.value)
-  }
-
-  const applyTheme = (theme) => {
-    document.documentElement.classList.remove('theme-nord', 'theme-solarized')
-    document.documentElement.classList.add(`theme-${theme}`)
-    localStorage.setItem('theme', theme)
-  }
-
-  const applyStoredTheme = () => {
-    const storedTheme = localStorage.getItem('theme')
-    if (storedTheme) {
-      applyTheme(storedTheme)
-    }
+    const newTheme = currentTheme.value === 'nord' ? 'solarized' : 'nord'
+    applyTheme(newTheme)
   }
 
   watch(currentTheme, (newTheme) => {
