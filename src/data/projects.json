@@ -16,6 +16,20 @@
   {
     "id": 2,
     "title": {
+      "en": "Milano Nails Spa - Flower Mound Website",
+      "jp": "Milano Nails Spa - Flower Mound ウェブサイト"
+    },
+    "description": {
+      "en": "A website for Milano Nails Spa - Flower Mound, a nail salon in Flower Mound, TX.",
+      "jp": "Milano Nails Spa - Flower Mound のウェブサイトです。Flower Mound, TX にあるネイルサロンです。"
+    },
+    "image": "milano.png",
+    "github": "#",
+    "demo": "https://www.milanonailspaflowermound.com/"
+  },
+  {
+    "id": 3,
+    "title": {
       "en": "More to come...",
       "jp": "これからも続々..."
     },
