@@ -83,15 +83,17 @@ import { ref, computed } from 'vue'
 import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 import { useI18n } from 'vue-i18n'
+import { CONTACT_EMAIL } from '@/utils/constants'
 
 const { currentTheme, toggleTheme } = useTheme()
 const { currentLanguage, toggleLanguage } = useLanguageSwitcher()
 const { t } = useI18n()
+const email = CONTACT_EMAIL
 
 const portraitUrl = ref('/images/userpic.png')
 
 const contactItems = computed(() => [
-  { text: t('businessCard.email'), href: `mailto:${t('businessCard.email')}` },
+  { text: email, href: `mailto:${email}` },
   { text: t('businessCard.phone'), href: `tel:${t('businessCard.phone')}` },
   { text: t('businessCard.website'), href: t('businessCard.website'), target: '_blank', rel: 'noopener noreferrer' },
   { text: t('businessCard.address'), href: `https://maps.google.com/?q=${encodeURIComponent(t('businessCard.address'))}`, target: '_blank', rel: 'noopener noreferrer' },

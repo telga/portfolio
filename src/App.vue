@@ -9,8 +9,10 @@
 </template>
 
 <script>
+import { onMounted } from 'vue'
 import Header from './components/TheHeader.vue'
 import Footer from './components/TheFooter.vue'
+import { useTheme } from '@/utils/useTheme'
 
 export default {
   name: 'App',
@@ -18,24 +20,31 @@ export default {
     Header,
     Footer
   },
-  mounted() {
-    this.setFavicon()
-    this.applyStoredTheme()
-  },
-  methods: {
-    setFavicon() {
+  setup() {
+    const { applyStoredTheme } = useTheme()
+
+    onMounted(() => {
+      setFavicon()
+      applyStoredTheme()
+      removeJsLoading()
+    })
+
+    const setFavicon = () => {
       const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
       link.type = 'image/png'
       link.rel = 'shortcut icon'
       link.href = require('/public/images/nordlogo.png')
       document.getElementsByTagName('head')[0].appendChild(link)
-    },
-    applyStoredTheme() {
-      const storedTheme = localStorage.getItem('theme')
-      if (storedTheme) {
-        document.documentElement.classList.add(storedTheme)
-      }
     }
+
+    const removeJsLoading = () => {
+      // Remove js-loading class after a short delay to ensure styles are applied
+      setTimeout(() => {
+        document.documentElement.classList.remove('js-loading');
+      }, 0);
+    }
+
+    return {}
   }
 }
 </script>
@@ -51,14 +60,5 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-/* Add this to ensure the theme is applied before the content is rendered */
-html {
-  visibility: hidden;
-}
-
-html.theme-applied {
-  visibility: visible;
 }
 </style>

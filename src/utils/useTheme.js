@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 
-const currentTheme = ref('nord')
+const currentTheme = ref(localStorage.getItem('theme') || 'nord')
 
 export function useTheme() {
   const toggleTheme = () => {
@@ -14,20 +14,20 @@ export function useTheme() {
     localStorage.setItem('theme', theme)
   }
 
-  // Initialize theme
-  if (typeof window !== 'undefined') {
-    const savedTheme = localStorage.getItem('theme') || 'nord'
-    currentTheme.value = savedTheme
-    applyTheme(savedTheme)
+  const applyStoredTheme = () => {
+    const storedTheme = localStorage.getItem('theme')
+    if (storedTheme) {
+      applyTheme(storedTheme)
+    }
   }
 
-  // Watch for theme changes
   watch(currentTheme, (newTheme) => {
     applyTheme(newTheme)
   })
 
   return {
     currentTheme,
-    toggleTheme
+    toggleTheme,
+    applyStoredTheme
   }
 }
