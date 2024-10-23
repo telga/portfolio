@@ -16,14 +16,14 @@
 
 <script setup>
 import { computed } from 'vue'
-import { GlobeAltIcon, UserIcon, CodeBracketIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
+import { GlobeAltIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
 
 const currentYear = computed(() => new Date().getFullYear())
 
 const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/telga', icon: GlobeAltIcon },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/bnguy23', icon: UserIcon },
-  { name: 'Twitter', url: 'https://twitter.com/yourusername', icon: CodeBracketIcon },
+  { name: 'Instagram', url: 'https://instagram.com/br.ainn', icon: CameraIcon },
   { name: 'Email', url: 'mailto:briann2305@gmail.com', icon: EnvelopeIcon },
 ]
 </script>

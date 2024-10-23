@@ -12,5 +12,19 @@
     "image": "soc.png",
     "github": "https://github.com/telga/Smile-of-Compassion-New-Site",
     "demo": "https://telga.github.io/Smile-of-Compassion-New-Site/"
+  },
+  {
+    "id": 2,
+    "title": {
+      "en": "More to come...",
+      "jp": "これからも続々..."
+    },
+    "description": {
+      "en": "More to come...",
+      "jp": "これからも続々..."
+    },
+    "image": "https://placehold.co/600x400/EEE/31343C?font=open-sans&text=Open%20Sans",
+    "github": "#",
+    "demo": "#"
   }
 ]
