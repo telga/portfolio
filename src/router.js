@@ -8,11 +8,11 @@ import Resume from './views/ResumePage.vue'
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/about', component: About },
-  { path: '/projects', component: Projects },
-  { path: '/experiences', component: Experiences },
-  { path: '/skills', component: Skills },
-  { path: '/resume', component: Resume }
+  { path: '/AboutPage', component: About },
+  { path: '/ProjectsPage', component: Projects },
+  { path: '/ExperiencesPage', component: Experiences },
+  { path: '/SkillsPage', component: Skills },
+  { path: '/ResumePage', component: Resume }
 ]
 
 const router = createRouter({

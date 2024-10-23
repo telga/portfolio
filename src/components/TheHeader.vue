@@ -1,10 +1,15 @@
 <template>
+  <LoadingScreen />
   <header class="bg-bg-secondary shadow">
     <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <router-link to="/" class="text-xl font-bold text-accent">{{ $t('siteName') }}</router-link>
+      <div class="flex items-center space-x-2">
+        <router-link to="/" class="flex items-center">
+          <img src="/images/nordlogo.png" alt="Nord Logo" class="h-8 w-auto max-w-[150px]" />
+        </router-link>
+      </div>
       
       <!-- Mobile menu button -->
-      <button @click="isMenuOpen = !isMenuOpen" class="lg:hidden text-text-primary hover:text-accent">
+      <button @click.stop="isMenuOpen = !isMenuOpen" class="lg:hidden text-text-primary hover:text-accent p-2">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -50,7 +55,7 @@
         </button>
         <!-- Language switcher -->
         <button 
-        @click="toggleLanguage" 
+        @click="toggleLanguageWithTransition" 
           class="flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none ring-2 focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary hover:ring-accent-hover focus:ring-accent rounded-full px-3 py-1 bg-bg-primary"
         >
           <span class="font-medium">{{ currentLanguage === 'en' ? '日本語' : 'english' }}</span>
@@ -60,12 +65,12 @@
 
     <!-- Mobile menu -->
     <transition
-      enter-active-class="transition duration-300 ease-out"
-      enter-from-class="transform -translate-y-full opacity-0"
-      enter-to-class="transform translate-y-0 opacity-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="transform translate-y-0 opacity-100"
-      leave-to-class="transform -translate-y-full opacity-0"
+      enter-active-class="transition-all duration-300 ease-out"
+      enter-from-class="opacity-0 -translate-y-full"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition-all duration-300 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-full"
     >
       <div v-if="isMenuOpen" class="lg:hidden bg-bg-secondary">
         <div class="px-2 pt-2 pb-3 space-y-1">
@@ -75,7 +80,7 @@
             :to="item.to" 
             class="block text-text-primary hover:text-accent text-base transition-colors duration-200 px-2 py-2"
             :class="{ 'active-mobile-link': isActiveRoute(item.to) }"
-            @click="isMenuOpen = false"
+            @click="closeMenu"
           >
             {{ $t(item.label) }}
           </router-link>
@@ -98,7 +103,7 @@
           </button>
           <!-- Language Menu (Mobile) -->
           <button 
-          @click="toggleLanguage" 
+          @click="toggleLanguageWithTransition" 
             class="flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none ring-2 focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary hover:ring-accent-hover focus:ring-accent rounded-full px-3 py-1 bg-bg-primary"
           >
             <span class="font-medium">{{ currentLanguage === 'en' ? '日本語' : 'english' }}</span>
@@ -110,10 +115,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
+import LoadingScreen from '@/components/LoadingScreen.vue'
+import { showLoading, hideLoading } from '@/utils/loadingState'
 
 const route = useRoute()
 const { currentTheme, toggleTheme } = useTheme()
@@ -125,15 +132,48 @@ const navItems = [
   { to: '/', label: 'nav.home' },
   { to: '/AboutPage', label: 'nav.about' },
   { to: '/ProjectsPage', label: 'nav.projects' },
-  { to: '/ExperiencesPage', label: 'nav.experiences' },
-  { to: '/SkillsPage', label: 'nav.skills' },
-  { to: '/ResumePage', label: 'nav.resume' }
+  //{ to: '/ExperiencesPage', label: 'nav.experiences' },
+  //{ to: '/SkillsPage', label: 'nav.skills' },
+  //{ to: '/ResumePage', label: 'nav.resume' }
 ]
 
 const isActiveRoute = (path) => {
   return route.path === path || (path !== '/' && route.path.startsWith(path))
 }
 
+const closeMenu = () => {
+  isMenuOpen.value = false
+}
+
+const toggleLanguageWithTransition = () => {
+  closeMenu()
+  showLoading()
+  setTimeout(() => {
+    toggleLanguage()
+    setTimeout(() => {
+      hideLoading()
+      window.location.reload()
+    }, 300) // Adjust this value to control how long the loading screen is shown after language change
+  }, 200) // Adjust this value to control the initial delay before changing the language
+}
+
+// Close menu when route changes
+watch(() => route.path, closeMenu)
+
+// Close menu when clicking outside
+const handleOutsideClick = (event) => {
+  if (isMenuOpen.value && !event.target.closest('header')) {
+    closeMenu()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick)
+})
 </script>
 
 <style scoped>
@@ -203,5 +243,10 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* Add this new style for the ガキ text */
+.border-accent {
+  border-color: var(--accent);
 }
 </style>

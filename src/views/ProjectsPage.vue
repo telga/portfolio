@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="projects-page container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-8 animate-fade-in" style="color: var(--accent);">{{ $t('projects.title') }}</h1>
-    <div v-if="portfolioStore.loading" class="animate-pulse" style="color: var(--text-secondary);">Loading...</div>
+    <div v-if="portfolioStore.loading" class="animate-pulse" style="color: var(--text-secondary);"></div>
     <div v-else-if="portfolioStore.error" style="color: var(--text-secondary);">{{ portfolioStore.error }}</div>
     <div 
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -71,6 +71,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.projects-page {
+  min-height: calc(100vh - 64px - 64px); /* Adjust these values based on your header and footer heights */
+  display: flex;
+  flex-direction: column;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

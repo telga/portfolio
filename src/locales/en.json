@@ -1,6 +1,10 @@
 {
     "siteName": "brian nguyen",
     "nav": {
+        "name": {
+            "first": "brian・",
+            "last": "nguyen"
+        },
         "home": "home",
         "about": "about",
         "projects": "projects",
@@ -9,13 +13,11 @@
         "resume": "resume"
     },
     "footer": {
-        "copyright": "Gaki Development"
+        "copyright": "gaki development"
     },
     "home": {
         "name": "brian nguyen",
-        "title": "i like to mess around with stuff and end up actually making things.",
-        "intro": "i'm a web developer specializing in building (and occasionally designing) kinda cool digital experiences.",
-        "viewProjects": "check out my projects"
+        "intro": "i'm a web developer specializing in building (and occasionally designing) kinda cool things."
     },
     "about": {
         "title": "About Me",
