@@ -1,0 +1,17 @@
+[
+  {
+    "name": "KB",
+    "description": "Test item 1",
+    "image": "/images/gear/camera.jpg"
+  },
+  {
+    "name": "KB",
+    "description": "Test item 2",
+    "image": "/images/gear/microphone.jpg"
+  },
+  {
+    "name": "KB",
+    "description": "Test item 3",
+    "image": "/images/gear/laptop.jpg"
+  }
+]

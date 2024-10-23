@@ -137,7 +137,8 @@ const navItems = [
   { to: '/ProjectsPage', label: 'nav.projects' },
   //{ to: '/ExperiencesPage', label: 'nav.experiences' },
   //{ to: '/SkillsPage', label: 'nav.skills' },
-  //{ to: '/ResumePage', label: 'nav.resume' }
+  //{ to: '/ResumePage', label: 'nav.resume' },
+  //{ to: '/GearPage', label: 'nav.gear' }
 ]
 
 const isActiveRoute = (path) => {

@@ -5,6 +5,7 @@ import Projects from './views/ProjectsPage.vue'
 import Experiences from './views/ExperiencesPage.vue'
 import Skills from './views/SkillsPage.vue'
 import Resume from './views/ResumePage.vue'
+import Gear from './views/GearPage.vue'
 
 const routes = [
   { path: '/', component: Home },
@@ -12,7 +13,8 @@ const routes = [
   { path: '/ProjectsPage', component: Projects },
   { path: '/ExperiencesPage', component: Experiences },
   { path: '/SkillsPage', component: Skills },
-  { path: '/ResumePage', component: Resume }
+  { path: '/ResumePage', component: Resume },
+  { path: '/GearPage', component: Gear }
 ]
 
 const router = createRouter({
