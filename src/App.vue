@@ -24,9 +24,9 @@ export default {
   methods: {
     setFavicon() {
       const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
-      link.type = 'image/x-icon'
+      link.type = 'image/png'
       link.rel = 'shortcut icon'
-      link.href = '/favicon.ico'  // Remove 'public' from the path
+      link.href = require('/public/images/nordlogo.png')
       document.getElementsByTagName('head')[0].appendChild(link)
     }
   }
