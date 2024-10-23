@@ -27,7 +27,9 @@
         "skills": "スキル"
     },
     "projects": {
-        "title": "プロジェクト"
+        "title": "プロジェクト",
+        "github": "github",
+        "demo": "デモ"
     },
     "experiences": {
         "title": "経験"

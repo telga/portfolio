@@ -9,32 +9,32 @@
       <div 
         v-for="(project, index) in localizedProjects" 
         :key="project.id" 
-        class="rounded-lg overflow-hidden shadow-lg animate-fade-in-up"
+        class="rounded-lg overflow-hidden shadow-lg animate-fade-in-up flex flex-col"
         :style="{ 
           animationDelay: `${index * 100}ms`,
           backgroundColor: 'var(--bg-secondary)',
         }"
       >
         <img :src="project.image" :alt="project.title" class="w-full h-48 object-cover">
-        <div class="p-6">
+        <div class="p-6 flex-grow flex flex-col">
           <h2 class="text-xl font-bold mb-2" style="color: var(--text-primary);">{{ project.title }}</h2>
-          <p class="mb-4" style="color: var(--text-secondary);">{{ project.description }}</p>
-          <div class="flex justify-between">
+          <p class="mb-4 flex-grow" style="color: var(--text-secondary);">{{ project.description }}</p>
+          <div class="flex justify-between mt-auto">
             <a 
               :href="project.github" 
               target="_blank" 
               rel="noopener noreferrer" 
-              class="text-accent"
+              class="animated-button github-button"
             >
-              GitHub
+              {{ $t('projects.github') }}
             </a>
             <a 
               :href="project.demo" 
               target="_blank" 
               rel="noopener noreferrer" 
-              class="text-accent"
+              class="animated-button demo-button"
             >
-              Demo
+              {{ $t('projects.demo') }}
             </a>
           </div>
         </div>
@@ -100,5 +100,33 @@ onMounted(() => {
 
 .animate-fade-in-up {
   animation: fadeInUp 0.5s ease-out;
+}
+
+.animated-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.github-button {
+  background-color: var(--accent-hover);
+  color: white;
+}
+
+.demo-button {
+  background-color: var(--accent);
+  color: white;
+}
+
+.animated-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.animated-button:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 </style>

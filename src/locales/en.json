@@ -26,7 +26,9 @@
         "skills": "skills"
     },
     "projects": {
-        "title": "projects"
+        "title": "projects",
+        "github": "github",
+        "demo": "demo"
     },
     "experiences": {
         "title": "experiences"
