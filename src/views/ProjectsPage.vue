@@ -15,7 +15,7 @@
           backgroundColor: 'var(--bg-secondary)',
         }"
       >
-        <img :src="project.image" :alt="project.title" class="w-full h-48 object-cover">
+        <img :src="project.image" :alt="project.title" class="w-full h-48 object-cover text-accent text-center">
         <div class="p-6 flex-grow flex flex-col">
           <h2 class="text-xl font-bold mb-2" style="color: var(--text-primary);">{{ project.title }}</h2>
           <p class="mb-4 flex-grow" style="color: var(--text-secondary);">{{ project.description }}</p>
