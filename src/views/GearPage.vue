@@ -22,7 +22,7 @@
       </div>
 
       <!-- Main content area -->
-      <div class="flex-grow max-w-3xl">
+      <div class="flex-grow max-w-3xl lg:max-w-4xl xl:max-w-5xl">
         <h1 class="text-2xl md:text-3xl font-bold mb-6 text-accent animate-slide-in-right">
           {{ $t(`gear.categories.${currentCategory}`) }}
         </h1>
