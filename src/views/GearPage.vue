@@ -28,7 +28,7 @@
         </h1>
         
         <div v-for="item in currentCategoryItems" :key="item.name">
-          <GearCard :item="item" />
+          <GearCard :item="item" :category="currentCategory" />
         </div>
       </div>
     </div>

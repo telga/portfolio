@@ -13,6 +13,7 @@ import { onMounted, onBeforeMount } from 'vue'
 import Header from './components/TheHeader.vue'
 import Footer from './components/TheFooter.vue'
 import { useTheme } from '@/utils/useTheme'
+import 'vue/dist/vue.esm-bundler';
 
 export default {
   name: 'App',

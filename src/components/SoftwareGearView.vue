@@ -1,6 +1,11 @@
 <template>
   <div>
-    <GearCard v-for="item in softwareGearItems" :key="item.name" :item="item" />
+    <GearCard 
+      v-for="item in softwareGearItems" 
+      :key="item.name" 
+      :item="item" 
+      category="software"
+    />
   </div>
 </template>
 
