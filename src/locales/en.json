@@ -38,7 +38,66 @@
         "title": "Skills"
     },
     "resume": {
-        "title": "resume"
+        "title": "Resume",
+        "keyHighlights": "Key Highlights",
+        "highlights": [
+            "Proficiency in HTML, CSS, and JavaScript",
+            "Experience with server-side languages",
+            "Familiarity with Git",
+            "Efficient troubleshooting and problem-solving"
+        ],
+        "education": "Education",
+        "educationDetails": [
+            {
+                "degree": "Bachelor of Computer Information Systems",
+                "school": "Mount Royal University",
+                "location": "Calgary, AB",
+                "duration": "2021 - Present",
+                "details": [
+                    "Dean's Honor Roll 2024 / Cumulative GPA 3.1.",
+                    "Anticipated graduation 2026."
+                ]
+            }
+        ],
+        "projects": "Relevant Course Projects",
+        "projectDetails": [
+            {
+                "name": "Interactive Portfolio Site",
+                "details": [
+                    "Created a personal portfolio website showcasing projects and skills, utilizing React to enhance interactivity and user experience."
+                ]
+            },
+            {
+                "name": "API Integration Projects",
+                "details": [
+                    "Built a web application that consumes third-party APIs to display real-time data, such as TMDb charts and an OPENAI speech-text and text-speech translator."
+                ]
+            }
+        ],
+        "experience": "Work Experience",
+        "workExperience": [
+            {
+                "title": "Front-End Web Developer",
+                "company": "Milano Nails Spa / Nails of America",
+                "location": "Dallas, TX",
+                "duration": "Nov 2022 – Mar 2023",
+                "responsibilities": [
+                    "Designed and implemented a visually appealing and user-friendly site enabling online bookings boosting overall appointments by around 130 customers per week.",
+                    "Optimized the website for mobile devices, ensuring a seamless user experience across all platforms and increasing mobile traffic and in addition to social media increased appointments and overall community interest."
+                ]
+            },
+            {
+                "title": "Full-Stack Developer",
+                "company": "Smile of Compassion Projects",
+                "location": "Calgary, AB",
+                "duration": "Sept 2019 – Jul 2024",
+                "responsibilities": [
+                    "Spearheaded the redesign of a non-profit organization site, resulting in a 70% increase in user visits and a 50% increase in proceeds.",
+                    "Implemented cost-effective web solutions reducing operational expenses by nearly 90%.",
+                    "Conducted tutorial sessions to train non-profit staff in website management, enabling them to update content independently."
+                ]
+            }
+        ]
     },
     "businessCard": {
         "name": "brian nguyen",

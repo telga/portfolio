@@ -3,8 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import About from './views/AboutPage.vue'
 import Projects from './views/ProjectsPage.vue'
 import Experiences from './views/ExperiencesPage.vue'
-import Skills from './views/SkillsPage.vue'
-import Resume from './views/ResumePage.vue'
 import Gear from './views/GearPage.vue'
 import BusinessCard from './views/BusinessCard.vue'
 import HomeAbout from './views/HomeAbout.vue'
@@ -15,8 +13,6 @@ const routes = [
   { path: '/AboutPage', component: About },
   { path: '/ProjectsPage', component: Projects },
   { path: '/ExperiencesPage', component: Experiences },
-  { path: '/SkillsPage', component: Skills },
-  { path: '/ResumePage', component: Resume },
   { path: '/GearPage', component: Gear },
   { 
     path: '/BusinessCard', 

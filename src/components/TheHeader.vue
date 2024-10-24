@@ -138,9 +138,7 @@ const navItems = [
   { to: '/', label: 'nav.home' },
   //{ to: '/AboutPage', label: 'nav.about' },
   { to: '/ProjectsPage', label: 'nav.projects' },
-  //{ to: '/ExperiencesPage', label: 'nav.experiences' },
-  //{ to: '/SkillsPage', label: 'nav.skills' },
-  //{ to: '/ResumePage', label: 'nav.resume' },
+  { to: '/ExperiencesPage', label: 'nav.experiences' },
   { to: '/GearPage', label: 'nav.gear' }
 ]
 
