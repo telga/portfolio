@@ -63,8 +63,8 @@
         "descriptions": {
             "home": "ホームでの作業セットアップ。ノートパソコン画面とアームに取り付けたモニターで動作しています。",
             "mobile": "外出先での作業セットアップ。ノートパソコンをタブレットモードに折りたたみ、キーボードとマウスを使用",
-            "development": "開発ツール",
-            "productivity": "生産性ツール",
+            "development": "開発環境とツール",
+            "productivity": "仕事と学校で使用する主要なアプリ",
             "entertainment": "エンターテイメントアプリ"
         },
         "items": {
@@ -72,15 +72,16 @@
                 "name": "Asus VivoBook S 16",
                 "description": "学校と仕事で使用するメインのノートパソコン。主にホームで使用していますが、時々外出先でも使用しています（重いですね）",
                 "specs": {
-                    "0": "13th Gen Intel Core i5-13500H",
-                    "1": "Intel Iris Xe グラフィックス",
-                    "2": "16GB RAM",
-                    "3": "1TB NVMe SSD",
-                    "4": "1920x1200 IPSパネル"
+                    "0": "Windows 11とArch LinuxとHyprlandのデュアルブート",
+                    "1": "13th Gen Intel Core i5-13500H",
+                    "2": "Intel Iris Xe グラフィックス",
+                    "3": "16GB RAM",
+                    "4": "1TB NVMe SSD",
+                    "5": "1920x1200 IPSパネル"
                 }
             },
             "Acer Nitro Curved Monitor": {
-                "name": "Acer Nitro Curved Monitor",
+                "name": "Acer Nitro カーブドモニター",
                 "description": "ノートパソコンに追加で使用するモニター",
                 "specs": {
                     "0": "31.5インチLEDパネル",
@@ -93,15 +94,16 @@
                 "name": "Panasonic CF-RZ6",
                 "description": "外出先での生産性向上のための超軽量ノートパソコン。軽くて小さいです。",
                 "specs": {
-                    "0": "7th Generation Intel Core i5-7Y57",
-                    "1": "8GB RAM",
-                    "2": "512GB NVMe SSD",
-                    "3": "統合グラフィックス"
+                    "0": "カスタムdotfilesを使用したArch Linuxとi3-gaps",
+                    "1": "7th Gen Intel Core i5-7Y57",
+                    "2": "8GB RAM",
+                    "3": "512GB NVMe SSD",
+                    "4": "統合グラフィックス"
                 }
             },
             "Visual Studio Code": {
                 "name": "Visual Studio Code",
-                "description": "好みのコードエディタ",
+                "description": "バックアップ用コードエディタ",
                 "features": {
                     "0": "豊富なプラグインエコシステム",
                     "1": "統合ターミナル",
@@ -147,12 +149,67 @@
                 }
             },
             "Digio Wireless Laser Trackball Mouse": {
-                "name": "Digio Wireless Laser Trackball Mouse",
+                "name": "Digio ワイヤレスレーザートラックボールマウス",
                 "description": "小さなトラックボールマウス",
                 "specs": {
                     "0": "最大2台のデバイスに接続可能なBluetooth 5.1",
                     "1": "インデックスファインダートラックボール位置",
                     "2": "エルゴノミックデザイン（実際にはそれほどだと思うｗｗｗ"
+                }
+            },
+            "OPENAI API": {
+                "name": "OPENAI API",
+                "description": "主に私のプロジェクトで使用するAI API",
+                "features": {
+                    "0": "GPT-4o",
+                    "1": "GPT-4o Mini"
+                }
+            },
+            "Obsidian": {
+                "name": "Obsidian",
+                "description": "Markdownノートテキストアプリで、私の個人プロジェクトと学校のノートに使用しています",
+                "features": {
+                    "0": "Markdownサポート",
+                    "1": "データベース機能",
+                    "2": "拡張可能なプラグインエコシステム"
+                }
+            },
+            "Zen Browser": {
+                "name": "Zen ブラウザ",
+                "description": "フォーカスモードをカスタマイズ可能なディストラクションフリーブラウザ",
+                "features": {
+                    "0": "ディストラクションフリーブラウジング体験",
+                    "1": "カスタマイズ可能なフォーカスモード",
+                    "2": "ウェブサイトブロックと時間制限",
+                    "3": "広告なし",
+                    "4": "見た目がいいね"
+                }
+            },
+            "Crunchyroll": {
+                "name": "Crunchyroll",
+                "description": "仕事中はほぼ常に何かを見ています",
+                "features": {
+                    "0": "アニメ視聴",
+                    "1": "エピソードダウンロード",
+                    "2": "広告なし"
+                }
+            },
+            "Cursor Code Editor": {
+                "name": "Cursor コードエディタ",
+                "description": "VSCodeをフォークした好みのコードエディタ",
+                "features": {
+                    "0": "AI搭載のコードエディタ",
+                    "1": "統合ターミナル",
+                    "2": "Git統合"
+                }
+            },
+            "Neovim": {
+                "name": "Neovim",
+                "description": "軽量で拡張可能なコードエディタ",
+                "features": {
+                    "0": "軽量で拡張可能",
+                    "1": "カスタマイズ可能な設定",
+                    "2": "マジでヤバイ効率的なホットキー"
                 }
             }
         },

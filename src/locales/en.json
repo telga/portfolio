@@ -58,25 +58,26 @@
             "mobile": "On the Go",
             "development": "Development",
             "productivity": "Productivity",
-            "entertainment": "Entertainment"
+            "aiTools": "AI Tools"
         },
         "descriptions": {
             "home": "Home work setup running on both laptop screen and monitor on arms",
             "mobile": "On the go work setup running laptop folded into tablet mode with a kb and mouse",
-            "development": "My development tools",
-            "productivity": "My productivity tools",
-            "entertainment": "My entertainment apps"
+            "development": "Development environments and tools",
+            "productivity": "Main apps that I use for work and school",
+            "aiTools": "Mainly AI API's I use for my projects"
         },
         "items": {
             "Asus VivoBook S 16": {
                 "name": "Asus VivoBook S 16",
                 "description": "Main laptop used for school and work, mainly at home but sometimes on the go (it's kinda heavy lol)",
                 "specs": {
-                    "0": "13th Gen Intel Core i5-13500H",
-                    "1": "Intel Iris Xe Graphics",
-                    "2": "16GB RAM",
-                    "3": "1TB NVMe SSD",
-                    "4": "1920x1200 resolution IPS panel"
+                    "0": "Dual boot Windows 11 and Arch Linux with Hyprland",
+                    "1": "13th Gen Intel Core i5-13500H",
+                    "2": "Intel Iris Xe Graphics",
+                    "3": "16GB RAM",
+                    "4": "1TB NVMe SSD",
+                    "5": "1920x1200 resolution IPS panel"
                 }
             },
             "Acer Nitro Curved Monitor": {
@@ -93,15 +94,16 @@
                 "name": "Panasonic CF-RZ6",
                 "description": "Ultra-portable laptop for on-the-go productivity, also it's suuuper light and small",
                 "specs": {
-                    "0": "7th Generation Intel Core i5-7Y57",
-                    "1": "8GB RAM",
-                    "2": "512GB NVMe SSD",
-                    "3": "Integrated graphics"
+                    "0": "Arch Linux with i3-gaps and custom dotfiles",
+                    "1": "7th Gen Intel Core i5-7Y57",
+                    "2": "8GB RAM",
+                    "3": "512GB NVMe SSD",
+                    "4": "Integrated graphics"
                 }
             },
             "Visual Studio Code": {
                 "name": "Visual Studio Code",
-                "description": "Preferred code editor",
+                "description": "Backup code editor",
                 "features": {
                     "0": "Extensive plugin ecosystem",
                     "1": "Integrated terminal",
@@ -153,6 +155,60 @@
                     "0": "Bluetooth 5.1 with up to 2 device connections",
                     "1": "Index finder trackball location",
                     "2": "Ergonomic design (it's actually not it kind of sucks lol)"
+                }
+            },
+            "OPENAI API": {
+                "name": "OPENAI API",
+                "description": "Mainly AI API's I use for my projects",
+                "features": {
+                    "0": "GPT-4o",
+                    "1": "GPT-4o Mini"
+                }
+            },
+            "Obsidian": {
+                "name": "Obsidian",
+                "description": "Markdown note-taking app that I use for my personal projects and school notes",
+                "features": {
+                    "0": "Markdown support",
+                    "1": "Database functionality",
+                    "2": "Extensible plugin ecosystem"
+                }
+            },
+            "Zen Browser": {
+                "name": "Zen Browser",
+                "description": "Distraction-free browser with customizable focus modes",
+                "features": {
+                    "0": "Distraction-free browsing experience",
+                    "1": "Customizable focus modes",
+                    "2": "Website blocking and time limits",
+                    "3": "Ad-free",
+                    "4": "Looks good lol"
+                }
+            },
+            "Crunchyroll": {
+                "name": "Crunchyroll",
+                "description": "I almost always have something on in the background while working",
+                "features": {
+                    "0": "Watch anime",
+                    "1": "Download episodes",
+                    "2": "No ads"
+                }
+            },
+            "Cursor Code Editor": {
+                "name": "Cursor Code Editor",
+                "description": "Preferred VScode-forked code editor",
+                "features": {
+                    "0": "AI-powered code editor",
+                    "1": "Integrated terminal",
+                    "2": "Git integration"
+                }
+            },
+            "Neovim": {
+                "name": "Neovim",
+                "description": "Lightweight and extensible code editor",
+                "features": {
+                    "0": "Lightweight and extensible",
+                    "1": "Customizable configuration"
                 }
             }
         },

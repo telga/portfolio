@@ -57,6 +57,7 @@
             {
               "name": "Panasonic CF-RZ6",
               "specs": [
+                "Arch Linux with i3-gaps and custom dotfiles",
                 "7th Generation Intel Core i5-7Y57",
                 "8GB RAM",
                 "512GB NVMe SSD",
@@ -67,6 +68,7 @@
             {
               "name": "Asus VivoBook S 16",
               "specs": [
+                "Dual boot Windows 11 and Arch Linux with Hyprland",
                 "13th Gen Intel Core i5-13500H",
                 "Intel Iris Xe Graphics",
                 "16GB RAM",
@@ -105,6 +107,24 @@
           "icon": "CodeBracketIcon",
           "items": [
             {
+              "name": "Cursor Code Editor",
+              "features": [
+                "AI-powered code editor",
+                "Integrated terminal",
+                "Git integration"
+              ],
+              "image": "/images/cursor.png"
+            },
+            {
+              "name": "Neovim",
+              "features": [
+                "Lightweight and extensible",
+                "Customizable configuration",
+                "Crazy efficient hotkeys"
+              ],
+              "image": "/images/neovim.png"
+            },
+            {
               "name": "Visual Studio Code",
               "features": [
                 "Extensive plugin ecosystem",
@@ -117,16 +137,50 @@
         },
         {
           "name": "productivity",
-          "icon": "PuzzlePieceIcon",
+          "icon": "DocumentIcon",
           "items": [
             {
-              "name": "Notion",
+              "name": "Obsidian",
               "features": [
-                "Customizable templates",
-                "Collaborative editing",
-                "Database functionality"
+                "Markdown support",
+                "Database functionality",
+                "Extensible plugin ecosystem"
               ],
-              "image": "/images/notion.png"
+              "image": "/images/obsidian.png"
+            },
+            {
+              "name": "Zen Browser",
+              "features": [
+                "Distraction-free browsing experience",
+                "Customizable focus modes",
+                "Website blocking and time limits",
+                "Ad-free",
+                "Looks good lol"
+              ],
+              "image": "/images/zen.png"
+            },
+            {
+              "name": "Crunchyroll",
+              "features": [
+                "Watch anime",
+                "Download episodes",
+                "No ads"
+              ],
+              "image": "/images/crunchyroll.png"
+            }
+          ]
+        },
+        {
+          "name": "aiTools",
+          "icon": "BookOpenIcon",
+          "items": [
+            {
+              "name": "OPENAI API",
+              "features": [
+                "GPT-4o",
+                "GPT-4o Mini"
+              ],
+              "image": "/images/openai.png"
             }
           ]
         }

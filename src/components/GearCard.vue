@@ -29,7 +29,7 @@
 <script setup>
 import { defineProps } from 'vue';
 import { 
-  DevicePhoneMobileIcon, ComputerDesktopIcon, CodeBracketIcon, PuzzlePieceIcon, TruckIcon, HomeIcon
+  DevicePhoneMobileIcon, ComputerDesktopIcon, CodeBracketIcon, DocumentIcon, TruckIcon, HomeIcon, BookOpenIcon
 } from '@heroicons/vue/24/outline';
 
 const props = defineProps(['item']);
@@ -38,9 +38,10 @@ const iconMap = {
   DevicePhoneMobileIcon,
   ComputerDesktopIcon,
   CodeBracketIcon,
-  PuzzlePieceIcon,
+  DocumentIcon,
   TruckIcon,
-  HomeIcon
+  HomeIcon,
+  BookOpenIcon
 };
 </script>
 
