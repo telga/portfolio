@@ -16,7 +16,6 @@
           </li>
         </ul>
         <div class="lg:hidden mt-4">
-          <img :src="subItem.image" :alt="$t(`gear.items.${subItem.name}.name`)" class="w-full h-auto rounded-lg">
         </div>
         <button class="mt-4 bg-bg-secondary text-text-primary py-2 px-4 rounded-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 hover:bg-bg-secondary-hover">
           {{ $t('gear.viewProduct') }}

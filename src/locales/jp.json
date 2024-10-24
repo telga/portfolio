@@ -58,14 +58,14 @@
             "mobile": "モバイル",
             "development": "開発",
             "productivity": "生産性",
-            "entertainment": "エンターテイメント"
+            "aiTools": "AIツール"
         },
         "descriptions": {
             "home": "ホームでの作業セットアップ。ノートパソコン画面とアームに取り付けたモニターで動作しています。",
             "mobile": "外出先での作業セットアップ。ノートパソコンをタブレットモードに折りたたみ、キーボードとマウスを使用",
             "development": "開発環境とツール",
             "productivity": "仕事と学校で使用する主要なアプリ",
-            "entertainment": "エンターテイメントアプリ"
+            "aiTools": "主に私のプロジェクトで使用するAI API"
         },
         "items": {
             "Asus VivoBook S 16": {
@@ -159,7 +159,7 @@
             },
             "OPENAI API": {
                 "name": "OPENAI API",
-                "description": "主に私のプロジェクトで使用するAI API",
+                "description": "Arch Linuxで多用されるCLIプログラムのために使用されるAPI",
                 "features": {
                     "0": "GPT-4o",
                     "1": "GPT-4o Mini"

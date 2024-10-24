@@ -159,7 +159,7 @@
             },
             "OPENAI API": {
                 "name": "OPENAI API",
-                "description": "Mainly AI API's I use for my projects",
+                "description": "API is used a lot for cli programs in arch linux",
                 "features": {
                     "0": "GPT-4o",
                     "1": "GPT-4o Mini"
