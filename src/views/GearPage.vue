@@ -8,7 +8,7 @@
             <button
               v-for="category in gearData.categories"
               :key="category.name"
-              @click="currentCategory = category.name"
+              @click="setCurrentCategory(category.name)"
               class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary focus:outline-none active:scale-95"
             >
               <span>{{ $t(`gear.categories.${category.name}`) }}</span>
@@ -36,15 +36,32 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import gearData from '@/data/gear.json'
 import GearCard from '@/components/GearCard.vue'
 
 const currentCategory = ref('hardware')
 
+const setCurrentCategory = (category) => {
+  currentCategory.value = category
+  localStorage.setItem('currentGearCategory', category)
+}
+
 const currentCategoryItems = computed(() => 
   gearData.categories.find(category => category.name === currentCategory.value)?.items || []
 )
+
+onMounted(() => {
+  const savedCategory = localStorage.getItem('currentGearCategory')
+  if (savedCategory && gearData.categories.some(cat => cat.name === savedCategory)) {
+    currentCategory.value = savedCategory
+  }
+})
+
+// Optional: Update localStorage when currentCategory changes
+watch(currentCategory, (newCategory) => {
+  localStorage.setItem('currentGearCategory', newCategory)
+})
 </script>
 
 <style scoped>
