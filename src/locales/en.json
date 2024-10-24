@@ -55,14 +55,14 @@
         },
         "subcategories": {
             "home": "Home",
-            "mobile": "On the Move",
+            "mobile": "On the Go",
             "development": "Development",
             "productivity": "Productivity",
             "entertainment": "Entertainment"
         },
         "descriptions": {
-            "home": "Hardware setup when i work at home",
-            "mobile": "My mobile setup",
+            "home": "Home work setup running on both laptop screen and monitor on arms",
+            "mobile": "On the go work setup running laptop folded into tablet mode with a kb and mouse",
             "development": "My development tools",
             "productivity": "My productivity tools",
             "entertainment": "My entertainment apps"
@@ -70,7 +70,7 @@
         "items": {
             "Asus VivoBook S 16": {
                 "name": "Asus VivoBook S 16",
-                "description": "Main laptop used for school and work",
+                "description": "Main laptop used for school and work, mainly at home but sometimes on the go (it's kinda heavy lol)",
                 "specs": {
                     "0": "13th Gen Intel Core i5-13500H",
                     "1": "Intel Iris Xe Graphics",
@@ -89,14 +89,14 @@
                     "3": "144hz refresh rate"
                 }
             },
-            "Laptop": {
-                "name": "Laptop",
-                "description": "Portable workstation for on-the-go productivity",
+            "Panasonic CF-RZ6": {
+                "name": "Panasonic CF-RZ6",
+                "description": "Ultra-portable laptop for on-the-go productivity, also it's suuuper light and small",
                 "specs": {
-                    "0": "Intel Core i7",
-                    "1": "16GB RAM",
-                    "2": "512GB SSD",
-                    "3": "15.6-inch Full HD display"
+                    "0": "7th Generation Intel Core i5-7Y57",
+                    "1": "8GB RAM",
+                    "2": "512GB NVMe SSD",
+                    "3": "Integrated graphics"
                 }
             },
             "Visual Studio Code": {
@@ -117,13 +117,42 @@
                     "2": "Database functionality"
                 }
             },
-            "Spotify": {
-                "name": "Spotify",
-                "description": "Music streaming app",
-                "features": {
-                    "0": "Vast music library",
-                    "1": "Personalized playlists",
-                    "2": "Offline listening"
+            "Archiss Quattro TKL": {
+                "name": "Archiss Quattro TKL",
+                "description": "Compact mechanical keyboard with silent switches",
+                "specs": {
+                    "0": "TKL form factor",
+                    "1": "JIS layout",
+                    "2": "Silent Cherry MX Pink switches",
+                    "3": "Lubed switches and stabs"
+                }
+            },
+            "MX Ergo Plus Trackball Mouse": {
+                "name": "MX Ergo Plus Trackball Mouse",
+                "description": "Ergonomic trackball mouse for improved comfort",
+                "specs": {
+                    "0": "Ergonomic design",
+                    "1": "Adjustable tilt (0 to 20 degrees)",
+                    "2": "Precision mode",
+                    "3": "Rechargeable battery"
+                }
+            },
+            "MOBO 2 Keyboard": {
+                "name": "MOBO 2 Keyboard",
+                "description": "Foldable JIS layout Bluetooth keyboard",
+                "specs": {
+                    "0": "Bluetooth 5.1 with up to 2 device connections",
+                    "1": "Ultra-compact design",
+                    "2": "JIS layout"
+                }
+            },
+            "Digio Wireless Laser Trackball Mouse": {
+                "name": "Digio Wireless Laser Trackball Mouse",
+                "description": "Tiny trackball mouse",
+                "specs": {
+                    "0": "Bluetooth 5.1 with up to 2 device connections",
+                    "1": "Index finder trackball location",
+                    "2": "Ergonomic design (it's actually not it kind of sucks lol)"
                 }
             }
         },

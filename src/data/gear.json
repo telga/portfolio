@@ -16,7 +16,7 @@
                 "1TB NVMe SSD",
                 "1920x1200 resolution IPS panel"
               ],
-              "image": "/images/desktop-pc.jpg"
+              "image": "/images/lets-note-cf-rz6.jpg"
             },
             {
               "name": "Acer Nitro Curved Monitor",
@@ -27,6 +27,26 @@
                 "144hz refresh rate"
               ],
               "image": "/images/monitor.jpg"
+            },
+            {
+              "name": "Archiss Quattro TKL",
+              "specs": [
+                "TKL form factor",
+                "JIS layout",
+                "Silent Cherry MX Pink switches",
+                "Lubed switches and stabs"
+              ],
+              "image": "/images/archiss-quattro-tkl.jpg"
+            },
+            {
+              "name": "MX Ergo Plus Trackball Mouse",
+              "specs": [
+                "Ergonomic design",
+                "Adjustable tilt (0 to 20 degrees)",
+                "Precision mode",
+                "Rechargeable battery"
+              ],
+              "image": "/images/mx-ergo-plus.jpg"
             }
           ]
         },
@@ -35,14 +55,43 @@
           "icon": "TruckIcon",
           "items": [
             {
-              "name": "Laptop",
+              "name": "Panasonic CF-RZ6",
               "specs": [
-                "Intel Core i7",
-                "16GB RAM",
-                "512GB SSD",
-                "15.6-inch Full HD display"
+                "7th Generation Intel Core i5-7Y57",
+                "8GB RAM",
+                "512GB NVMe SSD",
+                "Integrated graphics"
               ],
-              "image": "/images/laptop.jpg"
+              "image": "/images/lets-note-cf-rz6.jpg"
+            },
+            {
+              "name": "Asus VivoBook S 16",
+              "specs": [
+                "13th Gen Intel Core i5-13500H",
+                "Intel Iris Xe Graphics",
+                "16GB RAM",
+                "1TB NVMe SSD",
+                "1920x1200 resolution IPS panel"
+              ],
+              "image": "/images/lets-note-cf-rz6.jpg"
+            },
+            {
+              "name": "MOBO 2 Keyboard",
+              "specs": [
+                "Bluetooth 5.1 with up to 2 device connections",
+                "Ultra-compact design",
+                "JIS layout"
+              ],
+              "image": "/images/mobo-2.jpg"
+            },
+            {
+              "name": "Digio Wireless Laser Trackball Mouse",
+              "specs": [
+                "Bluetooth 5.1 with up to 2 device connections",
+                "Index finder trackball location",
+                "Ergonomic design (it's actually not it kind of sucks lol)"
+              ],
+              "image": "/images/digio-trackball.jpg"
             }
           ]
         }
@@ -78,21 +127,6 @@
                 "Database functionality"
               ],
               "image": "/images/notion.png"
-            }
-          ]
-        },
-        {
-          "name": "entertainment",
-          "icon": "DevicePhoneMobileIcon",
-          "items": [
-            {
-              "name": "Spotify",
-              "features": [
-                "Vast music library",
-                "Personalized playlists",
-                "Offline listening"
-              ],
-              "image": "/images/spotify.png"
             }
           ]
         }

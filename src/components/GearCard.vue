@@ -4,18 +4,24 @@
       <component :is="iconMap[props.item.icon]" class="w-6 h-6 mr-2" />
       {{ $t(`gear.subcategories.${props.item.name}`) }}
     </h2>
-    <p class="text-text-primary mb-4">{{ $t(`gear.descriptions.${props.item.name}`) }}</p>
-    <div v-for="subItem in props.item.items" :key="subItem.name" class="mt-4 p-4 bg-bg-primary rounded-lg">
-      <h3 class="text-xl font-semibold mb-2">{{ $t(`gear.items.${subItem.name}.name`) }}</h3>
-      <p class="mb-2">{{ $t(`gear.items.${subItem.name}.description`) }}</p>
-      <ul class="list-disc list-inside">
-        <li v-for="(spec, index) in subItem.specs || subItem.features" :key="index" class="animate-slide-in" :style="{ animationDelay: `${index * 100}ms` }">
-          {{ $t(`gear.items.${subItem.name}.${subItem.specs ? 'specs' : 'features'}.${index}`, spec) }}
-        </li>
-      </ul>
-      <button class="mt-4 bg-bg-secondary text-text-primary py-2 px-4 rounded-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 hover:bg-bg-secondary-hover">
-        {{ $t('gear.viewProduct') }}
-      </button>
+    <div>
+      <p class="text-text-primary mb-4">{{ $t(`gear.descriptions.${props.item.name}`) }}</p>
+      <div v-for="subItem in props.item.items" :key="subItem.name" class="mt-4 p-4 bg-bg-primary rounded-lg">
+        <h3 class="text-xl font-semibold mb-2 text-accent">{{ $t(`gear.items.${subItem.name}.name`) }}</h3>
+        <p class="mb-4">{{ $t(`gear.items.${subItem.name}.description`) }}</p>
+        <div class="w-48 h-0.5 bg-accent mb-4"></div>
+        <ul class="list-disc list-inside">
+          <li v-for="(spec, index) in subItem.specs || subItem.features" :key="index" class="animate-slide-in" :style="{ animationDelay: `${index * 100}ms` }">
+            {{ $t(`gear.items.${subItem.name}.${subItem.specs ? 'specs' : 'features'}.${index}`, spec) }}
+          </li>
+        </ul>
+        <div class="lg:hidden mt-4">
+          <img :src="subItem.image" :alt="$t(`gear.items.${subItem.name}.name`)" class="w-full h-auto rounded-lg">
+        </div>
+        <button class="mt-4 bg-bg-secondary text-text-primary py-2 px-4 rounded-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 hover:bg-bg-secondary-hover">
+          {{ $t('gear.viewProduct') }}
+        </button>
+      </div>
     </div>
   </div>
 </template>

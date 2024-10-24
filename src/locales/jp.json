@@ -61,8 +61,8 @@
             "entertainment": "エンターテイメント"
         },
         "descriptions": {
-            "home": "自宅のセットアップ",
-            "mobile": "移動中のセットアップ",
+            "home": "ホームでの作業セットアップ。ノートパソコン画面とアームに取り付けたモニターで動作しています。",
+            "mobile": "外出先での作業セットアップ。ノートパソコンをタブレットモードに折りたたみ、キーボードとマウスを使用",
             "development": "開発ツール",
             "productivity": "生産性ツール",
             "entertainment": "エンターテイメントアプリ"
@@ -70,7 +70,7 @@
         "items": {
             "Asus VivoBook S 16": {
                 "name": "Asus VivoBook S 16",
-                "description": "学校と仕事で使用するメインのノートパソコン",
+                "description": "学校と仕事で使用するメインのノートパソコン。主にホームで使用していますが、時々外出先でも使用しています（重いですね）",
                 "specs": {
                     "0": "13th Gen Intel Core i5-13500H",
                     "1": "Intel Iris Xe グラフィックス",
@@ -89,14 +89,14 @@
                     "3": "144Hz リフレッシュレート"
                 }
             },
-            "Laptop": {
-                "name": "ノートパソコン",
-                "description": "外出先での生産性向上のためのポータブルワークステーション",
+            "Panasonic CF-RZ6": {
+                "name": "Panasonic CF-RZ6",
+                "description": "外出先での生産性向上のための超軽量ノートパソコン。軽くて小さいです。",
                 "specs": {
-                    "0": "Intel Core i7",
-                    "1": "16GB RAM",
-                    "2": "512GB SSD",
-                    "3": "15.6インチフルHDディスプレイ"
+                    "0": "7th Generation Intel Core i5-7Y57",
+                    "1": "8GB RAM",
+                    "2": "512GB NVMe SSD",
+                    "3": "統合グラフィックス"
                 }
             },
             "Visual Studio Code": {
@@ -117,13 +117,42 @@
                     "2": "データベース機能"
                 }
             },
-            "Spotify": {
-                "name": "Spotify",
-                "description": "音楽ストリーミングアプリ",
-                "features": {
-                    "0": "膨大な音楽ライブラリ",
-                    "1": "パーソナライズされたプレイリスト",
-                    "2": "オフライン再生"
+            "Archiss Quattro TKL": {
+                "name": "Archiss Quattro TKL",
+                "description": "サイレントスイッチを搭載したコンパクトな機械式キーボード",
+                "specs": {
+                    "0": "TKLフォームファクター",
+                    "1": "JISレイアウト",
+                    "2": "サイレントCherry MXピンクスイッチ",
+                    "3": "潤滑スイッチとスタブ"
+                }
+            },
+            "MX Ergo Plus Trackball Mouse": {
+                "name": "MX Ergo Plus トラックボールマウス",
+                "description": "快適性を向上させるエルゴノミックトラックボールマウス",
+                "specs": {
+                    "0": "エルゴノミックデザイン",
+                    "1": "調整可能な傾斜(0〜20度)",
+                    "2": "精密モード",
+                    "3": "充電式バッテリー"
+                }
+            },
+            "MOBO 2 Keyboard": {
+                "name": "MOBO 2 キーボード",
+                "description": "折りたたみ可能なJISレイアウトBluetoothキーボード",
+                "specs": {
+                    "0": "最大2台のデバイスに接続可能なBluetooth 5.1",
+                    "1": "超コンパクトデザイン",
+                    "2": "JISレイアウト"
+                }
+            },
+            "Digio Wireless Laser Trackball Mouse": {
+                "name": "Digio Wireless Laser Trackball Mouse",
+                "description": "小さなトラックボールマウス",
+                "specs": {
+                    "0": "最大2台のデバイスに接続可能なBluetooth 5.1",
+                    "1": "インデックスファインダートラックボール位置",
+                    "2": "エルゴノミックデザイン（実際にはそれほどだと思うｗｗｗ"
                 }
             }
         },
