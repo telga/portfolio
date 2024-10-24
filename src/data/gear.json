@@ -78,13 +78,13 @@
               "image": "/images/lets-note-cf-rz6.jpg"
             },
             {
-              "name": "MOBO 2 Keyboard",
+              "name": "HHKB Hybrid Type-S Keyboard",
               "specs": [
-                "Bluetooth 5.1 with up to 2 device connections",
-                "Ultra-compact design",
+                "Bluetooth 5.1 with up to 4 device connections",
+                "Lubed Topre switches",
                 "JIS layout"
               ],
-              "image": "/images/mobo-2.jpg"
+              "image": "/images/hhkb.jpg"
             },
             {
               "name": "Digio Wireless Laser Trackball Mouse",

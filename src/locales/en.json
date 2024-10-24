@@ -174,12 +174,12 @@
                     "3": "Rechargeable battery"
                 }
             },
-            "MOBO 2 Keyboard": {
-                "name": "MOBO 2 Keyboard",
-                "description": "Foldable JIS layout Bluetooth keyboard",
+            "HHKB Hybrid Type-S Keyboard": {
+                "name": "HHKB Hybrid Type-S Keyboard",
+                "description": "Quiet and comfortable Topre keyboard",
                 "specs": {
-                    "0": "Bluetooth 5.1 with up to 2 device connections",
-                    "1": "Ultra-compact design",
+                    "0": "Bluetooth 5.1 with up to 4 device connections",
+                    "1": "Lubed Topre switches",
                     "2": "JIS layout"
                 }
             },

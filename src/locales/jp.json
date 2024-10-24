@@ -174,12 +174,12 @@
                     "3": "充電式バッテリー"
                 }
             },
-            "MOBO 2 Keyboard": {
-                "name": "MOBO 2 キーボード",
-                "description": "折りたたみ可能なJISレイアウトBluetoothキーボード",
+            "HHKB Hybrid Type-S Keyboard": {
+                "name": "HHKB Hybrid Type-S キーボード",
+                "description": "静かで快適なTopreキーボード",
                 "specs": {
-                    "0": "最大2台のデバイスに接続可能なBluetooth 5.1",
-                    "1": "超コンパクトデザイン",
+                    "0": "最大4台のデバイスに接続可能なBluetooth 5.1",
+                    "1": "潤滑Topreスイッチ",
                     "2": "JISレイアウト"
                 }
             },
