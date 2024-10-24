@@ -10,7 +10,8 @@
         "projects": "projects",
         "experiences": "experiences",
         "skills": "skills",
-        "resume": "resume"
+        "resume": "resume",
+        "gear": "gear"
     },
     "footer": {
         "copyright": "gaki development"
@@ -46,5 +47,25 @@
         "phone": "+1 (587) 500-9308",
         "website": "https://telga.github.io/portfolio",
         "address": "calgary, canada"
+    },
+    "gear": {
+        "title": {
+            "hardware": "hardware",
+            "software": "software"
+        },
+        "items": {
+            "home": {
+                "name": "home",
+                "description": "my home"
+            },
+            "mobile": {
+                "name": "on the move",
+                "description": "my mobile"
+            }
+        },
+        "types": {
+            "hardware": "hardware",
+            "software": "software"
+        }
     }
 }

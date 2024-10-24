@@ -10,7 +10,8 @@
         "projects": "プロジェクト",
         "experiences": "経験",
         "skills": "スキル",
-        "resume": "履歴書"
+        "resume": "履歴書",
+        "gear": "ギア"
     },
     "footer": {
         "copyright": "ガキ開発"
@@ -48,5 +49,21 @@
         "website": "https://telga.github.io/portfolio",
         "address": "calgary, canada",
         "contact": "連絡"
+    },
+    "gear": {
+        "title": {
+            "hardware": "ハードウェア",
+            "software": "ソフトウェア"
+        },
+        "types": {
+            "hardware": "ハードウェア",
+            "software": "ソフトウェア"
+        },
+        "items": {
+            "home": {
+                "name": "ホーム",
+                "description": "私の家"
+            }
+        }
     }
 }

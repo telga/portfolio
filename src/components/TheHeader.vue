@@ -1,8 +1,9 @@
 <template>
   <LoadingScreen />
   <header class="bg-bg-secondary shadow">
-    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
+    <nav class="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between lg:flex-nowrap">
+      <!-- Logo -->
+      <div class="flex items-center">
         <router-link to="/" class="flex items-center">
           <img :src="nordLogo" alt="Nord Logo" class="h-8 w-auto max-w-[150px]" />
         </router-link>
@@ -16,7 +17,7 @@
         </svg>
       </button>
 
-      <!-- Desktop menu -->
+      <!-- Desktop menu (centered for large screens) -->
       <div class="hidden lg:flex flex-grow justify-center">
         <div class="flex space-x-4">
           <router-link 
@@ -140,7 +141,7 @@ const navItems = [
   //{ to: '/ExperiencesPage', label: 'nav.experiences' },
   //{ to: '/SkillsPage', label: 'nav.skills' },
   //{ to: '/ResumePage', label: 'nav.resume' },
-  //{ to: '/GearPage', label: 'nav.gear' }
+  { to: '/GearPage', label: 'nav.gear' }
 ]
 
 const isActiveRoute = (path) => {

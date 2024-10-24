@@ -5,6 +5,15 @@
       /* This style will hide the content initially */
       .js-loading * {
         visibility: hidden;
+      }
+      /* Add these styles for immediate theme application */
+      .theme-nord {
+        background-color: #2E3440;
+        color: #D8DEE9;
+      }
+      .theme-solarized {
+        background-color: #002b36;
+        color: #839496;
       }</style><base href="/portfolio/"><script>(function(){
         var redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
@@ -17,6 +26,4 @@
       (function() {
         var savedTheme = localStorage.getItem('theme') || 'nord';
         document.documentElement.classList.add('theme-' + savedTheme);
-        // Set initial background color based on theme
-        document.body.style.backgroundColor = savedTheme === 'nord' ? '#2E3440' : '#002b36';
-      })();</script><script defer="defer" src="/portfolio/js/chunk-vendors.8d7adcbf7a295626.js"></script><script defer="defer" src="/portfolio/js/app.231b11c4063abf45.js"></script><link href="/portfolio/css/app.88fd77d9021af329.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but portfolio doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
+      })();</script><script defer="defer" src="/portfolio/js/chunk-vendors.7d5a945a3397170b.js"></script><script defer="defer" src="/portfolio/js/app.50673c46a4c8b3bd.js"></script><link href="/portfolio/css/app.32014236b47e8f82.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but portfolio doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
