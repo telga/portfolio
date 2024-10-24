@@ -1,97 +1,100 @@
 {
-  "hardware": [
+  "categories": [
     {
-      "name": "home",
-      "icon": "HomeIcon",
+      "name": "hardware",
       "items": [
         {
-          "name": "Desktop PC",
-          "description": "Custom-built gaming and development rig",
-          "specs": [
-            "AMD Ryzen 9 5950X",
-            "NVIDIA RTX 3080",
-            "64GB RAM",
-            "2TB NVMe SSD"
-          ],
-          "image": "/images/desktop-pc.jpg"
+          "name": "home",
+          "icon": "HomeIcon",
+          "items": [
+            {
+              "name": "Asus VivoBook S 16",
+              "specs": [
+                "13th Gen Intel Core i5-13500H",
+                "Intel Iris Xe Graphics",
+                "16GB RAM",
+                "1TB NVMe SSD",
+                "1920x1200 resolution IPS panel"
+              ],
+              "image": "/images/desktop-pc.jpg"
+            },
+            {
+              "name": "Acer Nitro Curved Monitor",
+              "specs": [
+                "31.5-inch LED panel",
+                "1920x1080 resolution",
+                "1ms response time",
+                "144hz refresh rate"
+              ],
+              "image": "/images/monitor.jpg"
+            }
+          ]
         },
         {
-          "name": "Monitor",
-          "description": "4K Ultra HD Display",
-          "specs": [
-            "27-inch IPS panel",
-            "3840x2160 resolution",
-            "HDR support",
-            "100% sRGB color gamut"
-          ],
-          "image": "/images/monitor.jpg"
+          "name": "mobile",
+          "icon": "TruckIcon",
+          "items": [
+            {
+              "name": "Laptop",
+              "specs": [
+                "Intel Core i7",
+                "16GB RAM",
+                "512GB SSD",
+                "15.6-inch Full HD display"
+              ],
+              "image": "/images/laptop.jpg"
+            }
+          ]
         }
       ]
     },
     {
-      "name": "mobile",
-      "icon": "TruckIcon",
+      "name": "software",
       "items": [
         {
-          "name": "Laptop",
-          "description": "Portable workstation for on-the-go productivity",
-          "specs": [
-            "Intel Core i7",
-            "16GB RAM",
-            "512GB SSD",
-            "15.6-inch Full HD display"
-          ],
-          "image": "/images/laptop.jpg"
-        }
-      ]
-    }
-  ],
-  "software": [
-    {
-      "name": "vivobook",
-      "icon": "CodeBracketIcon",
-      "items": [
+          "name": "development",
+          "icon": "CodeBracketIcon",
+          "items": [
+            {
+              "name": "Visual Studio Code",
+              "features": [
+                "Extensive plugin ecosystem",
+                "Integrated terminal",
+                "Git integration"
+              ],
+              "image": "/images/vscode.png"
+            }
+          ]
+        },
         {
-          "name": "Visual Studio Code",
-          "description": "Preferred code editor",
-          "features": [
-            "Extensive plugin ecosystem",
-            "Integrated terminal",
-            "Git integration"
-          ],
-          "image": "/images/vscode.png"
-        }
-      ]
-    },
-    {
-      "name": "letsnote",
-      "icon": "PuzzlePieceIcon",
-      "items": [
+          "name": "productivity",
+          "icon": "PuzzlePieceIcon",
+          "items": [
+            {
+              "name": "Notion",
+              "features": [
+                "Customizable templates",
+                "Collaborative editing",
+                "Database functionality"
+              ],
+              "image": "/images/notion.png"
+            }
+          ]
+        },
         {
-          "name": "Notion",
-          "description": "All-in-one workspace for notes and project management",
-          "features": [
-            "Customizable templates",
-            "Collaborative editing",
-            "Database functionality"
-          ],
-          "image": "/images/notion.png"
-        }
-      ]
-    },
-    {
-      "name": "iphone",
-      "icon": "DevicePhoneMobileIcon",
-      "items": [
-        {
-          "name": "Spotify",
-          "description": "Music streaming app",
-          "features": [
-            "Vast music library",
-            "Personalized playlists",
-            "Offline listening"
-          ],
-          "image": "/images/spotify.png"
+          "name": "entertainment",
+          "icon": "DevicePhoneMobileIcon",
+          "items": [
+            {
+              "name": "Spotify",
+              "features": [
+                "Vast music library",
+                "Personalized playlists",
+                "Offline listening"
+              ],
+              "image": "/images/spotify.png"
+            }
+          ]
         }
       ]
     }

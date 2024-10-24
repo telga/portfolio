@@ -6,15 +6,15 @@
         <div class="md:sticky md:top-8 w-full">
           <div class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-4 md:mt-[3.75rem]">
             <button
-              v-for="type in ['hardware', 'software']"
-              :key="type"
-              @click="currentGearType = type"
-              class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary hover:ring-2 hover:ring-accent-hover focus:outline-none active:scale-95"
+              v-for="category in gearData.categories"
+              :key="category.name"
+              @click="currentCategory = category.name"
+              class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary focus:outline-none active:scale-95"
             >
-              <span>{{ $t(`gear.types.${type}`) }}</span>
+              <span>{{ $t(`gear.categories.${category.name}`) }}</span>
               <span 
                 class="w-2 h-2 rounded-full bg-accent-hover transition-all duration-300 ease-in-out"
-                :class="currentGearType === type ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-75'"
+                :class="currentCategory === category.name ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-75'"
               ></span>
             </button>
           </div>
@@ -24,14 +24,12 @@
       <!-- Main content area -->
       <div class="flex-grow max-w-3xl">
         <h1 class="text-2xl md:text-3xl font-bold mb-6 text-accent animate-slide-in-right">
-          {{ $t(`gear.title.${currentGearType}`) }}
+          {{ $t(`gear.categories.${currentCategory}`) }}
         </h1>
         
-        <component 
-          :is="currentView" 
-          :hardwareGearItems="hardwareGearItems" 
-          :softwareGearItems="softwareGearItems" 
-        />
+        <div v-for="item in currentCategoryItems" :key="item.name">
+          <GearCard :item="item" />
+        </div>
       </div>
     </div>
   </div>
@@ -40,15 +38,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import gearData from '@/data/gear.json'
-import HardwareGearView from '@/components/HardwareGearView.vue'
-import SoftwareGearView from '@/components/SoftwareGearView.vue'
+import GearCard from '@/components/GearCard.vue'
 
-const currentGearType = ref('hardware')
-const hardwareGearItems = gearData.hardware
-const softwareGearItems = gearData.software
+const currentCategory = ref('hardware')
 
-const currentView = computed(() => 
-  currentGearType.value === 'hardware' ? HardwareGearView : SoftwareGearView
+const currentCategoryItems = computed(() => 
+  gearData.categories.find(category => category.name === currentCategory.value)?.items || []
 )
 </script>
 
@@ -74,13 +69,14 @@ const currentView = computed(() =>
   }
 }
 
-/* Update the pulse animation to affect the ring instead of the background */
-@keyframes pulseRing {
-  0%, 100% { box-shadow: 0 0 0 0px rgba(var(--color-accent-hover), 0.2); }
-  50% { box-shadow: 0 0 0 4px rgba(var(--color-accent-hover), 0.2); }
+/* New subtle hover animation */
+@keyframes subtleScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
 
 .group:hover {
-  animation: pulseRing 2s infinite;
+  animation: subtleScale 0.3s ease-out;
 }
 </style>

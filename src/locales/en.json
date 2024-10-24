@@ -21,21 +21,21 @@
         "intro": "i'm a web developer specializing in building (and occasionally designing) kinda cool things."
     },
     "about": {
-        "title": "about me",
+        "title": "About Me",
         "imageAlt": "profile picture",
         "bio": "Hey there! I'm a web developer with a knack for tinkering and a love for exploration! With nearly a decade of experience in the confusing world of computers and software, I've learned that the best solutions often come from a bit of trial and error (okay, maybe a lot of error).\n\nI thrive on diving into projects, poking at every corner until I figure out how to make things work—or at least until I get distracted by the next shiny idea haha. I absolutely love exploring other people's thoughts and ideas; it's like a treasure hunt for inspiration! There are countless ways to tackle a problem, and I'm here to explore them all, one problem at a time.\n\nTo be honest, I still feel like I'm just scratching the surface of what's possible. That's why I'm committed to continuous learning and expansion. Every day is a new chance to mess around, learn, and maybe break a few things (don't worry, I always fix them...almost always).\n\nSo, if you're ready to join me on this complex but satisfying coding adventure, let's connect and see what wonderfully weird things we can build together!",
-        "skills": "skills"
+        "skills": "Skills"
     },
     "projects": {
-        "title": "projects",
-        "github": "github",
-        "demo": "demo"
+        "title": "Projects",
+        "github": "GitHub",
+        "demo": "Demo"
     },
     "experiences": {
-        "title": "experiences"
+        "title": "Experiences"
     },
     "skills": {
-        "title": "skills"
+        "title": "Skills"
     },
     "resume": {
         "title": "resume"
@@ -49,23 +49,84 @@
         "address": "calgary, canada"
     },
     "gear": {
-        "title": {
-            "hardware": "hardware",
-            "software": "software"
+        "categories": {
+            "hardware": "Hardware",
+            "software": "Software"
+        },
+        "subcategories": {
+            "home": "Home",
+            "mobile": "On the Move",
+            "development": "Development",
+            "productivity": "Productivity",
+            "entertainment": "Entertainment"
+        },
+        "descriptions": {
+            "home": "Hardware setup when i work at home",
+            "mobile": "My mobile setup",
+            "development": "My development tools",
+            "productivity": "My productivity tools",
+            "entertainment": "My entertainment apps"
         },
         "items": {
-            "home": {
-                "name": "home",
-                "description": "my home"
+            "Asus VivoBook S 16": {
+                "name": "Asus VivoBook S 16",
+                "description": "Main laptop used for school and work",
+                "specs": {
+                    "0": "13th Gen Intel Core i5-13500H",
+                    "1": "Intel Iris Xe Graphics",
+                    "2": "16GB RAM",
+                    "3": "1TB NVMe SSD",
+                    "4": "1920x1200 resolution IPS panel"
+                }
             },
-            "mobile": {
-                "name": "on the move",
-                "description": "my mobile"
+            "Acer Nitro Curved Monitor": {
+                "name": "Acer Nitro Curved Monitor",
+                "description": "Monitor used in addition to the laptop",
+                "specs": {
+                    "0": "31.5-inch LED panel",
+                    "1": "1920x1080 resolution",
+                    "2": "1ms response time",
+                    "3": "144hz refresh rate"
+                }
+            },
+            "Laptop": {
+                "name": "Laptop",
+                "description": "Portable workstation for on-the-go productivity",
+                "specs": {
+                    "0": "Intel Core i7",
+                    "1": "16GB RAM",
+                    "2": "512GB SSD",
+                    "3": "15.6-inch Full HD display"
+                }
+            },
+            "Visual Studio Code": {
+                "name": "Visual Studio Code",
+                "description": "Preferred code editor",
+                "features": {
+                    "0": "Extensive plugin ecosystem",
+                    "1": "Integrated terminal",
+                    "2": "Git integration"
+                }
+            },
+            "Notion": {
+                "name": "Notion",
+                "description": "All-in-one workspace for notes and project management",
+                "features": {
+                    "0": "Customizable templates",
+                    "1": "Collaborative editing",
+                    "2": "Database functionality"
+                }
+            },
+            "Spotify": {
+                "name": "Spotify",
+                "description": "Music streaming app",
+                "features": {
+                    "0": "Vast music library",
+                    "1": "Personalized playlists",
+                    "2": "Offline listening"
+                }
             }
         },
-        "types": {
-            "hardware": "hardware",
-            "software": "software"
-        }
+        "viewProduct": "View product"
     }
 }
