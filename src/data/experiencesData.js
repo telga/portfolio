@@ -11,7 +11,6 @@ export default {
           detail2: "Anticipated graduation 2026."
         }
       }
-      // Add more education items if needed
     }
   },
   work: {
@@ -37,7 +36,6 @@ export default {
           resp3: "Conducted tutorial sessions to train non-profit staff in website management, enabling them to update content independently."
         }
       }
-      // Add more work items if needed
     }
   }
 }
