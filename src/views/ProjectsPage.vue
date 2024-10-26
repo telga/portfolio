@@ -58,7 +58,7 @@ const updateLocalizedProjects = () => {
     ...project,
     title: project.title[locale.value] || project.title.en,
     description: project.description[locale.value] || project.description.en,
-    image: `/portfolio/images/${project.image}` // Adjust the path here
+    image: `/images/${project.image}` // Adjust the path here
   }))
 }
 

@@ -90,7 +90,7 @@ const { currentLanguage, toggleLanguage } = useLanguageSwitcher()
 const { t } = useI18n()
 const email = CONTACT_EMAIL
 
-const portraitUrl = ref('/portfolio/images/userpic.png')
+const portraitUrl = ref('/images/userpic.png')
 
 const contactItems = computed(() => [
   { text: email, href: `mailto:${email}` },

@@ -1,6 +1,6 @@
 # Brian Nguyen Personal Website
 
-https://telga.github.io/portfolio/
+brianguyen.works
 
 Personal portfolio site for me.
 
