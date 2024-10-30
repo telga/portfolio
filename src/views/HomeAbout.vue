@@ -5,7 +5,9 @@
         <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
           <div class="lg:w-1/3 animate-fade-in-up" style="animation-delay: 100ms;">
             <div class="flex flex-col items-center lg:items-start">
-              <img :src="profileImage" :alt="$t('about.imageAlt')" class="w-48 h-48 object-cover rounded-full shadow-lg">
+              <div class="w-64 h-64 overflow-hidden">
+                <canvas ref="threeCanvas" class="w-full h-full"></canvas>
+              </div>
               <ul class="flex flex-wrap justify-center gap-2 mt-4 w-48">
                 <a v-for="(link, index) in socialLinks" 
                    :key="link.name" 
@@ -42,13 +44,16 @@
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
   import { useI18n } from 'vue-i18n'
-  import profileImageSrc from '/public/images/userpic.png'
+  //import profileImageSrc from '/public/images/userpic.png'
   import { CodeBracketIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
+  import * as THREE from 'three'
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
   
   const { t } = useI18n()
-  const profileImage = ref(profileImageSrc)
+  //const profileImage = ref(profileImageSrc)
   const skills = ref(['Vue.js', 'React.js', 'Node.js', 'HTML', 'CSS', 'Python', 'Java', 'JavaScript', 'WSL', 'Linux (Arch, Ubuntu)'])
 
   const socialLinks = [
@@ -61,6 +66,170 @@
   const bioParagraphs = computed(() => {
     return t('about.bio').split('\n\n')
   })
+
+  const threeCanvas = ref(null)
+  let scene, camera, renderer, controls, model
+
+  let autoRotate = true
+  const normalRotationSpeed = 0.003 // Slower default rotation speed
+  let currentRotationSpeed = 0.2 // Start with fast rotation
+  const slowdownFactor = 0.95 // Controls how quickly it slows down
+  const minRotationSpeed = normalRotationSpeed // Target rotation speed
+
+  // Setup Three.js scene
+  const initThree = () => {
+    // Scene setup
+    scene = new THREE.Scene()
+    // Remove background color to make it transparent
+    // scene.background = new THREE.Color(0x2A303C)
+    
+    // Camera setup
+    camera = new THREE.PerspectiveCamera(
+      75,
+      1,
+      0.1,
+      1000
+    )
+    // Position camera higher and further back
+    camera.position.set(0, 1, 1)
+    // Make camera look down at the center
+    camera.lookAt(0, 0, 0)
+
+    // Renderer setup
+    renderer = new THREE.WebGLRenderer({
+      canvas: threeCanvas.value,
+      antialias: true,
+      alpha: true,
+      precision: 'highp',
+      powerPreference: 'high-performance',
+    })
+    // Adjust size to match new container size (96 * 4 = 384)
+    renderer.setSize(256, 256)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    // Improved lighting setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2) // Increased ambient light
+    scene.add(ambientLight)
+    
+    // Main directional light
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.5) // Increased intensity
+    mainLight.position.set(2, 2, 1)
+    scene.add(mainLight)
+
+    // Fill light from opposite side
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8)
+    fillLight.position.set(-2, 0, -2)
+    scene.add(fillLight)
+
+    // Top light for better coverage
+    const topLight = new THREE.DirectionalLight(0xffffff, 0.8)
+    topLight.position.set(0, 5, 0)
+    scene.add(topLight)
+
+    // Load 3D Model with improved smoothing
+    const loader = new GLTFLoader()
+    loader.load(
+      '/models/profile.gltf',
+      (gltf) => {
+        model = gltf.scene
+        
+        model.traverse((node) => {
+          if (node.isMesh) {
+            node.castShadow = true
+            node.receiveShadow = true
+            
+            if (node.material) {
+              node.material.needsUpdate = true
+              // Restore original material settings
+              node.material.roughness = 0.9
+              node.material.metalness = 0.1
+              node.material.envMapIntensity = 0.5
+            }
+          }
+        })
+
+        scene.add(model)
+        
+        // Center and scale
+        const box = new THREE.Box3().setFromObject(model)
+        const center = box.getCenter(new THREE.Vector3())
+        model.position.sub(center)
+        
+        const size = box.getSize(new THREE.Vector3())
+        const maxDim = Math.max(size.x, size.y, size.z)
+        const scale = 2 / maxDim
+        model.scale.multiplyScalar(scale)
+
+        model.position.y = -0.5
+        model.rotation.y = Math.PI
+        currentRotationSpeed = 0.2
+      },
+      undefined,
+      (error) => {
+        console.error('Error loading model:', error)
+      }
+    )
+
+    // Add OrbitControls
+    controls = new OrbitControls(camera, renderer.domElement)
+    controls.enableDamping = true
+    controls.dampingFactor = 0.05
+    controls.minDistance = 1
+    controls.maxDistance = 4
+    controls.enablePan = false
+    controls.autoRotate = true
+    controls.autoRotateSpeed = 2
+
+    // Update autoRotate based on controls
+    controls.addEventListener('start', () => {
+      autoRotate = false
+      controls.autoRotate = false
+    })
+  }
+
+  // Animation loop
+  const animate = () => {
+    requestAnimationFrame(animate)
+    
+    if (model && autoRotate && !controls.autoRotate) {
+      model.rotation.y += currentRotationSpeed
+      
+      if (currentRotationSpeed > minRotationSpeed) {
+        currentRotationSpeed *= slowdownFactor
+        
+        if (currentRotationSpeed < minRotationSpeed) {
+          currentRotationSpeed = minRotationSpeed
+          controls.autoRotate = true
+          autoRotate = false
+        }
+      }
+    }
+    
+    controls?.update()
+    renderer?.render(scene, camera)
+  }
+
+  // Cleanup function
+  const cleanup = () => {
+    scene?.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        object.geometry.dispose()
+        object.material.dispose()
+      }
+    })
+    renderer?.dispose()
+    controls?.dispose()
+  }
+
+  onMounted(() => {
+    initThree()
+    animate()
+  })
+
+  onBeforeUnmount(() => {
+    cleanup()
+  })
+
   </script>
   
   <style scoped>
@@ -78,5 +247,13 @@
   .animate-fade-in-up {
     animation: fadeInUp 0.3s ease-out forwards;
     opacity: 0;
+  }
+
+  canvas {
+    cursor: grab;
+  }
+
+  canvas:active {
+    cursor: grabbing;
   }
   </style>
