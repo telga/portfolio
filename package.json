@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --dest build",
     "lint": "vue-cli-service lint",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "npm run build && echo brianguyen.works > build/CNAME && gh-pages -d build"
   },
   "dependencies": {
     "core-js": "^3.8.3",
