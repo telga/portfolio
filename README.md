@@ -1,6 +1,6 @@
 # Brian Nguyen Personal Website
 
-brianguyen.works
+https://brianguyen.works/
 
 Personal portfolio site for me.
 
