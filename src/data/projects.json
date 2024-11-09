@@ -26,19 +26,5 @@
     "image": "milano.png",
     "github": "#",
     "demo": "https://www.milanonailspaflowermound.com/"
-  },
-  {
-    "id": 3,
-    "title": {
-      "en": "More to come...",
-      "jp": "これからも続々..."
-    },
-    "description": {
-      "en": "More to come...",
-      "jp": "これからも続々..."
-    },
-    "image": "placeholder.png",
-    "github": "#",
-    "demo": "#"
   }
 ]
