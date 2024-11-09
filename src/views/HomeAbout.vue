@@ -8,42 +8,52 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         <div class="lg:col-span-5 animate-fade-in-up" style="animation-delay: 100ms;">
           <div class="flex flex-col items-center">
-            <div class="w-full aspect-square overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative">
+            <div class="w-full aspect-square overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative transition-shadow duration-300 hover:shadow-xl">
               <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-secondary/10 pointer-events-none"></div>
               <canvas ref="threeCanvas" class="w-full h-full"></canvas>
             </div>
             
-            <ul class="flex flex-wrap justify-center gap-4 mt-6">
-              <a v-for="(link, index) in socialLinks" 
-                 :key="link.name" 
-                 :href="link.url" 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 class="text-accent hover:text-accent-hover transition-colors hover:scale-110 transform duration-200 animate-slide-in-bottom"
-                 :style="{ animationDelay: `${index * 100}ms` }">
-                <component :is="link.icon" class="w-6 h-6 sm:w-7 sm:h-7" />
-              </a>
-            </ul>
+            <!-- Social links with better sizing -->
+            <div class="bg-bg-secondary rounded-lg shadow-lg px-6 py-4 mt-6 inline-block mx-auto transition-shadow duration-300 hover:shadow-xl">
+              <ul class="flex flex-wrap justify-center gap-4">
+                <a v-for="(link, index) in socialLinks" 
+                   :key="link.name" 
+                   :href="link.url" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="text-accent hover:text-accent-hover transition-colors hover:scale-110 transform duration-200 animate-slide-in-bottom"
+                   :style="{ animationDelay: `${index * 100}ms` }">
+                  <component :is="link.icon" class="w-6 h-6 sm:w-7 sm:h-7" />
+                </a>
+              </ul>
+            </div>
           </div>
         </div>
 
         <div class="lg:col-span-7">
-          <div class="space-y-6 mb-8">
-            <p v-for="(paragraph, index) in bioParagraphs" :key="index" 
-               class="text-text-secondary leading-relaxed animate-fade-in-up"
-               :style="{ animationDelay: `${200 + index * 30}ms` }">
-              {{ paragraph }}
-            </p>
+          <!-- Bio Card with title -->
+          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 mb-8 transition-shadow duration-300 hover:shadow-xl">
+            <h2 class="text-2xl font-bold text-accent mb-4 animate-fade-in-up" 
+                style="animation-delay: 200ms;">
+              {{ $t('about.introtitle') }}
+            </h2>
+            <div class="space-y-6">
+              <p v-for="(paragraph, index) in bioParagraphs" :key="index" 
+                 class="text-text-secondary leading-relaxed animate-fade-in-up"
+                 :style="{ animationDelay: `${200 + index * 30}ms` }">
+                {{ paragraph }}
+              </p>
+            </div>
           </div>
 
-          <div>
+          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 transition-shadow duration-300 hover:shadow-xl">
             <h2 class="text-2xl font-bold text-accent mb-4 animate-fade-in-up" 
                 style="animation-delay: 200ms;">
               {{ $t('about.skills') }}
             </h2>
             <ul class="flex flex-wrap gap-2">
               <li v-for="(skill, index) in skills" :key="skill" 
-                  class="bg-bg-secondary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-fade-in-up"
+                  class="bg-bg-primary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-fade-in-up"
                   :style="{ animationDelay: `${300 + index * 25}ms` }">
                 {{ skill }}
               </li>
@@ -188,14 +198,12 @@ const initThree = () => {
     }
   )
 
-  // Add OrbitControls
+  // Modified OrbitControls settings
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
   controls.dampingFactor = 0.05
-  controls.minDistance = 1.5    // Prevent zooming in too close
-  controls.maxDistance = 4      // Limit how far can zoom out
-  controls.minPolarAngle = Math.PI / 3    // Adjusted from Math.PI / 4 for better viewing angle
-  controls.maxPolarAngle = Math.PI * 2/3  // Adjusted from Math.PI * 3/4
+  controls.minDistance = 1    // Prevent zooming in too close
+  controls.maxDistance = 3      // Limit how far can zoom out
   controls.enablePan = false
   controls.autoRotate = true
   controls.autoRotateSpeed = 2
