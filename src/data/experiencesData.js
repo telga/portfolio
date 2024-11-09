@@ -29,7 +29,7 @@ export default {
         title: "Full-Stack Developer",
         company: "Smile of Compassion Projects",
         location: "Calgary, AB",
-        duration: "Sept 2019 – Current",
+        duration: "Sept 2019 – Present",
         responsibilities: {
           resp1: "Spearheaded the redesign of a non-profit organization site, resulting in a 70% increase in user visits and a 50% increase in proceeds.",
           resp2: "Implemented cost-effective web solutions reducing operational expenses by nearly 90%.",
