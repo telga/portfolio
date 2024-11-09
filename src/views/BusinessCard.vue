@@ -94,7 +94,6 @@ const portraitUrl = ref('/images/userpic.png')
 
 const contactItems = computed(() => [
   { text: email, href: `mailto:${email}` },
-  { text: t('businessCard.phone'), href: `tel:${t('businessCard.phone')}` },
   { text: t('businessCard.website'), href: 'https://brianguyen.works/' },
   { text: t('businessCard.address'), href: `https://maps.google.com/?q=${encodeURIComponent(t('businessCard.address'))}` },
 ])
