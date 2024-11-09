@@ -37,7 +37,7 @@ export default {
       const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
       link.type = 'image/png'
       link.rel = 'shortcut icon'
-      link.href = require('/public/images/nordlogo.png')
+      link.href = require('/public/images/userpic.png')
       document.getElementsByTagName('head')[0].appendChild(link)
     }
 

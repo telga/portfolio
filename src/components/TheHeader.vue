@@ -5,7 +5,7 @@
       <!-- Logo -->
       <div class="flex items-center">
         <router-link to="/" class="flex items-center">
-          <img :src="nordLogo" alt="Nord Logo" class="h-8 w-auto max-w-[150px]" />
+          <img :src="currentLogo" alt="Logo" class="h-8 w-auto max-w-[150px]" />
         </router-link>
       </div>
       
@@ -118,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
@@ -127,6 +127,7 @@ import { showLoading } from '@/utils/loadingState'
 
 // Import the logo image
 import nordLogo from '/public/images/nordlogo.png'
+import solarizedLogo from '/public/images/solarizedlogo.png'
 
 const route = useRoute()
 const { currentTheme, toggleTheme } = useTheme()
@@ -181,6 +182,11 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleOutsideClick)
+})
+
+// Create a computed property for the logo
+const currentLogo = computed(() => {
+  return currentTheme.value === 'nord' ? nordLogo : solarizedLogo
 })
 </script>
 
