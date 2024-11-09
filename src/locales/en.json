@@ -1,5 +1,8 @@
 {
     "siteName": "brian nguyen",
+    "common": {
+        "loading": "Loading..."
+    },
     "nav": {
         "name": {
             "first": "brian・",

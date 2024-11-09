@@ -1,11 +1,24 @@
 <template>
   <div class="projects-page container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8 animate-fade-in" style="color: var(--accent);">{{ $t('projects.title') }}</h1>
-    <div v-if="portfolioStore.loading" class="animate-pulse" style="color: var(--text-secondary);"></div>
-    <div v-else-if="portfolioStore.error" style="color: var(--text-secondary);">{{ portfolioStore.error }}</div>
-    <div 
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-    >
+    <h1 class="text-3xl font-bold mb-8 animate-fade-in" style="color: var(--accent);">
+      {{ $t('projects.title') }}
+    </h1>
+
+    <!-- Loading State -->
+    <div v-if="portfolioStore.loading" class="flex flex-col items-center justify-center min-h-[50vh]">
+      <div class="loader mb-4"></div>
+      <p class="text-text-secondary">{{ $t('common.loading') }}</p>
+    </div>
+
+    <!-- Error State -->
+    <div v-else-if="portfolioStore.error" 
+         class="text-center p-8 rounded-lg bg-bg-secondary"
+         style="color: var(--text-secondary);">
+      {{ portfolioStore.error }}
+    </div>
+
+    <!-- Projects Grid -->
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div 
         v-for="(project, index) in localizedProjects" 
         :key="project.id" 
@@ -128,5 +141,39 @@ onMounted(() => {
 .animated-button:active {
   transform: translateY(0);
   box-shadow: none;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid var(--bg-secondary);
+  border-bottom-color: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optional: Add a fade-in animation for the content when it loads */
+.grid {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

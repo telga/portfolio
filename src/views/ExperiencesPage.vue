@@ -42,8 +42,6 @@
 
 <script setup>
 import experiencesData from '@/data/experiencesData.js'
-
-console.log('Experiences Data:', experiencesData)
 </script>
 
 <style scoped>
