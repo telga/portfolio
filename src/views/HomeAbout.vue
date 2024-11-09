@@ -1,12 +1,13 @@
 <template>
   <div class="min-h-screen bg-bg-primary text-text-primary p-4 sm:p-8 lg:p-12">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl sm:text-5xl font-bold text-accent mb-8 sm:mb-12 animate-fade-in-up text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold text-accent mb-8 sm:mb-12 animate-slide-in text-center"
+          style="animation-delay: 0ms;">
         {{ $t('about.title') }}
       </h1>
       
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-        <div class="lg:col-span-5 animate-fade-in-up" style="animation-delay: 100ms;">
+        <div class="lg:col-span-5 animate-slide-in" style="animation-delay: 100ms;">
           <div class="flex flex-col items-center">
             <div class="w-full aspect-square overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative transition-shadow duration-300 hover:shadow-xl">
               <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-secondary/10 pointer-events-none"></div>
@@ -31,30 +32,31 @@
         </div>
 
         <div class="lg:col-span-7">
-          <!-- Bio Card with title -->
-          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 mb-8 transition-shadow duration-300 hover:shadow-xl">
-            <h2 class="text-2xl font-bold text-accent mb-4 animate-fade-in-up" 
-                style="animation-delay: 200ms;">
-              {{ $t('about.introtitle') }}
+          <!-- Bio Card -->
+          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 mb-8 animate-slide-in"
+               style="animation-delay: 200ms;">
+            <h2 class="text-2xl font-bold text-accent mb-4">
+              {{ $t('about.about') }}
             </h2>
             <div class="space-y-6">
               <p v-for="(paragraph, index) in bioParagraphs" :key="index" 
-                 class="text-text-secondary leading-relaxed animate-fade-in-up"
-                 :style="{ animationDelay: `${200 + index * 30}ms` }">
+                 class="text-text-secondary leading-relaxed animate-slide-in-down"
+                 :style="{ animationDelay: `${300 + index * 100}ms` }">
                 {{ paragraph }}
               </p>
             </div>
           </div>
 
-          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 transition-shadow duration-300 hover:shadow-xl">
-            <h2 class="text-2xl font-bold text-accent mb-4 animate-fade-in-up" 
-                style="animation-delay: 200ms;">
+          <!-- Skills Card -->
+          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in"
+               style="animation-delay: 400ms;">
+            <h2 class="text-2xl font-bold text-accent mb-4">
               {{ $t('about.skills') }}
             </h2>
             <ul class="flex flex-wrap gap-2">
               <li v-for="(skill, index) in skills" :key="skill" 
-                  class="bg-bg-primary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-fade-in-up"
-                  :style="{ animationDelay: `${300 + index * 25}ms` }">
+                  class="bg-bg-primary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-slide-in"
+                  :style="{ animationDelay: `${500 + index * 50}ms` }">
                 {{ skill }}
               </li>
             </ul>
@@ -66,7 +68,7 @@
 </template>
   
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 //import profileImageSrc from '/public/images/userpic.png'
 import { CodeBracketIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
@@ -91,6 +93,8 @@ const bioParagraphs = computed(() => {
 
 const threeCanvas = ref(null)
 let scene, camera, renderer, controls, model
+let resizeObserver = null
+let animationFrameId = null  // Add this to track animation frame
 
 let autoRotate = true
 const normalRotationSpeed = 0.003 // Slower default rotation speed
@@ -217,7 +221,9 @@ const initThree = () => {
 
 // Animation loop
 const animate = () => {
-  requestAnimationFrame(animate)
+  if (!scene || !camera || !renderer) return
+  
+  animationFrameId = requestAnimationFrame(animate)
   
   if (model && autoRotate && !controls.autoRotate) {
     model.rotation.y += currentRotationSpeed
@@ -237,22 +243,56 @@ const animate = () => {
   renderer?.render(scene, camera)
 }
 
-// Cleanup function
+// Enhanced cleanup function
 const cleanup = () => {
-  scene?.traverse((object) => {
-    if (object instanceof THREE.Mesh) {
-      object.geometry.dispose()
-      object.material.dispose()
-    }
-  })
-  renderer?.dispose()
-  controls?.dispose()
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId)
+    animationFrameId = null
+  }
+
+  if (controls) {
+    controls.dispose()
+    controls = null
+  }
+
+  if (renderer) {
+    renderer.dispose()
+    renderer = null
+  }
+
+  if (scene) {
+    scene.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        object.geometry?.dispose()
+        if (object.material) {
+          if (Array.isArray(object.material)) {
+            object.material.forEach(material => material.dispose())
+          } else {
+            object.material.dispose()
+          }
+        }
+      }
+    })
+    scene = null
+  }
+
+  camera = null
+  model = null
 }
 
-// Update renderer sizing
+// Update renderer sizing with additional checks
 const updateRendererSize = () => {
+  if (!threeCanvas.value || !renderer || !camera) return
+  
   const container = threeCanvas.value.parentElement
-  const size = container.clientWidth  // Use full width of container
+  if (!container) return
+
+  const size = container.clientWidth
   renderer.setSize(size, size)
   camera.aspect = 1
   camera.updateProjectionMatrix()
@@ -260,14 +300,22 @@ const updateRendererSize = () => {
 
 // Add resize handling
 onMounted(() => {
-  initThree()
-  animate()
-  
-  const resizeObserver = new ResizeObserver(() => {
-    updateRendererSize()
+  nextTick(() => {
+    if (!threeCanvas.value) return
+    
+    initThree()
+    animate()
+    
+    resizeObserver = new ResizeObserver(() => {
+      if (threeCanvas.value?.parentElement) {
+        updateRendererSize()
+      }
+    })
+    
+    if (threeCanvas.value.parentElement) {
+      resizeObserver.observe(threeCanvas.value.parentElement)
+    }
   })
-  
-  resizeObserver.observe(threeCanvas.value.parentElement)
 })
 
 onBeforeUnmount(() => {
@@ -277,20 +325,44 @@ onBeforeUnmount(() => {
 </script>
   
 <style scoped>
-@keyframes fadeInUp {
+@keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateX(-30px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(0);
   }
 }
-  
-.animate-fade-in-up {
-  animation: fadeInUp 0.3s ease-out forwards;
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out forwards;
   opacity: 0;
+}
+
+.animate-slide-in-down {
+  animation: slideInDown 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .animate-slide-in,
+  .animate-slide-in-down {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 canvas {

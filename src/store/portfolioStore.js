@@ -12,7 +12,7 @@ export const usePortfolioStore = defineStore('portfolio', {
       this.loading = true
       this.error = null
       try {
-        await new Promise(resolve => setTimeout(resolve, 500))
+        await new Promise(resolve => setTimeout(resolve, 200))
         this.projects = projectsData
       } catch (e) {
         console.error("Error fetching projects:", e)
