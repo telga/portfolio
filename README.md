@@ -13,5 +13,4 @@ Personal portfolio site for me.
 - Hygraph integration for projects and gear pages
 - update on 3d model
 - theme switched logo on header nav
-- theme-fluid favicon
 - smooth refresh on language switch
