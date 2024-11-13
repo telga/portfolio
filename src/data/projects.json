@@ -26,5 +26,19 @@
     "image": "milano.png",
     "github": "https://github.com/telga/MilanoFlowerMound",
     "demo": "https://telga.github.io/MilanoFlowerMound/"
+  },
+  {
+    "id": 3,
+    "title": {
+      "en": "Brain Type",
+      "jp": "ブレーンタイプ"
+    },
+    "description": {
+      "en": "A website for a simple typing test game with both English and Japanese(hiragana).",
+      "jp": "英語と日本語(ひらがな)のタイピングテストゲームのウェブサイトです。"
+    },
+    "image": "braintype.png",
+    "github": "https://github.com/telga/type-tester",
+    "demo": "https://telga.github.io/type-tester/"
   }
 ]
