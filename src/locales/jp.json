@@ -132,7 +132,7 @@
                 "name": "Panasonic CF-RZ6",
                 "description": "外出先での生産性向上のための超軽量ノートパソコン。軽くて小さいです。",
                 "specs": {
-                    "0": "カスタムdotfilesを使用したArch Linuxとi3-gaps",
+                    "0": "XFCE Arch Linux",
                     "1": "7th Gen Intel Core i5-7Y57",
                     "2": "8GB RAM",
                     "3": "512GB NVMe SSD",

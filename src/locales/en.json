@@ -132,7 +132,7 @@
                 "name": "Panasonic CF-RZ6",
                 "description": "Ultra-portable laptop for on-the-go productivity, also it's suuuper light and small",
                 "specs": {
-                    "0": "Arch Linux with i3-gaps and custom dotfiles",
+                    "0": "XFCE Arch Linux",
                     "1": "7th Gen Intel Core i5-7Y57",
                     "2": "8GB RAM",
                     "3": "512GB NVMe SSD",
