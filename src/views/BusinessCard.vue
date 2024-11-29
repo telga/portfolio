@@ -5,7 +5,7 @@
       <div class="absolute top-2 left-2 z-10">
         <button @click="toggleTheme" :class="[
           'theme-toggle-btn p-1 ring-2 hover:ring-accent-hover focus:ring-accent rounded-full transition-colors duration-300 focus:outline-none',
-          currentTheme === 'nord' 
+          currentTheme === 'solarized' 
             ? 'bg-solarized-base03 text-solarized-base1 border-solarized-base1' 
             : 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1',
           'hover:border-accent active:border-accent-secondary'
@@ -45,7 +45,6 @@
 
         <div class="space-y-6 animate-content text-center">
           <h1 class="text-4xl font-bold text-accent animate-text-slide-up">{{ $t('businessCard.name') }}</h1>
-          <p class="text-2xl font-light animate-text-slide-up animation-delay-100">{{ $t('businessCard.title') }}</p>
           <div class="mt-8">
             <!-- Divider -->
             <div class="flex items-center justify-center mb-6">
@@ -55,27 +54,43 @@
             </div>
 
             <!-- Contact Items -->
-            <div class="space-y-4">
-              <a v-for="(item, index) in contactItems" 
-                 :key="index" 
-                 :href="item.href" 
-                 :target="item.target" 
-                 :rel="item.rel" 
-                 class="block py-2 transition-colors duration-300 group relative"
+            <div class="flex flex-col items-center space-y-4">
+              <div v-for="(item, index) in contactItems" 
+                   :key="index" 
+                   class="relative py-2 group"
               >
-                <div class="flex items-center justify-center">
-                  <span class="text-sm text-text-primary group-hover:text-accent transition-colors duration-300">{{ item.text }}</span>
+                <div class="relative">
+                  <template v-if="!item.isEmail">
+                    <a 
+                      :href="item.href"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-sm text-text-primary group-hover:text-accent transition-colors duration-300 cursor-pointer"
+                    >
+                      {{ item.text }}
+                    </a>
+                  </template>
+                  <template v-else>
+                    <span 
+                      @click="copyEmail"
+                      class="text-sm text-text-primary group-hover:text-accent transition-colors duration-300 cursor-pointer"
+                    >
+                      {{ item.text }}
+                    </span>
+                  </template>
+                  <span 
+                    class="absolute -bottom-1 left-0 border-b-2 border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    :style="{ width: '100%' }"
+                  ></span>
                 </div>
-                <span 
-                  class="absolute bottom-0 left-0 w-full border-b-2 border-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                ></span>
-              </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <ToastNotification :show="showToast" message="Email address copied" />
 </template>
 
 <script setup>
@@ -84,6 +99,7 @@ import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 import { useI18n } from 'vue-i18n'
 import { CONTACT_EMAIL } from '@/utils/constants'
+import ToastNotification from '@/components/ToastNotification.vue'
 
 const { currentTheme, toggleTheme } = useTheme()
 const { currentLanguage, toggleLanguage } = useLanguageSwitcher()
@@ -92,11 +108,28 @@ const email = CONTACT_EMAIL
 
 const portraitUrl = ref('/images/userpic.png')
 
+const copyStatus = ref('Copy email')
+const showToast = ref(false)
+
 const contactItems = computed(() => [
-  { text: email, href: `mailto:${email}` },
-  { text: t('businessCard.website'), href: 'https://brianguyen.works/' },
-  { text: t('businessCard.address'), href: `https://maps.google.com/?q=${encodeURIComponent(t('businessCard.address'))}` },
+  { text: email, href: `mailto:${email}`, isEmail: true },
+  { text: t('businessCard.website'), href: 'https://brianguyen.works/', isEmail: false },
 ])
+
+const copyEmail = async () => {
+  try {
+    await navigator.clipboard.writeText(email)
+    copyStatus.value = 'Copied!'
+    showToast.value = true
+    setTimeout(() => {
+      copyStatus.value = 'Copy email'
+      showToast.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy email:', err)
+    copyStatus.value = 'Failed to copy'
+  }
+}
 </script>
 
 <style scoped>
@@ -161,5 +194,18 @@ const contactItems = computed(() => [
 .flag-icon {
   font-size: 1.2rem; /* Adjust size as needed */
   line-height: 1;
+}
+
+.min-h-screen {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .min-h-screen {
+    align-items: flex-start;
+  }
 }
 </style>

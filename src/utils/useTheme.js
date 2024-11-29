@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 
-const currentTheme = ref(localStorage.getItem('theme') || 'nord')
+const currentTheme = ref(localStorage.getItem('theme') || 'solarized')
 
 function applyTheme(theme) {
   document.documentElement.classList.remove('theme-nord', 'theme-solarized')
