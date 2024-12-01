@@ -158,24 +158,22 @@
                 </li>
               </ul>
             </div>
-          </div>
-        </div>
 
-          <!-- Skills section full width -->
-          <div class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in"
-               style="animation-delay: 400ms;">
-            <h2 class="text-2xl font-bold text-accent mb-4">
-              {{ $t('about.skills') }}
-            </h2>
-            <ul class="flex flex-wrap gap-2">
-              <li v-for="(skill, index) in skills" :key="skill" 
-                  class="bg-bg-primary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-slide-in"
-                  :style="{ animationDelay: `${500 + index * 50}ms` }">
-                {{ skill }}
-              </li>
-            </ul>
+            <!-- Skills section moved here -->
+            <h2 class="text-2xl font-bold text-accent mb-4 mt-8">{{ $t('about.skills') }}</h2>
+            <div class="bg-bg-primary p-4 rounded-lg shadow-md animate-slide-in-right"
+                 :style="{ animationDelay: '650ms' }">
+              <ul class="flex flex-wrap gap-2">
+                <li v-for="(skill, index) in skills" :key="skill" 
+                    class="bg-bg-secondary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-slide-in"
+                    :style="{ animationDelay: `${700 + index * 50}ms` }">
+                  {{ skill }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+      </div>
     </div>
 
     <!-- Toast Notification - Moved outside main content -->
