@@ -3,26 +3,24 @@
     <HeaderV2 />
     <div class="flex-1 bg-[#2e1f40] flex items-center justify-center">
       <!-- Terminal Window -->
-      <div class="bg-[#002b36] w-[900px] h-[600px] rounded-lg shadow-xl overflow-hidden">
+      <div class="bg-[#002b36] w-[900px] h-[600px] shadow-xl overflow-hidden">
         <!-- Terminal Header -->
-        <div class="bg-[#1a1a1a] h-8 flex items-center justify-between px-3">
-          <div class="flex items-center gap-2">
-            <div class="flex items-center gap-1.5">
-              <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
-              <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
-              <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
-            </div>
-            <div class="text-gray-400 text-xs ml-2">bnterm: portfolio@brian-nguyen</div>
+        <div class="bg-[#1a1a1a] h-8 flex items-center relative">
+          <!-- Centered text -->
+          <div class="absolute w-full text-center text-gray-300 text-sm pointer-events-none">
+            portfolio@brian-nguyen>
           </div>
-          <div class="flex items-center">
-            <button class="text-gray-400 hover:text-gray-200 p-1">
-              <div class="i-mdi-magnify w-3.5 h-3.5"></div>
+          
+          <!-- Right-aligned buttons -->
+          <div class="flex items-stretch h-full ml-auto">
+            <button class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative">
+              <MinusSmallIcon class="w-5 h-5 text-gray-300" />
             </button>
-            <button class="text-gray-400 hover:text-gray-200 p-1">
-              <div class="i-mdi-menu w-3.5 h-3.5"></div>
+            <button class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative">
+              <Square2StackIcon class="w-4 h-4 text-gray-300" />
             </button>
-            <button class="text-gray-400 hover:text-gray-200 p-1">
-              <div class="i-mdi-close w-3.5 h-3.5"></div>
+            <button class="hover:bg-red-500 w-11 flex items-center justify-center cursor-pointer relative">
+              <XMarkIcon class="w-5 h-5 text-gray-300" />
             </button>
           </div>
         </div>
@@ -131,6 +129,7 @@
   import projectsData from '@/data/projects.json'
   import { useI18n } from 'vue-i18n'
   import HeaderV2 from '@/components/HeaderV2.vue'
+  import { MinusSmallIcon, Square2StackIcon, XMarkIcon } from '@heroicons/vue/24/outline'
   
   const { t, locale } = useI18n()
   
