@@ -1,45 +1,52 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, defineEmits } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useTheme } from '@/utils/useTheme'
+import LoadingScreenV2 from '@/components/LoadingScreenV2.vue'
 
-const { currentTheme, toggleTheme } = useTheme()
-
-const emit = defineEmits(['open-terminal', 'toggle-terminal'])
-
+const { currentTheme } = useTheme()
+const showLoadingScreen = ref(true)
 const currentTime = ref('')
-let timeInterval
+
+// Initial loading screen
+onMounted(() => {
+  setTimeout(() => {
+    showLoadingScreen.value = false
+  }, 2000)
+  updateTime()
+  setInterval(updateTime, 1000)
+})
 
 const updateTime = () => {
   const now = new Date()
-  const month = now.toLocaleString('en-US', { month: 'short' })
+  const month = now.toLocaleString('default', { month: 'short' })
   const day = now.getDate()
-  const hours = now.getHours().toString().padStart(2, '0')
-  const minutes = now.getMinutes().toString().padStart(2, '0')
-  currentTime.value = `${month} ${day} ${hours}:${minutes}`
-}
-
-onMounted(() => {
-  updateTime()
-  timeInterval = setInterval(updateTime, 60000)
-})
-
-onBeforeUnmount(() => {
-  if (timeInterval) clearInterval(timeInterval)
-})
-
-const handleConsoleClick = () => {
-  emit('toggle-terminal')
+  const time = now.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  })
+  currentTime.value = `${month} ${day} ${time}`
 }
 
 const handleThemeToggle = () => {
-  toggleTheme()
-  // Store the current theme in localStorage
-  localStorage.setItem('lastTheme', currentTheme.value)
+  // First show loading screen
+  showLoadingScreen.value = true
+  
+  // Store new theme choice
+  const newTheme = currentTheme.value === 'nord' ? 'solarized' : 'nord'
+  
+  // Update theme in localStorage
+  localStorage.setItem('theme', newTheme)
+  
+  // Reload page immediately - the theme will be applied on reload
+  window.location.reload()
 }
 </script>
 
 <template>
   <div class="bg-[var(--bg-primary)] h-8 flex items-center justify-between px-4 text-[var(--text-primary)] text-sm relative shadow-md">
+    <LoadingScreenV2 :show="showLoadingScreen" />
+    
     <!-- Left section -->
     <div class="w-[200px] flex items-center gap-4">
       <router-link 
@@ -67,22 +74,20 @@ const handleThemeToggle = () => {
       </button>
     </div>
     
-    <!-- Center section - Terminal Tab -->
+    <!-- Center section -->
     <div 
       v-if="$attrs.isTerminalExists" 
       class="absolute inset-x-0 mx-auto w-fit h-8 flex items-center justify-center cursor-pointer group -translate-x-4"
-      @click="handleConsoleClick"
+      @click="$emit('toggle-terminal')"
     >
       <div class="flex items-center gap-1">
         <div class="i-mdi-console w-4 h-4"></div>
         <span class="relative inline-block whitespace-nowrap">
           portfolio@brian-nguyen
-          <!-- Active underline -->
           <div 
             class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] transition-transform duration-200"
             :class="{ 'scale-x-100': !$attrs.isMinimized, 'scale-x-0': $attrs.isMinimized }"
           ></div>
-          <!-- Hover underline -->
           <div 
             class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
             v-if="$attrs.isMinimized"

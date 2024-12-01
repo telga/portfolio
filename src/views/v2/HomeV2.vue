@@ -1,8 +1,9 @@
 <template>
-    <div class="absolute inset-0 bg-[#1a1a1a] flex flex-col">
+    <div class="absolute inset-0 bg-[var(--bg-primary)] flex flex-col">
       <HeaderV2 
         @open-terminal="openTerminal" 
         @toggle-terminal="toggleTerminal"
+        @theme-switch="handleThemeSwitch"
         :isMinimized="isMinimized"
         :isTerminalExists="isTerminalExists"
       />
