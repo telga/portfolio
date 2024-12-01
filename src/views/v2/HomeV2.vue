@@ -54,6 +54,30 @@
                 <span class="text-[var(--accent)]">Skills: </span>
                 <span class="text-[var(--accent-secondary)] ml-1">Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, Linux (Arch, Ubuntu)</span>
               </div>
+              <div class="flex">
+                <span class="text-[var(--accent)]">Pages: </span>
+                <div class="flex gap-2 ml-1">
+                  <button 
+                    @click="runCommand('about')" 
+                    class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                  >about</button>
+                  <span class="text-[var(--text-secondary)]">|</span>
+                  <button 
+                    @click="runCommand('projects')" 
+                    class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                  >projects</button>
+                  <span class="text-[var(--text-secondary)]">|</span>
+                  <button 
+                    @click="runCommand('experience')" 
+                    class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                  >experience</button>
+                  <span class="text-[var(--text-secondary)]">|</span>
+                  <button 
+                    @click="runCommand('contact')" 
+                    class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                  >contact</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -107,24 +131,83 @@ const handleKeyPress = (e) => {
     if (currentCommand.value === 'ifetch') {
       newEntry.showNeofetch = true
       commandHistory.value.push(newEntry)
-      if (commandHistory.value.length > MAX_HISTORY) {
-        commandHistory.value.shift()
-      }
     } else if (currentCommand.value === 'help') {
       newEntry.output = `Available commands:
 
 ifetch     Display system information and profile
+about      Show information about me
+projects   View my projects
+experience View my work experience
+contact    Get my contact information
 help       Show this help message
 clear      Clear the terminal (Ctrl+L)
 
 Type a command and press Enter to execute`
       commandHistory.value.push(newEntry)
-      if (commandHistory.value.length > MAX_HISTORY) {
-        commandHistory.value.shift()
-      }
+    } else if (currentCommand.value === 'about') {
+      newEntry.output = `Hi, I'm Brian! 👋
+
+I'm a software engineer with a passion for building intuitive and efficient applications. 
+My journey in tech started with game development, which evolved into a love for web development 
+and systems programming.
+
+Currently, I'm focused on:
+• Full-stack web development using Vue.js and Node.js
+• Learning Rust and exploring systems programming
+• Contributing to open-source projects
+• Building tools that make developers' lives easier
+
+When I'm not coding, you can find me:
+• Playing video games (currently obsessed with Baldur's Gate 3)
+• Reading tech blogs and documentation
+• Experimenting with Linux configurations
+• Learning new programming languages and paradigms
+
+Feel free to reach out if you want to collaborate or just chat about tech!`
+      commandHistory.value.push(newEntry)
+    } else if (currentCommand.value === 'projects') {
+      newEntry.output = `My Projects:
+
+• Portfolio Terminal (Vue.js, TailwindCSS)
+  A terminal-style portfolio website with interactive commands
+  
+• Project 2 Name (Technologies)
+  Description of project 2
+  
+• Project 3 Name (Technologies)
+  Description of project 3
+
+More projects available on my Github!`
+      commandHistory.value.push(newEntry)
+    } else if (currentCommand.value === 'experience') {
+      newEntry.output = `Work Experience:
+
+Software Engineer @ Company (2022 - Present)
+• Achievement 1
+• Achievement 2
+• Achievement 3
+
+Previous Role @ Company (2020 - 2022)
+• Achievement 1
+• Achievement 2
+• Achievement 3`
+      commandHistory.value.push(newEntry)
+    } else if (currentCommand.value === 'contact') {
+      newEntry.output = `Contact Information:
+
+Email: briann2305@gmail.com
+LinkedIn: bnguy23
+Github: telga
+
+Feel free to reach out! I'm always open to interesting conversations and opportunities.`
+      commandHistory.value.push(newEntry)
     } else if (currentCommand.value === 'clear') {
       clearTerminal()
-      return // Don't add clear command to history
+      return
+    }
+
+    if (commandHistory.value.length > MAX_HISTORY) {
+      commandHistory.value.shift()
     }
 
     currentCommand.value = ''
@@ -161,6 +244,12 @@ const copyEmail = async () => {
   } catch (err) {
     console.error('Failed to copy email')
   }
+}
+
+const runCommand = (cmd) => {
+  currentCommand.value = cmd
+  const e = { key: 'Enter' }
+  handleKeyPress(e)
 }
 
 onMounted(() => {
