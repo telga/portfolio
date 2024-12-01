@@ -1,18 +1,35 @@
 <template>
-    <div class="v2-page min-h-screen flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-[#2e1f40] flex flex-col">
+    <HeaderV2 />
+    <div class="flex-1 bg-[#2e1f40] flex items-center justify-center">
       <!-- Terminal Window -->
-      <div class="bg-[var(--bg-secondary)] w-[900px] h-[600px] rounded-lg shadow-xl overflow-hidden border border-[var(--accent-hover)] border-opacity-50 hover:border-opacity-100 transition-all duration-300">
+      <div class="bg-[#002b36] w-[900px] h-[600px] rounded-lg shadow-xl overflow-hidden">
         <!-- Terminal Header -->
-        <div class="bg-[var(--bg-primary)] p-3 flex items-center space-x-2">
-          <div class="w-3 h-3 rounded-full bg-red-500"></div>
-          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-          <div class="w-3 h-3 rounded-full bg-green-500"></div>
-          <span class="text-[var(--text-secondary)] text-sm ml-2">bnterm: portfolio@brian-nguyen</span>
+        <div class="bg-[#1a1a1a] h-8 flex items-center justify-between px-3">
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+            </div>
+            <div class="text-gray-400 text-xs ml-2">bnterm: portfolio@brian-nguyen</div>
+          </div>
+          <div class="flex items-center">
+            <button class="text-gray-400 hover:text-gray-200 p-1">
+              <div class="i-mdi-magnify w-3.5 h-3.5"></div>
+            </button>
+            <button class="text-gray-400 hover:text-gray-200 p-1">
+              <div class="i-mdi-menu w-3.5 h-3.5"></div>
+            </button>
+            <button class="text-gray-400 hover:text-gray-200 p-1">
+              <div class="i-mdi-close w-3.5 h-3.5"></div>
+            </button>
+          </div>
         </div>
         
         <!-- Terminal Content -->
         <div 
-          class="p-6 font-mono text-sm h-[calc(100%-48px)] overflow-y-auto" 
+          class="p-6 font-mono text-sm h-[calc(100%-32px)] overflow-y-auto bg-[#002b36]" 
           @keydown="handleKeyPress"
           @keyup="handleSelection"
           @click="handleSelection"
@@ -27,7 +44,7 @@
               <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
               <div class="text-[var(--text-primary)]">{{ entry.command }}</div>
             </div>
-  
+    
             <!-- Command Output -->
             <div 
               v-if="entry.output" 
@@ -36,7 +53,7 @@
             
             <!-- Neofetch Output -->
             <div v-if="entry.showNeofetch" class="flex mt-2 gap-8">
-              <div class="w-[35%] aspect-square overflow-hidden rounded-lg bg-bg-secondary relative">
+              <div class="w-[35%] aspect-square relative">
                 <img 
                   src="/images/userpic.png" 
                   alt="Profile Picture"
@@ -81,7 +98,7 @@
               </div>
             </div>
           </div>
-  
+    
           <!-- Current Command Line -->
           <div class="flex">
             <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
@@ -105,13 +122,15 @@
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
   <script setup>
   import { ref, nextTick, onMounted } from 'vue'
   import experiencesData from '@/data/experiencesData.js'
   import projectsData from '@/data/projects.json'
   import { useI18n } from 'vue-i18n'
+  import HeaderV2 from '@/components/HeaderV2.vue'
   
   const { t, locale } = useI18n()
   
@@ -354,13 +373,13 @@
   }
   
   .v2-page {
-    background-color: var(--bg-primary) !important;
+    background-color: #1a1b26 !important;
   }
   
   :root,
   html,
   body {
-    background-color: var(--bg-primary) !important;
+    background-color: #2e1f40 !important;
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -402,5 +421,15 @@
   .cursor-text {
     letter-spacing: normal;
     user-select: none;
+  }
+  
+  .h-screen {
+    height: 100vh;
+    min-height: 100vh;
+  }
+  
+  .w-screen {
+    width: 100vw;
+    min-width: 100vw;
   }
   </style> 
