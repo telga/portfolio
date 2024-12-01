@@ -31,7 +31,7 @@
 
       <!-- Drawing App Icon -->
       <div 
-        class="absolute top-28 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
+        class="absolute top-28 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon hidden xl:flex"
         @click="handleDrawingIconClick"
         @dblclick="openDrawing"
       >
@@ -68,8 +68,20 @@
         <div 
           class="h-8 flex items-center relative select-none bg-[var(--bg-primary)]"
           @mousedown="startDrag"
+          @touchstart="startDrag"
           :style="{ cursor: isDragging ? 'grabbing' : 'grab' }"
         >
+          <!-- Add mobile drag handle -->
+          <div 
+            v-if="windowWidth <= 1024" 
+            class="absolute left-2 top-1/2 -translate-y-1/2 lg:hidden cursor-grab active:cursor-grabbing"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[var(--text-secondary)]" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M7 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM7 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM7 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+              <path d="M13 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM13 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM13 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+            </svg>
+          </div>
+          
           <!-- Centered text -->
           <div class="absolute w-full text-center text-[var(--accent)] text-sm pointer-events-none">
             portfolio@brian-nguyen>
@@ -216,14 +228,33 @@
             </div>
           </div>
         </div>
+
+        <!-- Add mobile resize handle -->
+        <div 
+          v-if="windowWidth <= 1024"
+          class="absolute bottom-0 right-0 w-6 h-6 lg:hidden cursor-se-resize"
+          @mousedown="(e) => startResize('se', e)"
+          @touchstart="(e) => startResize('se', e)"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 absolute bottom-1 right-1 text-[var(--text-secondary)]" 
+            viewBox="0 0 20 20" 
+            fill="currentColor"
+          >
+            <path d="M6 6L14 14M14 6L6 14" />
+          </svg>
+        </div>
       </div>
 
       <!-- Drawing Window -->
       <DrawingWindow
+        v-if="isDrawingExists"
         v-show="isDrawingVisible"
         v-model:position="drawingPosition"
         v-model:size="drawingSize"
         :isMaximized="isDrawingMaximized"
+        :windowWidth="windowWidth"
         @minimize="minimizeDrawing"
         @maximize="maximizeDrawing"
         @close="closeDrawing"
@@ -699,6 +730,23 @@
             }
           })
         }
+
+        // Handle drawing window size for smaller views
+        if (window.innerWidth <= 1024 && window.innerWidth > window.innerHeight) {
+          const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+          drawingSize.value = {
+            width: Math.min(700, window.innerWidth - 80),
+            height: pageHeight - 88
+          }
+          drawingPosition.value = {
+            x: Math.max(60, (window.innerWidth - drawingSize.value.width) / 2),
+            y: Math.max(60, (pageHeight - drawingSize.value.height) / 2)
+          }
+        } else {
+          // Reset to default size for desktop
+          drawingSize.value = { width: 800, height: 600 }
+          drawingPosition.value = { x: 120, y: 120 }
+        }
       }
 
       // Initial size setup
@@ -756,7 +804,6 @@
     //   nextTick(() => {
     //     terminalContent.value?.focus()
     //   })
-    // }
     
     const minimizeTerminal = () => {
       lastPosition.value = { ...position.value }
@@ -790,7 +837,7 @@
         position.value = { x: 0, y: 0 }
         size.value = {
           width: window.innerWidth,
-          height: pageHeight // Subtract header height only when maximized
+          height: pageHeight - 48 // Subtract header height only when maximized
         }
         isMaximized.value = true
         nextTick(() => {
@@ -805,21 +852,29 @@
       if (e.target.closest('.window-controls') || isMaximized.value) return
       
       isDragging.value = true
+      const touch = e.touches ? e.touches[0] : e
       dragOffset.value = {
-        x: e.clientX - terminalWindow.value.offsetLeft,
-        y: e.clientY - terminalWindow.value.offsetTop
+        x: touch.clientX - terminalWindow.value.offsetLeft,
+        y: touch.clientY - terminalWindow.value.offsetTop
       }
-      document.addEventListener('mousemove', handleDrag)
-      document.addEventListener('mouseup', stopDrag)
+      
+      if (e.touches) {
+        document.addEventListener('touchmove', handleDrag, { passive: false })
+        document.addEventListener('touchend', stopDrag)
+      } else {
+        document.addEventListener('mousemove', handleDrag)
+        document.addEventListener('mouseup', stopDrag)
+      }
     }
     
     const handleDrag = (e) => {
       if (!isDragging.value) return
+      e.preventDefault() // Prevent scrolling on mobile
       
-      const newX = e.clientX - dragOffset.value.x
-      const newY = e.clientY - dragOffset.value.y
+      const touch = e.touches ? e.touches[0] : e
+      const newX = touch.clientX - dragOffset.value.x
+      const newY = touch.clientY - dragOffset.value.y
       
-      // Prevent dragging outside viewport
       position.value = {
         x: Math.max(0, Math.min(newX, window.innerWidth - size.value.width)),
         y: Math.max(0, Math.min(newY, window.innerHeight - size.value.height))
@@ -828,6 +883,8 @@
     
     const stopDrag = () => {
       isDragging.value = false
+      document.removeEventListener('touchmove', handleDrag)
+      document.removeEventListener('touchend', stopDrag)
       document.removeEventListener('mousemove', handleDrag)
       document.removeEventListener('mouseup', stopDrag)
     }
@@ -839,62 +896,47 @@
       isResizing.value = true
       resizeDirection.value = direction
       
+      const touch = e.touches ? e.touches[0] : e
       const rect = terminalWindow.value.getBoundingClientRect()
       resizeStartPos.value = {
-        x: e.clientX,
-        y: e.clientY,
+        x: touch.clientX,
+        y: touch.clientY,
         width: rect.width,
         height: rect.height,
         left: rect.left,
       }
       
-      document.addEventListener('mousemove', handleResize)
-      document.addEventListener('mouseup', stopResize)
+      if (e.touches) {
+        document.addEventListener('touchmove', handleResize, { passive: false })
+        document.addEventListener('touchend', stopResize)
+      } else {
+        document.addEventListener('mousemove', handleResize)
+        document.addEventListener('mouseup', stopResize)
+      }
     }
     
     const handleResize = (e) => {
       if (!isResizing.value || !resizeStartPos.value) return
+      e.preventDefault() // Prevent scrolling on mobile
 
-      const deltaX = e.clientX - resizeStartPos.value.x
-      const deltaY = e.clientY - resizeStartPos.value.y
-      let newWidth, newWidthSW
+      const touch = e.touches ? e.touches[0] : e
+      const deltaX = touch.clientX - resizeStartPos.value.x
+      const deltaY = touch.clientY - resizeStartPos.value.y
 
-      switch (resizeDirection.value) {
-        case 'e':
-          size.value.width = Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX)
-          break
-        case 'w':
-          newWidth = Math.max(MIN_WIDTH, resizeStartPos.value.width - deltaX)
-          if (newWidth !== size.value.width) {
-            position.value.x = resizeStartPos.value.left + deltaX
-            size.value.width = newWidth
-          }
-          break
-        case 's':
-          size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
-          nextTick(() => scrollToBottom()) // Add scroll after height change
-          break
-        case 'se':
-          size.value.width = Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX)
-          size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
-          nextTick(() => scrollToBottom()) // Add scroll after height change
-          break
-        case 'sw':
-          newWidthSW = Math.max(MIN_WIDTH, resizeStartPos.value.width - deltaX)
-          if (newWidthSW !== size.value.width) {
-            position.value.x = resizeStartPos.value.left + deltaX
-            size.value.width = newWidthSW
-          }
-          size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
-          nextTick(() => scrollToBottom()) // Add scroll after height change
-          break
+      size.value = {
+        width: Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX),
+        height: Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
       }
+
+      nextTick(() => scrollToBottom())
     }
     
     const stopResize = () => {
       isResizing.value = false
       resizeDirection.value = null
       resizeStartPos.value = null
+      document.removeEventListener('touchmove', handleResize)
+      document.removeEventListener('touchend', stopResize)
       document.removeEventListener('mousemove', handleResize)
       document.removeEventListener('mouseup', stopResize)
     }
@@ -944,8 +986,23 @@
       isDrawingExists.value = true
       isDrawingVisible.value = true
       isDrawingMinimized.value = false
-      drawingPosition.value = { x: 120, y: 120 }
-      drawingSize.value = { width: 800, height: 600 }
+      
+      // Set initial size based on screen size
+      if (windowWidth.value <= 1024) {
+        const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+        drawingSize.value = {
+          width: Math.min(700, window.innerWidth - 80),
+          height: pageHeight - 88
+        }
+        drawingPosition.value = {
+          x: Math.max(60, (window.innerWidth - drawingSize.value.width) / 2),
+          y: Math.max(60, (pageHeight - drawingSize.value.height) / 2)
+        }
+      } else {
+        drawingPosition.value = { x: 120, y: 120 }
+        drawingSize.value = { width: 800, height: 600 }
+      }
+      
       focusDrawing()
     }
 
@@ -961,17 +1018,39 @@
       isDrawingMinimized.value = true
     }
 
+    const lastDrawingState = ref({
+  position: { x: 120, y: 120 },
+      size: { width: 800, height: 600 }
+    })
+
     const maximizeDrawing = () => {
       isDrawingMaximized.value = !isDrawingMaximized.value
+      
       if (isDrawingMaximized.value) {
+        lastDrawingState.value = {
+          position: { ...drawingPosition.value },
+          size: { ...drawingSize.value }
+        }
         drawingPosition.value = { x: 0, y: 0 }
         drawingSize.value = {
           width: window.innerWidth,
-          height: window.innerHeight
+          height: (windowWidth.value <= 1024 ? window.innerHeight - 48 : window.innerHeight)
         }
       } else {
-        drawingPosition.value = { x: 120, y: 120 }
-        drawingSize.value = { width: 800, height: 600 }
+        if (windowWidth.value <= 1024) {
+          const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+          drawingSize.value = {
+            width: Math.min(700, window.innerWidth - 80),
+            height: pageHeight - 88
+          }
+          drawingPosition.value = {
+            x: Math.max(60, (window.innerWidth - drawingSize.value.width) / 2),
+            y: Math.max(60, (pageHeight - drawingSize.value.height) / 2)
+          }
+        } else if (lastDrawingState.value) {
+          drawingPosition.value = { ...lastDrawingState.value.position }
+          drawingSize.value = { ...lastDrawingState.value.size }
+        }
       }
     }
 
@@ -988,28 +1067,12 @@
     }
 
     const handleDrawingIconClick = () => {
-      // First remove selected class from all desktop icons
-      const allIcons = document.querySelectorAll('.desktop-icon')
-      allIcons.forEach(icon => icon.classList.remove('selected'))
-      
-      // Add selected class to drawing icon
-      const drawingIcon = document.querySelectorAll('.desktop-icon')[1]
-      if (drawingIcon) {
-        drawingIcon.classList.add('selected')
+      if (!isDrawingExists.value) {
+        openDrawing()
+      } else {
+        isDrawingVisible.value = !isDrawingVisible.value
+        isDrawingMinimized.value = !isDrawingVisible.value
       }
-
-      // Add click outside listener to remove selection
-      const handleClickOutside = (e) => {
-        if (!drawingIcon.contains(e.target)) {
-          drawingIcon.classList.remove('selected')
-          document.removeEventListener('click', handleClickOutside)
-        }
-      }
-      
-      // Add the listener with a slight delay to avoid immediate trigger
-      setTimeout(() => {
-        document.addEventListener('click', handleClickOutside)
-      }, 0)
     }
 
     // Add z-index management
@@ -1022,8 +1085,7 @@
     }
 
     const focusDrawing = () => {
-      drawingZIndex.value = 2
-      terminalZIndex.value = 1
+      drawingZIndex.value = Math.max(terminalZIndex.value + 1, drawingZIndex.value + 1)
     }
 
     // Add these new refs and computed properties
@@ -1085,6 +1147,21 @@
         x: 'calc(50% - 450px)', 
         y: 'calc(50% - 300px)' 
       }
+    })
+
+    // Add window width ref
+    const windowWidth = ref(window.innerWidth)
+
+    onMounted(() => {
+      // Update window width on resize
+      const updateWidth = () => {
+        windowWidth.value = window.innerWidth
+      }
+      window.addEventListener('resize', updateWidth)
+      
+      onUnmounted(() => {
+        window.removeEventListener('resize', updateWidth)
+      })
     })
     </script>
     
@@ -1464,5 +1541,23 @@
     .fade-enter-from,
     .fade-leave-to {
       opacity: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .window-header {
+        padding-left: 2rem; /* Make room for drag handle */
+      }
+      
+      .resize-indicator {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 12px 12px;
+        border-color: transparent transparent var(--text-secondary) transparent;
+        opacity: 0.5;
+      }
     }
     </style> 
