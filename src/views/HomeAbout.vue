@@ -36,21 +36,40 @@
 
           <div class="bg-bg-secondary rounded-lg shadow-lg p-4 lg:mt-12 xl:mt-12 animate-slide-in"
                style="animation-delay: 300ms;">
-            <div class="flex justify-center items-center gap-4 text-accent">
+            <!-- Desktop view -->
+            <div class="hidden md:flex flex-wrap justify-center items-center gap-4 text-accent">
               <template v-for="(link, index) in socialLinks" :key="link.name">
                 <a v-if="link.name !== 'Email'"
                    :href="link.url"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="text-[var(--accent-secondary)] hover:text-accent-hover transition-colors duration-200">
+                   class="px-3 py-2 rounded-md hover:bg-bg-primary text-[var(--accent-secondary)] hover:text-accent-hover transition-all duration-200">
                   {{ link.name }}
                 </a>
                 <button v-else
                         @click="copyEmail"
-                        class="text-[var(--accent-secondary)] hover:text-accent-hover transition-colors duration-200">
+                        class="px-3 py-2 rounded-md hover:bg-bg-primary text-[var(--accent-secondary)] hover:text-accent-hover transition-all duration-200">
                   Email
                 </button>
                 <span v-if="index < socialLinks.length - 1" class="text-[var(--text-primary)]">|</span>
+              </template>
+            </div>
+
+            <!-- Mobile view -->
+            <div class="md:hidden grid grid-cols-2 gap-3">
+              <template v-for="link in socialLinks" :key="link.name">
+                <a v-if="link.name !== 'Email'"
+                   :href="link.url"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="flex items-center justify-center py-3 rounded-lg bg-bg-primary text-[var(--accent-secondary)] active:bg-accent active:text-white transition-all duration-200">
+                  {{ link.name }}
+                </a>
+                <button v-else
+                        @click="copyEmail"
+                        class="flex items-center justify-center py-3 rounded-lg bg-bg-primary text-[var(--accent-secondary)] active:bg-accent active:text-white transition-all duration-200">
+                  Email
+                </button>
               </template>
             </div>
           </div>
