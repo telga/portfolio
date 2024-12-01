@@ -36,7 +36,7 @@
             
             <!-- Neofetch Output -->
             <div v-if="entry.showNeofetch" class="flex mt-2 gap-8">
-              <div class="w-[45%] aspect-square overflow-hidden rounded-lg bg-bg-secondary relative">
+              <div class="w-[35%] aspect-square overflow-hidden rounded-lg bg-bg-secondary relative">
                 <img 
                   src="/images/userpic.png" 
                   alt="Profile Picture"
@@ -44,7 +44,7 @@
                 />
               </div>
               
-              <div class="text-[var(--text-primary)] w-[55%] space-y-1">
+              <div class="text-[var(--text-primary)] w-[65%] space-y-1 mt-6">
                 <div><span class="text-[var(--accent)]">Name: </span>Brian Nguyen</div>
                 <div><span class="text-[var(--accent)]">Github: </span><a href="https://github.com/telga" target="_blank" class="hover:text-[var(--accent-hover)] transition-colors duration-300">telga (link)</a></div>
                 <div>
@@ -87,16 +87,19 @@
             <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
             <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
             <div 
-              class="text-[var(--text-primary)] relative cursor-text"
-              @click="handleClick"
+              class="text-[var(--text-primary)] relative cursor-text font-mono"
             >
-              {{ currentCommand.slice(0, cursorPosition) }}
+              <span>{{ currentCommand.slice(0, cursorPosition) }}</span>
               <div 
-                class="w-2 h-4 bg-[var(--text-primary)] animate-blink absolute"
-                :style="{ left: `${cursorPosition * 8}px`, top: '0' }"
+                class="w-[2px] h-[14px] bg-[var(--accent-red)] animate-blink absolute inline-block"
+                :style="{ 
+                  left: `${cursorPosition * 7.8}px`,
+                  top: '3px',
+                  transform: 'translateX(-50%)'
+                }"
                 v-show="showCursor && !isExecuting"
               ></div>
-              {{ currentCommand.slice(cursorPosition) }}
+              <span>{{ currentCommand.slice(cursorPosition) }}</span>
             </div>
           </div>
         </div>
@@ -126,7 +129,8 @@
       output: 'Type \'help\' for a list of available commands.'
     }
   ])
-  const MAX_HISTORY = 3
+  const MAX_HISTORY = 5
+  const initialCommands = ['ifetch', 'init']
   const cursorPosition = ref(0)
   const inputRef = ref(null)
   
@@ -190,8 +194,15 @@
         if (currentCommand.value === 'ifetch') {
           newEntry.showNeofetch = true
           commandHistory.value.push(newEntry)
-          if (commandHistory.value.length > MAX_HISTORY) {
-            commandHistory.value.shift()
+          
+          const userCommands = commandHistory.value.filter(cmd => 
+            !initialCommands.includes(cmd.command)
+          )
+          if (userCommands.length > MAX_HISTORY) {
+            const firstUserCommandIndex = commandHistory.value.findIndex(cmd => 
+              !initialCommands.includes(cmd.command)
+            )
+            commandHistory.value.splice(firstUserCommandIndex, 1)
           }
         } else if (currentCommand.value === 'help') {
           newEntry.output = `Available commands:
@@ -205,8 +216,15 @@
   
   Type a command and press Enter to execute`
           commandHistory.value.push(newEntry)
-          if (commandHistory.value.length > MAX_HISTORY) {
-            commandHistory.value.shift()
+          
+          const userCommands = commandHistory.value.filter(cmd => 
+            !initialCommands.includes(cmd.command)
+          )
+          if (userCommands.length > MAX_HISTORY) {
+            const firstUserCommandIndex = commandHistory.value.findIndex(cmd => 
+              !initialCommands.includes(cmd.command)
+            )
+            commandHistory.value.splice(firstUserCommandIndex, 1)
           }
         } else if (currentCommand.value === 'about') {
           newEntry.output = t('about.bio')
@@ -260,6 +278,7 @@
       }
   
       currentCommand.value = ''
+      cursorPosition.value = 0
       isExecuting.value = false
   
       nextTick(() => {
@@ -289,6 +308,7 @@
   const clearTerminal = () => {
     commandHistory.value = []
     currentCommand.value = ''
+    cursorPosition.value = 0
     isExecuting.value = false
     terminalContent.value?.focus()
   }
@@ -316,20 +336,6 @@
     if (inputRef.value) {
       cursorPosition.value = inputRef.value.selectionStart || 0
     }
-  }
-  
-  const handleClick = (e) => {
-    const commandElement = e.target
-    const rect = commandElement.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    
-    // Approximate character position based on click location
-    // Assuming monospace font where each character is ~8px wide
-    const clickedPosition = Math.floor(x / 8)
-    cursorPosition.value = Math.min(
-      Math.max(0, clickedPosition),
-      currentCommand.value.length
-    )
   }
   
   onMounted(() => {
@@ -394,6 +400,7 @@
   }
   
   .cursor-text {
-    user-select: none; /* Prevent text selection for better cursor handling */
+    letter-spacing: normal;
+    user-select: none;
   }
   </style> 

@@ -15,4 +15,5 @@
   --accent: theme('colors.solarized.blue');
   --accent-secondary: theme('colors.solarized.green');
   --accent-hover: theme('colors.solarized.cyan');
+  --accent-red: theme('colors.solarized.red');
 }
