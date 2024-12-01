@@ -559,6 +559,7 @@
       } else if (isTerminalVisible.value) {
         // If visible, just focus
         focusTerminal()
+        scrollToBottom()
       }
     }
     
