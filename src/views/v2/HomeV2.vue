@@ -4,13 +4,28 @@
         @open-terminal="openTerminal" 
         @toggle-terminal="toggleTerminal"
         :isMinimized="isMinimized"
+        :isTerminalExists="isTerminalExists"
       />
       <div class="flex-1 relative" style="background-image: url('/images/termbg.jpg'); background-size: cover; background-position: center;">
+        <!-- Desktop Icon -->
+        <div 
+          class="absolute top-4 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
+          @click="handleIconClick"
+          @dblclick="openTerminal"
+        >
+          <CommandLineIcon 
+            class="w-10 h-10 text-[#93a1a1] group-hover:text-[#eee8d5]"
+          />
+          <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
+            Terminal
+          </span>
+        </div>
+
         <!-- Terminal Window -->
         <div 
           v-if="isTerminalVisible" 
           ref="terminalWindow"
-          class="absolute bg-[#002b36] shadow-xl overflow-hidden"
+          class="absolute shadow-xl overflow-hidden bg-[#002b36]"
           :style="{
             left: typeof position.x === 'number' ? `${position.x}px` : position.x,
             top: typeof position.y === 'number' ? `${position.y}px` : position.y,
@@ -18,6 +33,7 @@
             height: `${size.height}px`,
             cursor: isDragging ? 'grabbing' : 'auto'
           }"
+          @mousedown="startDrag"
         >
           <!-- Resize handles -->
           <template v-if="!isMaximized">
@@ -30,11 +46,11 @@
           
           <!-- Terminal Header -->
           <div 
-            class="bg-[#1a1a1a] h-8 flex items-center relative select-none"
+            class="h-8 flex items-center relative select-none bg-[var(--bg-secondary)] border-b border-[var(--accent-hover)]"
             @mousedown="startDrag"
           >
             <!-- Centered text -->
-            <div class="absolute w-full text-center text-gray-300 text-sm pointer-events-none">
+            <div class="absolute w-full text-center text-[var(--accent)] text-sm pointer-events-none">
               portfolio@brian-nguyen>
             </div>
             
@@ -66,13 +82,13 @@
           
           <!-- Terminal Content -->
           <div 
-            class="p-6 font-mono text-sm overflow-y-auto bg-[#002b36]"
+            ref="terminalContent"
+            class="p-6 font-mono text-sm overflow-y-auto bg-[var(--bg-secondary)]"
             :style="{ height: `calc(${size.height}px - 32px)` }"
             @keydown="handleKeyPress"
             @keyup="handleSelection"
             @click="handleSelection"
             tabindex="0" 
-            ref="terminalContent"
           >
             <!-- Command History -->
             <div v-for="(entry, index) in commandHistory" :key="index" class="mb-4">
@@ -110,7 +126,7 @@
                   <div>
                     <span class="text-[var(--accent)]">Github: </span>
                     <a href="https://github.com/telga" target="_blank" 
-                       class="hover:text-[var(--accent-hover)] transition-colors duration-300">
+                       class="hover:text-[var(--accent-orange)] transition-colors duration-300">
                       telga (link)
                     </a>
                   </div>
@@ -118,13 +134,13 @@
                     <span class="text-[var(--accent)]">Email: </span>
                     <button 
                       @click="copyEmail" 
-                      class="hover:text-[var(--accent-hover)] transition-colors duration-300"
+                      class="hover:text-[var(--accent-orange)] transition-colors duration-300"
                     >briann2305@gmail.com (link)</button>
                   </div>
                   <div>
                     <span class="text-[var(--accent)]">LinkedIn: </span>
                     <a href="https://www.linkedin.com/in/bnguy23/" target="_blank" 
-                       class="hover:text-[var(--accent-hover)] transition-colors duration-300">
+                       class="hover:text-[var(--accent-orange)] transition-colors duration-300">
                       bnguy23 (link)
                     </a>
                   </div>
@@ -139,17 +155,17 @@
                     <div class="flex gap-2">
                       <button 
                         @click="runCommand('about')" 
-                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
                       >about</button>
                       <span class="text-[var(--text-secondary)]">|</span>
                       <button 
                         @click="runCommand('projects')" 
-                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
                       >projects</button>
                       <span class="text-[var(--text-secondary)]">|</span>
                       <button 
                         @click="runCommand('exp')" 
-                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
+                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
                       >experience</button>
                     </div>
                   </div>
@@ -184,12 +200,12 @@
   </template>
     
     <script setup>
-    import { ref, nextTick, onMounted, onUnmounted } from 'vue'
+    import { ref, nextTick, onMounted, onUnmounted, watch, computed } from 'vue'
     import experiencesData from '@/data/experiencesData.js'
     import projectsData from '@/data/projects.json'
     import { useI18n } from 'vue-i18n'
     import HeaderV2 from '@/components/HeaderV2.vue'
-    import { MinusSmallIcon, Square2StackIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+    import { MinusSmallIcon, Square2StackIcon, XMarkIcon, CommandLineIcon } from '@heroicons/vue/24/outline'
     
     const { t, locale } = useI18n()
     
@@ -224,6 +240,11 @@
       position: null,
       size: null
     })
+    const selectedIcon = ref(false)
+    const lastPosition = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
+    const lastSize = ref({ width: 900, height: 600 })
+    
+    const isTerminalExists = computed(() => isTerminalVisible.value || isMinimized.value)
     
     const handleKeyPress = (e) => {
       if (isExecuting.value) {
@@ -430,20 +451,22 @@
     }
     
     const scrollToBottom = () => {
-      nextTick(() => {
-        if (terminalContent.value) {
-          terminalContent.value.scrollTop = terminalContent.value.scrollHeight
-        }
-      })
+      if (terminalContent.value) {
+        terminalContent.value.scrollTop = terminalContent.value.scrollHeight
+      }
     }
     
     const toggleTerminal = () => {
       if (isMinimized.value) {
         isTerminalVisible.value = true
         isMinimized.value = false
-        scrollToBottom()
+        nextTick(() => {
+          terminalContent.value?.focus()
+          scrollToBottom()
+        })
       } else {
-        openTerminal()
+        isMinimized.value = true
+        isTerminalVisible.value = false
       }
     }
     
@@ -452,24 +475,33 @@
       isMinimized.value = false
       position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
       size.value = { width: 900, height: 600 }
+      commandHistory.value = []
+      currentCommand.value = ''
     }
     
     const openTerminal = () => {
-      if (isMinimized.value) {
-        isTerminalVisible.value = true
-        isMinimized.value = false
-        scrollToBottom()
-      } else {
-        isTerminalVisible.value = true
-        position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
-        size.value = { width: 900, height: 600 }
-        initializeTerminal()
-      }
+      isTerminalVisible.value = true
+      isMinimized.value = false
+      position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
+      size.value = { width: 900, height: 600 }
+      initializeTerminal()
+      nextTick(() => {
+        terminalContent.value?.focus()
+      })
     }
     
     onMounted(() => {
       terminalContent.value?.focus()
       scrollToBottom()
+      window.addEventListener('keydown', handleGlobalKeyPress)
+    })
+    
+    onUnmounted(() => {
+      window.removeEventListener('keydown', handleGlobalKeyPress)
+      document.removeEventListener('mousemove', handleDrag)
+      document.removeEventListener('mouseup', stopDrag)
+      document.removeEventListener('mousemove', handleResize)
+      document.removeEventListener('mouseup', stopResize)
     })
     
     const initializeTerminal = () => {
@@ -492,8 +524,10 @@
     }
     
     const minimizeTerminal = () => {
-      isTerminalVisible.value = false
+      lastPosition.value = { ...position.value }
+      lastSize.value = { ...size.value }
       isMinimized.value = true
+      isTerminalVisible.value = false
     }
     
     const maximizeTerminal = () => {
@@ -520,7 +554,7 @@
     
     // Dragging logic
     const startDrag = (e) => {
-      if (e.target.closest('.window-controls') || isMaximized.value) return
+      if (e.target.closest('.window-controls') || e.target.closest('.resize-handle') || isMaximized.value) return
       
       isDragging.value = true
       dragOffset.value = {
@@ -615,12 +649,37 @@
       document.removeEventListener('mouseup', stopResize)
     }
     
-    onUnmounted(() => {
-      document.removeEventListener('mousemove', handleDrag)
-      document.removeEventListener('mouseup', stopDrag)
-      document.removeEventListener('mousemove', handleResize)
-      document.removeEventListener('mouseup', stopResize)
+    const handleIconClick = () => {
+      selectedIcon.value = true
+      // Deselect when clicking elsewhere
+      const handleClickOutside = (e) => {
+        if (!e.target.closest('.desktop-icon')) {
+          selectedIcon.value = false
+          document.removeEventListener('click', handleClickOutside)
+        }
+      }
+      // Add timeout to prevent immediate deselection
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside)
+      }, 0)
+    }
+    
+    watch(selectedIcon, (newValue) => {
+      const icon = document.querySelector('.desktop-icon')
+      if (newValue) {
+        icon.classList.add('selected')
+      } else {
+        icon.classList.remove('selected')
+      }
     })
+    
+    const handleGlobalKeyPress = (e) => {
+      // Check if terminal is open and Ctrl+W is pressed
+      if (isTerminalVisible.value && e.ctrlKey && e.key === 'w') {
+        e.preventDefault() // Prevent browser default behavior
+        closeTerminal()
+      }
+    }
     </script>
     
     <style scoped>
@@ -729,11 +788,11 @@
       flex-wrap: wrap;
     }
     
-    .min-w-[200px] {
+    .min-w-200 {
       min-width: 200px;
     }
     
-    .min-w-[300px] {
+    .min-w-300 {
       min-width: 300px;
     }
     
@@ -797,5 +856,55 @@
     
     .transform.rotate-180 {
       transform: rotate(180deg);
+    }
+    
+    /* Update border styles */
+    .border {
+      border-width: 1px;
+    }
+    
+    /* Optional: Add some subtle shadow */
+    .shadow-xl {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Only add transition for maximize/minimize if needed */
+    .maximizing {
+      transition: width 0.2s, height 0.2s, left 0.2s, top 0.2s;
+    }
+    
+    /* Prevent text selection on desktop icon */
+    .group {
+      user-select: none;
+    }
+    
+    .desktop-icon {
+      min-width: 96px;
+    }
+    
+    .desktop-icon.selected,
+    .desktop-icon:focus-visible {
+      outline: 1px dotted #93a1a1;
+      outline-offset: -1px;
+      background-color: rgba(147, 161, 161, 0.1); /* Solarized base1 with low opacity */
+    }
+    
+    /* Prevent text selection */
+    .desktop-icon {
+      user-select: none;
+    }
+    
+    /* Make text wrap if needed */
+    .desktop-icon span {
+      word-break: break-word;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    /* Add selected state */
+    .desktop-icon:has(.selected) img {
+      filter: brightness(1.25);
     }
     </style> 

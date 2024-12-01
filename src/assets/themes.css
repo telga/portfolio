@@ -4,7 +4,10 @@
   --text-primary: theme('colors.nord.snow-storm-1');
   --text-secondary: theme('colors.nord.snow-storm-2');
   --accent: theme('colors.nord.frost-2');
+  --accent-secondary: theme('colors.nord.aurora-green');
   --accent-hover: theme('colors.nord.frost-1');
+  --accent-red: theme('colors.nord.aurora-red');
+  --accent-orange: theme('colors.nord.aurora-orange');
 }
 
 .theme-solarized {
@@ -16,4 +19,5 @@
   --accent-secondary: theme('colors.solarized.green');
   --accent-hover: theme('colors.solarized.cyan');
   --accent-red: theme('colors.solarized.red');
+  --accent-orange: theme('colors.solarized.orange');
 }
