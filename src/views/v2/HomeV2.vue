@@ -1,11 +1,11 @@
 <template>
-    <div class="absolute inset-0 bg-[#2e1f40] flex flex-col">
+    <div class="absolute inset-0 bg-[#1a1a1a] flex flex-col">
       <HeaderV2 
         @open-terminal="openTerminal" 
         @toggle-terminal="toggleTerminal"
         :isMinimized="isMinimized"
       />
-      <div class="flex-1 bg-[#2e1f40] relative">
+      <div class="flex-1 relative" style="background-image: url('/images/termbg.jpg'); background-size: cover; background-position: center;">
         <!-- Terminal Window -->
         <div 
           v-if="isTerminalVisible" 
@@ -20,11 +20,13 @@
           }"
         >
           <!-- Resize handles -->
-          <div class="resize-handle left" @mousedown="(e) => startResize('left', e)"></div>
-          <div class="resize-handle right" @mousedown="(e) => startResize('right', e)"></div>
-          <div class="resize-handle bottom" @mousedown="(e) => startResize('bottom', e)"></div>
-          <div class="resize-handle bottom-left" @mousedown="(e) => startResize('bottom-left', e)"></div>
-          <div class="resize-handle bottom-right" @mousedown="(e) => startResize('bottom-right', e)"></div>
+          <template v-if="!isMaximized">
+            <div class="resize-handle left" @mousedown="(e) => startResize('left', e)"></div>
+            <div class="resize-handle right" @mousedown="(e) => startResize('right', e)"></div>
+            <div class="resize-handle bottom" @mousedown="(e) => startResize('bottom', e)"></div>
+            <div class="resize-handle bottom-left" @mousedown="(e) => startResize('bottom-left', e)"></div>
+            <div class="resize-handle bottom-right" @mousedown="(e) => startResize('bottom-right', e)"></div>
+          </template>
           
           <!-- Terminal Header -->
           <div 
@@ -44,8 +46,14 @@
               >
                 <MinusSmallIcon class="w-5 h-5 text-gray-300" />
               </button>
-              <button class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative">
-                <Square2StackIcon class="w-4 h-4 text-gray-300" />
+              <button 
+                @click="maximizeTerminal"
+                class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
+              >
+                <Square2StackIcon 
+                  class="w-4 h-4 text-gray-300"
+                  :class="{ 'transform rotate-180': isMaximized }"
+                />
               </button>
               <button 
                 @click="closeTerminal"
@@ -211,6 +219,11 @@
     const position = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
     const size = ref({ width: 900, height: 600 })
     const resizeEdge = ref(null)
+    const isMaximized = ref(false)
+    const previousState = ref({
+      position: null,
+      size: null
+    })
     
     const handleKeyPress = (e) => {
       if (isExecuting.value) {
@@ -483,10 +496,31 @@
       isMinimized.value = true
     }
     
+    const maximizeTerminal = () => {
+      if (isMaximized.value) {
+        // Restore previous state
+        position.value = { ...previousState.value.position }
+        size.value = { ...previousState.value.size }
+        isMaximized.value = false
+      } else {
+        // Save current state
+        previousState.value = {
+          position: { ...position.value },
+          size: { ...size.value }
+        }
+        // Maximize
+        position.value = { x: 0, y: 0 }
+        size.value = {
+          width: window.innerWidth,
+          height: window.innerHeight - 32 // Subtract header height
+        }
+        isMaximized.value = true
+      }
+    }
+    
     // Dragging logic
     const startDrag = (e) => {
-      // Don't start drag if clicking window controls
-      if (e.target.closest('.window-controls')) return
+      if (e.target.closest('.window-controls') || isMaximized.value) return
       
       isDragging.value = true
       dragOffset.value = {
@@ -520,6 +554,7 @@
     const isResizing = ref(false)
     
     const startResize = (edge, e) => {
+      if (isMaximized.value) return
       e.preventDefault()
       resizeEdge.value = edge
       isResizing.value = true
@@ -758,5 +793,9 @@
       width: 100%;
       height: 100%;
       background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .transform.rotate-180 {
+      transform: rotate(180deg);
     }
     </style> 
