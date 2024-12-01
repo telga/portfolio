@@ -24,6 +24,7 @@
             v-for="item in navItems" 
             :key="item.to" 
             :to="item.to" 
+            v-show="!item.desktopOnly || (item.desktopOnly && isLargeScreen)"
             class="text-text-primary hover:text-accent text-base transition-colors duration-200 relative group px-2 py-1"
             :class="{ 'text-accent-secondary': $route.path === item.to }"
           >
@@ -78,7 +79,7 @@
       <div v-if="isMenuOpen" class="lg:hidden bg-bg-secondary">
         <div class="px-2 pt-2 pb-3 space-y-1">
           <router-link 
-            v-for="item in navItems" 
+            v-for="item in navItems.filter(item => !item.desktopOnly)" 
             :key="item.to" 
             :to="item.to" 
             class="block text-text-primary hover:text-accent text-base transition-colors duration-200 px-2 py-2"
@@ -141,7 +142,7 @@ const navItems = [
   { to: '/ProjectsPage', label: 'nav.projects' },
   { to: '/ExperiencesPage', label: 'nav.experiences' },
   { to: '/GearPage', label: 'nav.gear' },
-  { to: '/v2', label: 'nav.v2' }
+  { to: '/v2', label: 'nav.v2', desktopOnly: true }
 ]
 
 const isActiveRoute = (path) => {
@@ -177,13 +178,26 @@ const handleOutsideClick = (event) => {
   }
 }
 
+// Add viewport width tracking
+const viewportWidth = ref(window.innerWidth)
+
+// Update viewport width on resize
+const handleResize = () => {
+  viewportWidth.value = window.innerWidth
+}
+
 onMounted(() => {
   document.addEventListener('click', handleOutsideClick)
+  window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleOutsideClick)
+  window.addEventListener('resize', handleResize)
 })
+
+// Computed property to check if screen is large enough
+const isLargeScreen = computed(() => viewportWidth.value >= 1024)
 
 // Create a computed property for the logo
 const currentLogo = computed(() => {

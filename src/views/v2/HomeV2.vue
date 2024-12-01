@@ -251,6 +251,8 @@
     const lastPosition = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
     const lastSize = ref({ width: 900, height: 600 })
     const isResizing = ref(false)
+    const historyIndex = ref(-1)
+    const commandBuffer = ref('')  // Store current command when navigating history
     
     const isTerminalExists = computed(() => isTerminalVisible.value || isMinimized.value)
     
@@ -436,6 +438,50 @@
           e.key + 
           currentCommand.value.slice(cursorPosition.value)
         cursorPosition.value++
+      }
+    
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        // Save current command if we're just starting to navigate
+        if (historyIndex.value === -1) {
+          commandBuffer.value = currentCommand.value
+        }
+        
+        // Get user commands only (exclude initial commands)
+        const userCommands = commandHistory.value
+          .filter(entry => !initialCommands.includes(entry.command))
+          .map(entry => entry.command)
+          .slice(-10)  // Keep only last 10 commands
+        
+        if (userCommands.length > 0 && historyIndex.value < userCommands.length - 1) {
+          historyIndex.value++
+          currentCommand.value = userCommands[userCommands.length - 1 - historyIndex.value]
+          cursorPosition.value = currentCommand.value.length
+        }
+        return
+      }
+    
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        if (historyIndex.value > -1) {
+          historyIndex.value--
+          if (historyIndex.value === -1) {
+            currentCommand.value = commandBuffer.value
+          } else {
+            const userCommands = commandHistory.value
+              .filter(entry => !initialCommands.includes(entry.command))
+              .map(entry => entry.command)
+              .slice(-10)
+            currentCommand.value = userCommands[userCommands.length - 1 - historyIndex.value]
+          }
+          cursorPosition.value = currentCommand.value.length
+        }
+        return
+      }
+    
+      // Reset history index when typing new command
+      if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
+        historyIndex.value = -1
       }
     }
     
