@@ -216,7 +216,7 @@
 
         <!-- Drawing Window -->
         <DrawingWindow
-          v-if="isDrawingVisible"
+          v-show="isDrawingVisible"
           v-model:position="drawingPosition"
           v-model:size="drawingSize"
           :isMaximized="isDrawingMaximized"
@@ -413,7 +413,7 @@
     ${education.school}, ${education.location}
     ${education.duration}
     • ${education.details.detail1}
-    • ${education.details.detail2}
+    ��� ${education.details.detail2}
     
     Work Experience:\n`
     
@@ -560,15 +560,13 @@
     
     const toggleTerminal = () => {
       if (isMinimized.value) {
+        // Only restore if minimized
         isTerminalVisible.value = true
         isMinimized.value = false
-        nextTick(() => {
-          terminalContent.value?.focus()
-          scrollToBottom()
-        })
-      } else {
-        isMinimized.value = true
-        isTerminalVisible.value = false
+        focusTerminal()
+      } else if (isTerminalVisible.value) {
+        // If visible, just focus
+        focusTerminal()
       }
     }
     
@@ -784,7 +782,7 @@
     const isDrawingVisible = ref(false)
     const isDrawingExists = ref(false)
     const isDrawingMinimized = ref(false)
-    const drawingPosition = ref({ x: 100, y: 100 })
+    const drawingPosition = ref({ x: 120, y: 120 })
     const drawingSize = ref({ width: 800, height: 600 })
     const isDrawingMaximized = ref(false)
 
@@ -793,6 +791,8 @@
       isDrawingExists.value = true
       isDrawingVisible.value = true
       isDrawingMinimized.value = false
+      drawingPosition.value = { x: 120, y: 120 }
+      drawingSize.value = { width: 800, height: 600 }
       focusDrawing()
     }
 
@@ -817,33 +817,46 @@
           height: window.innerHeight
         }
       } else {
-        drawingPosition.value = { x: 100, y: 100 }
+        drawingPosition.value = { x: 120, y: 120 }
         drawingSize.value = { width: 800, height: 600 }
       }
     }
 
     const toggleDrawing = () => {
       if (isDrawingMinimized.value) {
+        // Only restore if minimized
         isDrawingVisible.value = true
         isDrawingMinimized.value = false
-      } else {
-        isDrawingVisible.value = false
-        isDrawingMinimized.value = true
+        focusDrawing()
+      } else if (isDrawingVisible.value) {
+        // If visible, just focus
+        focusDrawing()
       }
     }
 
     const handleDrawingIconClick = () => {
-      // Deselect terminal icon if selected
-      const terminalIcon = document.querySelector('.desktop-icon')
-      if (terminalIcon) {
-        terminalIcon.classList.remove('selected')
-      }
+      // First remove selected class from all desktop icons
+      const allIcons = document.querySelectorAll('.desktop-icon')
+      allIcons.forEach(icon => icon.classList.remove('selected'))
       
-      // Select drawing icon
+      // Add selected class to drawing icon
       const drawingIcon = document.querySelectorAll('.desktop-icon')[1]
       if (drawingIcon) {
         drawingIcon.classList.add('selected')
       }
+
+      // Add click outside listener to remove selection
+      const handleClickOutside = (e) => {
+        if (!drawingIcon.contains(e.target)) {
+          drawingIcon.classList.remove('selected')
+          document.removeEventListener('click', handleClickOutside)
+        }
+      }
+      
+      // Add the listener with a slight delay to avoid immediate trigger
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside)
+      }, 0)
     }
 
     // Add z-index management

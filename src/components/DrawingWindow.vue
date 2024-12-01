@@ -41,8 +41,8 @@
           <Square2StackIcon class="w-4 h-4 text-gray-300" />
         </button>
         <button 
-          @click="$emit('close')"
-          class="hover:bg-red-500 w-11 flex items-center justify-center cursor-pointer"
+          @click="handleClose"
+          class="hover:bg-red-500 w-11 flex items-center justify-center cursor-pointer relative"
         >
           <XMarkIcon class="w-5 h-5 text-gray-300" />
         </button>
@@ -266,6 +266,15 @@ function draw(e) {
 
 function stopDrawing() {
   isDrawing.value = false
+}
+
+const handleClose = () => {
+  // Clear the canvas before closing
+  if (canvas.value && ctx.value) {
+    ctx.value.fillStyle = 'white'
+    ctx.value.fillRect(0, 0, canvas.value.width, canvas.value.height)
+  }
+  emit('close')
 }
 
 // Make sure to clean up event listeners
