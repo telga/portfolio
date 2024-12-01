@@ -101,6 +101,7 @@
           <!-- Terminal Content -->
           <div 
             ref="terminalContent"
+            id="terminal-content"
             class="p-6 font-mono text-sm overflow-y-auto bg-[var(--bg-secondary)]"
             :style="{ height: `calc(${size.height}px - 32px)` }"
             @keydown="handleKeyPress"
@@ -552,31 +553,54 @@
     
     const toggleTerminal = () => {
       if (isMinimized.value) {
-        // Only restore if minimized
         isTerminalVisible.value = true
         isMinimized.value = false
         focusTerminal()
+        
+        // Force multiple scroll attempts with reflow
+        setTimeout(() => {
+          const content = document.querySelector('#terminal-content')
+          if (content) {
+            // Force a reflow
+            content.style.display = 'none'
+            content.offsetHeight // Force reflow
+            content.style.display = ''
+            
+            // Scroll after reflow
+            content.scrollTop = content.scrollHeight
+            content.focus()
+          }
+        }, 10)
       } else if (isTerminalVisible.value) {
-        // If visible, just focus
         focusTerminal()
-        scrollToBottom()
       }
     }
     
     const closeTerminal = () => {
+      isTerminalExists.value = false
       isTerminalVisible.value = false
       isMinimized.value = false
-      position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
-      size.value = { width: 900, height: 600 }
-      commandHistory.value = []
+      cursorPosition.value = 0
       currentCommand.value = ''
+      commandHistory.value = []  // Optional: clear command history
     }
     
     const openTerminal = () => {
       isTerminalExists.value = true
       isTerminalVisible.value = true
       isMinimized.value = false
+      cursorPosition.value = 0
+      // Initialize with just one line
+      //commandHistory.value = [{
+      //  showNeofetch: false
+      //}]
       focusTerminal()
+      nextTick(() => {
+        const terminalContent = document.querySelector('#terminal-content')
+        if (terminalContent) {
+          terminalContent.focus()
+        }
+      })
     }
     
     onMounted(() => {
@@ -630,6 +654,7 @@
           size.value = { ...lastWindowState.value.size }
         }
         isMaximized.value = false
+        scrollToBottom()
       } else {
         // Save current state
         lastWindowState.value = {
@@ -643,6 +668,7 @@
           height: window.innerHeight
         }
         isMaximized.value = true
+        scrollToBottom()
       }
     }
     
