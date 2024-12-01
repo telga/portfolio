@@ -413,7 +413,7 @@
     ${education.school}, ${education.location}
     ${education.duration}
     • ${education.details.detail1}
-    ��� ${education.details.detail2}
+     ${education.details.detail2}
     
     Work Experience:\n`
     
@@ -587,6 +587,9 @@
     }
     
     onMounted(() => {
+      // Force English locale when HomeV2 is loaded
+      locale.value = 'en'
+      
       terminalContent.value?.focus()
       scrollToBottom()
       window.addEventListener('keydown', handleGlobalKeyPress)
