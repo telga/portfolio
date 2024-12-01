@@ -29,16 +29,9 @@ const updateTime = () => {
 }
 
 const handleThemeToggle = () => {
-  // First show loading screen
   showLoadingScreen.value = true
-  
-  // Store new theme choice
   const newTheme = currentTheme.value === 'nord' ? 'solarized' : 'nord'
-  
-  // Update theme in localStorage
   localStorage.setItem('theme', newTheme)
-  
-  // Reload page immediately - the theme will be applied on reload
   window.location.reload()
 }
 </script>
@@ -75,24 +68,49 @@ const handleThemeToggle = () => {
     </div>
     
     <!-- Center section -->
-    <div 
-      v-if="$attrs.isTerminalExists" 
-      class="absolute inset-x-0 mx-auto w-fit h-8 flex items-center justify-center cursor-pointer group -translate-x-4"
-      @click="$emit('toggle-terminal')"
-    >
-      <div class="flex items-center gap-1">
-        <div class="i-mdi-console w-4 h-4"></div>
-        <span class="relative inline-block whitespace-nowrap">
-          portfolio@brian-nguyen
-          <div 
-            class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] transition-transform duration-200"
-            :class="{ 'scale-x-100': !$attrs.isMinimized, 'scale-x-0': $attrs.isMinimized }"
-          ></div>
-          <div 
-            class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
-            v-if="$attrs.isMinimized"
-          ></div>
-        </span>
+    <div class="absolute inset-x-0 mx-auto w-fit h-8 flex items-center justify-center gap-4 -translate-x-4">
+      <!-- Terminal Tab -->
+      <div 
+        v-if="$attrs.isTerminalExists" 
+        class="cursor-pointer group"
+        @click="$emit('toggle-terminal')"
+      >
+        <div class="flex items-center gap-1">
+          <div class="i-mdi-console w-4 h-4"></div>
+          <span class="relative inline-block whitespace-nowrap">
+            portfolio@brian-nguyen
+            <div 
+              class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] transition-transform duration-200"
+              :class="{ 'scale-x-100': !$attrs.isMinimized, 'scale-x-0': $attrs.isMinimized }"
+            ></div>
+            <div 
+              class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+              v-if="$attrs.isMinimized"
+            ></div>
+          </span>
+        </div>
+      </div>
+
+      <!-- Drawing Tab -->
+      <div 
+        v-if="$attrs.isDrawingExists" 
+        class="cursor-pointer group"
+        @click="$emit('toggle-drawing')"
+      >
+        <div class="flex items-center gap-1">
+          <div class="i-mdi-pencil w-4 h-4"></div>
+          <span class="relative inline-block whitespace-nowrap">
+            drawing@brian-nguyen
+            <div 
+              class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] transition-transform duration-200"
+              :class="{ 'scale-x-100': !$attrs.isDrawingMinimized, 'scale-x-0': $attrs.isDrawingMinimized }"
+            ></div>
+            <div 
+              class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+              v-if="$attrs.isDrawingMinimized"
+            ></div>
+          </span>
+        </div>
       </div>
     </div>
     

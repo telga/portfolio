@@ -3,9 +3,13 @@
       <HeaderV2 
         @open-terminal="openTerminal" 
         @toggle-terminal="toggleTerminal"
+        @open-drawing="openDrawing"
+        @toggle-drawing="toggleDrawing"
         @theme-switch="handleThemeSwitch"
         :isMinimized="isMinimized"
         :isTerminalExists="isTerminalExists"
+        :isDrawingMinimized="isDrawingMinimized"
+        :isDrawingExists="isDrawingExists"
       />
       <div class="flex-1 relative" style="background-image: url('/images/termbg.jpg'); background-size: cover; background-position: center;">
         <!-- Desktop Icon -->
@@ -19,6 +23,20 @@
           />
           <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
             Terminal
+          </span>
+        </div>
+
+        <!-- Drawing App Icon -->
+        <div 
+          class="absolute top-28 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
+          @click="handleDrawingIconClick"
+          @dblclick="openDrawing"
+        >
+          <PencilSquareIcon 
+            class="w-10 h-10 text-[#93a1a1] group-hover:text-[#eee8d5]"
+          />
+          <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
+            Drawing
           </span>
         </div>
 
@@ -193,6 +211,17 @@
             </div>
           </div>
         </div>
+
+        <!-- Drawing Window -->
+        <DrawingWindow
+          v-if="isDrawingVisible"
+          v-model:position="drawingPosition"
+          v-model:size="drawingSize"
+          :isMaximized="isDrawingMaximized"
+          @minimize="minimizeDrawing"
+          @maximize="maximizeDrawing"
+          @close="closeDrawing"
+        />
       </div>
     </div>
   </template>
@@ -205,7 +234,8 @@
     import projectsData from '@/data/projects.json'
     import { useI18n } from 'vue-i18n'
     import HeaderV2 from '@/components/HeaderV2.vue'
-    import { MinusSmallIcon, Square2StackIcon, XMarkIcon, CommandLineIcon } from '@heroicons/vue/24/outline'
+    import { MinusSmallIcon, Square2StackIcon, XMarkIcon, CommandLineIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
+    import DrawingWindow from '@/components/DrawingWindow.vue'
 
     const router = useRouter()
     const { currentTheme } = useTheme()
@@ -747,6 +777,71 @@
       if (isTerminalVisible.value && e.ctrlKey && e.key === 'w') {
         e.preventDefault() // Prevent browser default behavior
         closeTerminal()
+      }
+    }
+    
+    // Drawing window state
+    const isDrawingVisible = ref(false)
+    const isDrawingExists = ref(false)
+    const isDrawingMinimized = ref(false)
+    const drawingPosition = ref({ x: 100, y: 100 })
+    const drawingSize = ref({ width: 800, height: 600 })
+    const isDrawingMaximized = ref(false)
+
+    // Drawing window management
+    const openDrawing = () => {
+      isDrawingExists.value = true
+      isDrawingVisible.value = true
+      isDrawingMinimized.value = false
+    }
+
+    const closeDrawing = () => {
+      isDrawingExists.value = false
+      isDrawingVisible.value = false
+      isDrawingMinimized.value = false
+      isDrawingMaximized.value = false
+    }
+
+    const minimizeDrawing = () => {
+      isDrawingVisible.value = false
+      isDrawingMinimized.value = true
+    }
+
+    const maximizeDrawing = () => {
+      isDrawingMaximized.value = !isDrawingMaximized.value
+      if (isDrawingMaximized.value) {
+        drawingPosition.value = { x: 0, y: 0 }
+        drawingSize.value = {
+          width: window.innerWidth,
+          height: window.innerHeight
+        }
+      } else {
+        drawingPosition.value = { x: 100, y: 100 }
+        drawingSize.value = { width: 800, height: 600 }
+      }
+    }
+
+    const toggleDrawing = () => {
+      if (isDrawingMinimized.value) {
+        isDrawingVisible.value = true
+        isDrawingMinimized.value = false
+      } else {
+        isDrawingVisible.value = false
+        isDrawingMinimized.value = true
+      }
+    }
+
+    const handleDrawingIconClick = () => {
+      // Deselect terminal icon if selected
+      const terminalIcon = document.querySelector('.desktop-icon')
+      if (terminalIcon) {
+        terminalIcon.classList.remove('selected')
+      }
+      
+      // Select drawing icon
+      const drawingIcon = document.querySelectorAll('.desktop-icon')[1]
+      if (drawingIcon) {
+        drawingIcon.classList.add('selected')
       }
     }
     </script>
