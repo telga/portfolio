@@ -9,9 +9,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div class="animate-slide-in h-full" style="animation-delay: 100ms;">
           <div class="flex flex-col h-full">
-            <div class="w-full flex-grow aspect-square md:aspect-[4/3] lg:h-[480px] xl:h-[420px] 2xl:h-[420px] overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative transition-shadow duration-300 hover:shadow-xl">
+            <div class="w-full flex-grow aspect-[4/3] lg:aspect-[3/2] xl:aspect-auto lg:h-[480px] xl:h-[420px] overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative transition-shadow duration-300 hover:shadow-xl">
               <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-secondary/10 pointer-events-none"></div>
-              <canvas ref="threeCanvas" class="w-full h-full"></canvas>
+              <canvas ref="threeCanvas" class="w-full h-full !min-h-full"></canvas>
             </div>
           </div>
         </div>
@@ -204,18 +204,36 @@ const initThree = () => {
   // Scene setup
   scene = new THREE.Scene()
   
-  // Camera setup
+  // Camera setup first
   camera = new THREE.PerspectiveCamera(
-    45, // Reduced FOV for less distortion
-    1,  // Maintain aspect ratio of 1:1
+    45,
+    1,
     0.1,
     1000
   )
-  // Move camera down just a bit
-  camera.position.set(0, 0, 2.8) // Adjusted from (0, -0.5, 2.8)
-  camera.lookAt(0, -0.3, 0)  // Adjusted from (0, -0.8, 0)
 
-  // Renderer setup
+  // Define camera position update function
+  const updateCameraPosition = () => {
+    if (window.matchMedia('(min-width: 1280px)').matches) {
+      // XL breakpoint
+      camera.position.set(0, 1.5, 2.8)
+      camera.lookAt(0, 0, 0)
+    } else if (window.matchMedia('(min-width: 1024px)').matches) {
+      // LG breakpoint (1024px-1279px)
+      camera.position.set(0, 1.2, 2.8)  // Now matches XL camera position
+      camera.lookAt(0, -0.4, 0)  // Now matches XL lookAt
+    } else {
+      // Mobile/tablet
+      camera.position.set(0, 1.5, 2.8)
+      camera.lookAt(0, -0.4, 0)
+    }
+    camera.updateProjectionMatrix()
+  }
+
+  // Initial camera setup
+  updateCameraPosition()
+
+  // Rest of your original initialization code...
   renderer = new THREE.WebGLRenderer({
     canvas: threeCanvas.value,
     antialias: true,
@@ -270,25 +288,41 @@ const initThree = () => {
 
       scene.add(model)
       
-      // Center and scale the model
+      // Center the model
       const box = new THREE.Box3().setFromObject(model)
       const center = box.getCenter(new THREE.Vector3())
       model.position.sub(center)
       
+      // Scale the model
       const size = box.getSize(new THREE.Vector3())
       const maxDim = Math.max(size.x, size.y, size.z)
-      const scale = 1.5 / maxDim  // Adjusted scale to better fit viewport
+      const scale = 1.1 / maxDim  // Increased scale from 0.8 to 1.1
       model.scale.multiplyScalar(scale)
-
-      // Adjust position based on screen size
+      
+      console.log('Initial model setup complete')
+      console.log('Initial scale:', scale)
+      console.log('Initial position:', model.position)
+      
       updateModelPosition = () => {
-        if (window.matchMedia('(min-width: 1024px) and (max-width: 1535px)').matches) {
-          model.position.y = -1.0  // More down for lg screens
+        console.log('Model update called')
+        model.position.set(0, 0, 0)
+        
+        if (window.matchMedia('(min-width: 1280px)').matches) {
+          // XL breakpoint
+          model.position.set(0, 0.3, 0)
+        } else if (window.matchMedia('(min-width: 1024px)').matches) {
+          // LG breakpoint (1024px-1279px)
+          model.position.set(0, 0.3, 0.2)  // Now matches XL positioning
         } else {
-          model.position.y = -0.8  // Default position for other screens
+          // Mobile/tablet
+          model.position.set(0, 0.4, -0.4)
         }
-        controls.target.set(0, model.position.y + 0.4, 0)
+        
+        model.updateMatrix()
+        controls.target.copy(model.position)
         controls.update()
+        
+        console.log('Final model position:', model.position)
       }
 
       // Initial position
