@@ -14,7 +14,8 @@
         "experiences": "経験",
         "skills": "スキル",
         "resume": "履歴書",
-        "gear": "ギア"
+        "gear": "ギア",
+        "v2": "ターミナル"
     },
     "footer": {
         "copyright": "ガキ開発"

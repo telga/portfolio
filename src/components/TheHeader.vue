@@ -140,7 +140,8 @@ const navItems = [
   //{ to: '/AboutPage', label: 'nav.about' },
   { to: '/ProjectsPage', label: 'nav.projects' },
   { to: '/ExperiencesPage', label: 'nav.experiences' },
-  { to: '/GearPage', label: 'nav.gear' }
+  { to: '/GearPage', label: 'nav.gear' },
+  { to: '/v2', label: 'nav.v2' }
 ]
 
 const isActiveRoute = (path) => {

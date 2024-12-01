@@ -14,7 +14,8 @@
         "experiences": "experience",
         "skills": "skills",
         "resume": "resume",
-        "gear": "gear"
+        "gear": "gear",
+        "v2": "terminal"
     },
     "footer": {
         "copyright": "gaki development"

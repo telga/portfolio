@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, defineEmits } from 'vue'
 
-const emit = defineEmits(['open-terminal'])
+const emit = defineEmits(['open-terminal', 'toggle-terminal'])
 
 const currentTime = ref('')
 let timeInterval
@@ -16,8 +16,8 @@ const updateTime = () => {
 }
 
 onMounted(() => {
-  updateTime() // Initial update
-  timeInterval = setInterval(updateTime, 60000) // Update every minute
+  updateTime()
+  timeInterval = setInterval(updateTime, 60000)
 })
 
 onBeforeUnmount(() => {
@@ -25,14 +25,19 @@ onBeforeUnmount(() => {
 })
 
 const handleConsoleClick = () => {
-  emit('open-terminal')
+  emit('toggle-terminal')
 }
 </script>
 
 <template>
   <div class="bg-[#1a1a1a] h-8 flex items-center justify-between px-4 text-gray-300 text-xs">
     <div class="flex items-center gap-4">
-      <div>Activities</div>
+      <router-link 
+        to="/" 
+        class="hover:bg-gray-700 px-2 py-1 rounded cursor-pointer transition-colors duration-200"
+      >
+        Regular Site
+      </router-link>
       <div 
         class="flex items-center gap-1 hover:bg-gray-700 px-2 py-1 rounded cursor-pointer"
         @click="handleConsoleClick"
@@ -41,6 +46,17 @@ const handleConsoleClick = () => {
         <span>Console</span>
       </div>
     </div>
+    
+    <!-- Terminal Tab -->
+    <div 
+      v-if="$attrs.isMinimized" 
+      class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 hover:bg-gray-700 px-3 py-1 rounded cursor-pointer"
+      @click="handleConsoleClick"
+    >
+      <div class="i-mdi-console w-3.5 h-3.5"></div>
+      <span>Terminal</span>
+    </div>
+
     <div class="flex items-center gap-2">
       <div>{{ currentTime }}</div>
       <div class="i-mdi-account-multiple w-3.5 h-3.5"></div>

@@ -1,6 +1,10 @@
 <template>
     <div class="absolute inset-0 bg-[#2e1f40] flex flex-col">
-      <HeaderV2 @open-terminal="openTerminal" />
+      <HeaderV2 
+        @open-terminal="openTerminal" 
+        @toggle-terminal="toggleTerminal"
+        :isMinimized="isMinimized"
+      />
       <div class="flex-1 bg-[#2e1f40] flex items-center justify-center">
         <!-- Terminal Window -->
         <div v-if="isTerminalVisible" class="bg-[#002b36] w-[900px] h-[600px] shadow-xl overflow-hidden">
@@ -13,7 +17,10 @@
             
             <!-- Right-aligned buttons -->
             <div class="flex items-stretch h-full ml-auto">
-              <button class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative">
+              <button 
+                @click="minimizeTerminal"
+                class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
+              >
                 <MinusSmallIcon class="w-5 h-5 text-gray-300" />
               </button>
               <button class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative">
@@ -155,6 +162,7 @@
     const cursorPosition = ref(0)
     const inputRef = ref(null)
     const isTerminalVisible = ref(true)
+    const isMinimized = ref(false)
     
     const handleKeyPress = (e) => {
       if (isExecuting.value) {
@@ -360,8 +368,43 @@
       }
     }
     
+    const scrollToBottom = () => {
+      nextTick(() => {
+        if (terminalContent.value) {
+          terminalContent.value.scrollTop = terminalContent.value.scrollHeight
+        }
+      })
+    }
+    
+    const toggleTerminal = () => {
+      if (isMinimized.value) {
+        isTerminalVisible.value = true
+        isMinimized.value = false
+        scrollToBottom()
+      } else {
+        openTerminal()
+      }
+    }
+    
+    const closeTerminal = () => {
+      isTerminalVisible.value = false
+      isMinimized.value = false
+    }
+    
+    const openTerminal = () => {
+      if (isMinimized.value) {
+        isTerminalVisible.value = true
+        isMinimized.value = false
+        scrollToBottom()
+      } else {
+        isTerminalVisible.value = true
+        initializeTerminal()
+      }
+    }
+    
     onMounted(() => {
       terminalContent.value?.focus()
+      scrollToBottom()
     })
     
     const initializeTerminal = () => {
@@ -383,13 +426,9 @@
       })
     }
     
-    const closeTerminal = () => {
+    const minimizeTerminal = () => {
       isTerminalVisible.value = false
-    }
-    
-    const openTerminal = () => {
-      isTerminalVisible.value = true
-      initializeTerminal()
+      isMinimized.value = true
     }
     </script>
     
