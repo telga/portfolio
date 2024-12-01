@@ -7,7 +7,7 @@
     },
     "description": {
       "en": "A website for the Smile of Compassion Projects, a non-profit organization that provides various services to underserved communities.",
-      "jp": "Smile of Compassion プロジェクトのウェブサイトです。非営利団体が、貧困した地域に対して様々なサービスを提供しています。"
+      "jp": "「Smile of Compassion Projects」のウェブサイト。こちらは、恵まれないコミュニティに様々なサービスを提供する非営利団体のために作成されたサイトです。"
     },
     "image": "soc.png",
     "github": "https://github.com/telga/Smile-of-Compassion-New-Site",
@@ -21,7 +21,7 @@
     },
     "description": {
       "en": "A website for Milano Nails Spa - Flower Mound, a nail salon in Flower Mound, TX.",
-      "jp": "Milano Nails Spa - Flower Mound のウェブサイトです。Flower Mound, TX にあるネイルサロンです。"
+      "jp": "「Milano Nails Spa - Flower Mound」のウェブサイト。テキサス州フラワーマウンドにあるネイルサロンのために作成されたサイトです。"
     },
     "image": "milano.png",
     "github": "https://github.com/telga/MilanoFlowerMound",
@@ -35,7 +35,7 @@
     },
     "description": {
       "en": "A website for a simple typing test game with both English and Japanese(hiragana).",
-      "jp": "英語と日本語(ひらがな)のタイピングテストゲームのウェブサイトです。"
+      "jp": "英語と日本語（ひらがな）の両方に対応したシンプルなタイピングテストゲームのためのウェブサイトです。"
     },
     "image": "braintype.png",
     "github": "https://github.com/telga/type-tester",
