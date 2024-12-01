@@ -405,17 +405,9 @@
               commandHistory.value.shift()
             }
           } else if (currentCommand.value === 'exp') {
-            const education = experiencesData.education.items.item1
             const work = Object.values(experiencesData.work.items)
             
-            let output = `Education:
-    ${education.degree}
-    ${education.school}, ${education.location}
-    ${education.duration}
-    • ${education.details.detail1}
-     ${education.details.detail2}
-    
-    Work Experience:\n`
+            let output = `Work Experience:\n`
     
             work.forEach(job => {
               output += `\n${job.title}
