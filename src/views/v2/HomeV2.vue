@@ -1,235 +1,269 @@
 <template>
-    <div class="absolute inset-0 bg-[var(--bg-primary)] flex flex-col">
-      <HeaderV2 
-        @open-terminal="openTerminal" 
-        @toggle-terminal="toggleTerminal"
-        @open-drawing="openDrawing"
-        @toggle-drawing="toggleDrawing"
-        @theme-switch="handleThemeSwitch"
-        :isMinimized="isMinimized"
-        :isTerminalExists="isTerminalExists"
-        :isDrawingMinimized="isDrawingMinimized"
-        :isDrawingExists="isDrawingExists"
-      />
-      <div class="flex-1 relative" style="background-image: url('/images/termbg.jpg'); background-size: cover; background-position: center;">
-        <!-- Desktop Icon -->
-        <div 
-          class="absolute top-4 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
-          @click="handleIconClick"
-          @dblclick="openTerminal"
-        >
-          <CommandLineIcon 
-            class="w-10 h-10 text-[#93a1a1] group-hover:text-[#eee8d5]"
-          />
-          <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
-            Terminal
-          </span>
-        </div>
+  <div 
+    class="absolute inset-0 bg-[var(--bg-primary)] flex flex-col"
+    :style="appStyles"
+  >
+    <HeaderV2 
+      @open-terminal="openTerminal" 
+      @toggle-terminal="toggleTerminal"
+      @open-drawing="openDrawing"
+      @toggle-drawing="toggleDrawing"
+      @theme-switch="handleThemeSwitch"
+      :isMinimized="isMinimized"
+      :isTerminalExists="isTerminalExists"
+      :isDrawingMinimized="isDrawingMinimized"
+      :isDrawingExists="isDrawingExists"
+    />
+    <div class="flex-1 relative" style="background-image: url('/images/termbg.jpg'); background-size: cover; background-position: center;">
+      <!-- Desktop Icon -->
+      <div 
+        class="absolute top-4 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
+        @click="handleIconClick"
+        @dblclick="openTerminal"
+      >
+        <CommandLineIcon 
+          class="w-10 h-10 text-[#93a1a1] group-hover:text-[#eee8d5]"
+        />
+        <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
+          Terminal
+        </span>
+      </div>
 
-        <!-- Drawing App Icon -->
-        <div 
-          class="absolute top-28 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
-          @click="handleDrawingIconClick"
-          @dblclick="openDrawing"
-        >
-          <PencilSquareIcon 
-            class="w-10 h-10 text-[#93a1a1] group-hover:text-[#eee8d5]"
-          />
-          <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
-            Drawing
-          </span>
-        </div>
+      <!-- Drawing App Icon -->
+      <div 
+        class="absolute top-28 left-4 flex flex-col items-center gap-1 p-2 rounded cursor-pointer group desktop-icon"
+        @click="handleDrawingIconClick"
+        @dblclick="openDrawing"
+      >
+        <PencilSquareIcon 
+          class="w-10 h-10 text-[#93a1a1] group-hover:text-[#eee8d5]"
+        />
+        <span class="text-[#93a1a1] text-xs group-hover:text-[#eee8d5] text-center max-w-[96px] px-1">
+          Drawing
+        </span>
+      </div>
 
-        <!-- Terminal Window -->
+      <!-- Terminal Window -->
+      <div 
+        v-if="isTerminalVisible" 
+        ref="terminalWindow"
+        class="absolute shadow-xl overflow-hidden bg-[#002b36]"
+        :style="{
+          left: typeof position.x === 'number' ? `${position.x}px` : position.x,
+          top: typeof position.y === 'number' ? `${position.y}px` : position.y,
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+          zIndex: terminalZIndex
+        }"
+        @mousedown="focusTerminal"
+      >
+        <!-- Resize Handles - removed top edge -->
+        <div class="resize-handle resize-e" @mousedown="(e) => startResize('e', e)"></div>
+        <div class="resize-handle resize-w" @mousedown="(e) => startResize('w', e)"></div>
+        <div class="resize-handle resize-s" @mousedown="(e) => startResize('s', e)"></div>
+        <div class="resize-handle resize-se" @mousedown="(e) => startResize('se', e)"></div>
+        <div class="resize-handle resize-sw" @mousedown="(e) => startResize('sw', e)"></div>
+        
+        <!-- Terminal Header -->
         <div 
-          v-if="isTerminalVisible" 
-          ref="terminalWindow"
-          class="absolute shadow-xl overflow-hidden bg-[#002b36]"
-          :style="{
-            left: typeof position.x === 'number' ? `${position.x}px` : position.x,
-            top: typeof position.y === 'number' ? `${position.y}px` : position.y,
-            width: `${size.width}px`,
-            height: `${size.height}px`,
-            zIndex: terminalZIndex
-          }"
-          @mousedown="focusTerminal"
+          class="h-8 flex items-center relative select-none bg-[var(--bg-primary)]"
+          @mousedown="startDrag"
+          :style="{ cursor: isDragging ? 'grabbing' : 'grab' }"
         >
-          <!-- Resize Handles - removed top edge -->
-          <div class="resize-handle resize-e" @mousedown="(e) => startResize('e', e)"></div>
-          <div class="resize-handle resize-w" @mousedown="(e) => startResize('w', e)"></div>
-          <div class="resize-handle resize-s" @mousedown="(e) => startResize('s', e)"></div>
-          <div class="resize-handle resize-se" @mousedown="(e) => startResize('se', e)"></div>
-          <div class="resize-handle resize-sw" @mousedown="(e) => startResize('sw', e)"></div>
-          
-          <!-- Terminal Header -->
-          <div 
-            class="h-8 flex items-center relative select-none bg-[var(--bg-primary)]"
-            @mousedown="startDrag"
-            :style="{ cursor: isDragging ? 'grabbing' : 'grab' }"
-          >
-            <!-- Centered text -->
-            <div class="absolute w-full text-center text-[var(--accent)] text-sm pointer-events-none">
-              portfolio@brian-nguyen>
-            </div>
-            
-            <!-- Right-aligned buttons -->
-            <div class="flex items-stretch h-full ml-auto window-controls">
-              <button 
-                @click="minimizeTerminal"
-                class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
-              >
-                <MinusSmallIcon class="w-5 h-5 text-gray-300" />
-              </button>
-              <button 
-                @click="maximizeTerminal"
-                class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
-              >
-                <Square2StackIcon 
-                  class="w-4 h-4 text-gray-300"
-                  :class="{ 'transform rotate-180': isMaximized }"
-                />
-              </button>
-              <button 
-                @click="closeTerminal"
-                class="hover:bg-red-500 w-11 flex items-center justify-center cursor-pointer relative"
-              >
-                <XMarkIcon class="w-5 h-5 text-gray-300" />
-              </button>
-            </div>
+          <!-- Centered text -->
+          <div class="absolute w-full text-center text-[var(--accent)] text-sm pointer-events-none">
+            portfolio@brian-nguyen>
           </div>
           
-          <!-- Terminal Content -->
-          <div 
-            ref="terminalContent"
-            id="terminal-content"
-            class="p-6 font-mono text-sm overflow-y-auto bg-[var(--bg-secondary)]"
-            :style="{ height: `calc(${size.height}px - 32px)` }"
-            @keydown="handleKeyPress"
-            @keyup="handleSelection"
-            @click="handleSelection"
-            tabindex="0" 
-          >
-            <!-- Command History -->
-            <div v-for="(entry, index) in commandHistory" :key="index" class="mb-4">
-              <!-- Command Line -->
-              <div class="flex">
-                <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
-                <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
-                <div class="text-[var(--text-primary)]">{{ entry.command }}</div>
-              </div>
-      
-              <!-- Command Output -->
-              <div 
-                v-if="entry.output" 
-                class="mt-2 text-[var(--text-secondary)] font-mono whitespace-pre-wrap break-words max-w-full"
-              >{{ entry.output }}</div>
-              
-              <!-- Neofetch/ifetch Output -->
-              <div 
-                v-if="entry.showNeofetch" 
-                class="flex flex-wrap mt-2 gap-8"
-                :style="{ maxWidth: `${size.width - 48}px` }"
-              >
-                <!-- Profile Picture -->
-                <div class="w-[200px] min-w-[200px] aspect-square relative">
-                  <img 
-                    src="/images/userpic.png" 
-                    alt="Profile Picture"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <!-- Info Section -->
-                <div class="text-[var(--text-primary)] space-y-1 mt-6 flex-1 min-w-[300px]">
-                  <div><span class="text-[var(--accent)]">Name: </span>Brian Nguyen</div>
-                  <div>
-                    <span class="text-[var(--accent)]">Github: </span>
-                    <a href="https://github.com/telga" target="_blank" 
-                       class="hover:text-[var(--accent-orange)] transition-colors duration-300">
-                      telga (link)
-                    </a>
-                  </div>
-                  <div>
-                    <span class="text-[var(--accent)]">Email: </span>
-                    <button 
-                      @click="copyEmail" 
-                      class="hover:text-[var(--accent-orange)] transition-colors duration-300"
-                    >briann2305@gmail.com (link)</button>
-                  </div>
-                  <div>
-                    <span class="text-[var(--accent)]">LinkedIn: </span>
-                    <a href="https://www.linkedin.com/in/bnguy23/" target="_blank" 
-                       class="hover:text-[var(--accent-orange)] transition-colors duration-300">
-                      bnguy23 (link)
-                    </a>
-                  </div>
-                  <div class="flex flex-wrap gap-x-2">
-                    <span class="text-[var(--accent)]">Skills:</span>
-                    <span class="text-[var(--accent-secondary)]">
-                      Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, Linux (Arch, Ubuntu)
-                    </span>
-                  </div>
-                  <div class="flex flex-wrap gap-2">
-                    <span class="text-[var(--accent)]">Pages:</span>
-                    <div class="flex gap-2">
-                      <button 
-                        @click="runCommand('about')" 
-                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
-                      >about</button>
-                      <span class="text-[var(--text-secondary)]">|</span>
-                      <button 
-                        @click="runCommand('projects')" 
-                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
-                      >projects</button>
-                      <span class="text-[var(--text-secondary)]">|</span>
-                      <button 
-                        @click="runCommand('exp')" 
-                        class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
-                      >experience</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-      
-            <!-- Current Command Line -->
+          <!-- Right-aligned buttons -->
+          <div class="flex items-stretch h-full ml-auto window-controls">
+            <button 
+              @click="minimizeTerminal"
+              class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
+            >
+              <MinusSmallIcon class="w-5 h-5 text-gray-300" />
+            </button>
+            <button 
+              @click="maximizeTerminal"
+              class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
+            >
+              <Square2StackIcon 
+                class="w-4 h-4 text-gray-300"
+                :class="{ 'transform rotate-180': isMaximized }"
+              />
+            </button>
+            <button 
+              @click="closeTerminal"
+              class="hover:bg-red-500 w-11 flex items-center justify-center cursor-pointer relative"
+            >
+              <XMarkIcon class="w-5 h-5 text-gray-300" />
+            </button>
+          </div>
+        </div>
+        
+        <!-- Terminal Content -->
+        <div 
+          ref="terminalContent"
+          id="terminal-content"
+          class="p-6 font-mono text-sm overflow-y-auto bg-[var(--bg-secondary)]"
+          :style="{ height: `calc(${size.height}px - 32px)` }"
+          @keydown="handleKeyPress"
+          @keyup="handleSelection"
+          @click="handleSelection"
+          tabindex="0" 
+        >
+          <!-- Command History -->
+          <div v-for="(entry, index) in commandHistory" :key="index" class="mb-4">
+            <!-- Command Line -->
             <div class="flex">
               <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
               <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
-              <div 
-                class="text-[var(--text-primary)] relative cursor-text font-mono"
-              >
-                <span>{{ currentCommand.slice(0, cursorPosition) }}</span>
-                <div 
-                  class="w-[2px] h-[14px] bg-[var(--accent-red)] animate-blink absolute inline-block"
-                  :style="{ 
-                    left: `${cursorPosition * 7.8}px`,
-                    top: '3px',
-                    transform: 'translateX(-50%)'
-                  }"
-                  v-show="showCursor && !isExecuting"
-                ></div>
-                <span>{{ currentCommand.slice(cursorPosition) }}</span>
+              <div class="text-[var(--text-primary)]">{{ entry.command }}</div>
+            </div>
+    
+            <!-- Command Output -->
+            <div 
+              v-if="entry.output" 
+              class="mt-2 text-[var(--text-secondary)] font-mono whitespace-pre-wrap break-words max-w-full"
+            >{{ entry.output }}</div>
+            
+            <!-- Neofetch/ifetch Output -->
+            <div 
+              v-if="entry.showNeofetch" 
+              class="flex flex-wrap mt-2 gap-8"
+              :style="{ maxWidth: `${size.width - 48}px` }"
+            >
+              <!-- Profile Picture -->
+              <div class="w-[200px] min-w-[200px] aspect-square relative">
+                <img 
+                  src="/images/userpic.png" 
+                  alt="Profile Picture"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              
+              <!-- Info Section -->
+              <div class="text-[var(--text-primary)] space-y-1 mt-6 flex-1 min-w-[300px]">
+                <div><span class="text-[var(--accent)]">Name: </span>Brian Nguyen</div>
+                <div>
+                  <span class="text-[var(--accent)]">Github: </span>
+                  <a href="https://github.com/telga" target="_blank" 
+                     class="hover:text-[var(--accent-orange)] transition-colors duration-300">
+                    telga (link)
+                  </a>
+                </div>
+                <div>
+                  <span class="text-[var(--accent)]">Email: </span>
+                  <button 
+                    @click="copyEmail" 
+                    class="hover:text-[var(--accent-orange)] transition-colors duration-300"
+                  >briann2305@gmail.com (link)</button>
+                </div>
+                <div>
+                  <span class="text-[var(--accent)]">LinkedIn: </span>
+                  <a href="https://www.linkedin.com/in/bnguy23/" target="_blank" 
+                     class="hover:text-[var(--accent-orange)] transition-colors duration-300">
+                    bnguy23 (link)
+                  </a>
+                </div>
+                <div class="flex flex-wrap gap-x-2">
+                  <span class="text-[var(--accent)]">Skills:</span>
+                  <span class="text-[var(--accent-secondary)]">
+                    Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, Linux (Arch, Ubuntu)
+                  </span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="text-[var(--accent)]">Pages:</span>
+                  <div class="flex gap-2">
+                    <button 
+                      @click="runCommand('about')" 
+                      class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
+                    >about</button>
+                    <span class="text-[var(--text-secondary)]">|</span>
+                    <button 
+                      @click="runCommand('projects')" 
+                      class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
+                    >projects</button>
+                    <span class="text-[var(--text-secondary)]">|</span>
+                    <button 
+                      @click="runCommand('exp')" 
+                      class="text-[var(--accent-secondary)] hover:text-[var(--accent-orange)] transition-colors duration-300"
+                    >experience</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+    
+          <!-- Current Command Line -->
+          <div class="flex">
+            <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
+            <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
+            <div 
+              class="text-[var(--text-primary)] relative cursor-text font-mono"
+            >
+              <span>{{ currentCommand.slice(0, cursorPosition) }}</span>
+              <div 
+                class="w-[2px] h-[14px] bg-[var(--accent-red)] animate-blink absolute inline-block"
+                :style="{ 
+                  left: `${cursorPosition * 7.8}px`,
+                  top: '3px',
+                  transform: 'translateX(-50%)'
+                }"
+                v-show="showCursor && !isExecuting"
+              ></div>
+              <span>{{ currentCommand.slice(cursorPosition) }}</span>
+            </div>
+          </div>
         </div>
-
-        <!-- Drawing Window -->
-        <DrawingWindow
-          v-show="isDrawingVisible"
-          v-model:position="drawingPosition"
-          v-model:size="drawingSize"
-          :isMaximized="isDrawingMaximized"
-          @minimize="minimizeDrawing"
-          @maximize="maximizeDrawing"
-          @close="closeDrawing"
-          @mousedown="focusDrawing"
-          :style="{ zIndex: drawingZIndex }"
-        />
       </div>
+
+      <!-- Drawing Window -->
+      <DrawingWindow
+        v-show="isDrawingVisible"
+        v-model:position="drawingPosition"
+        v-model:size="drawingSize"
+        :isMaximized="isDrawingMaximized"
+        @minimize="minimizeDrawing"
+        @maximize="maximizeDrawing"
+        @close="closeDrawing"
+        @mousedown="focusDrawing"
+        :style="{ zIndex: drawingZIndex }"
+      />
+
+      <!-- Update modal component -->
+      <Transition name="fade">
+        <div 
+          v-if="showRotateModal" 
+          class="fixed inset-0 z-50 flex items-center justify-center"
+        >
+          <!-- Frosted backdrop -->
+          <div 
+            class="absolute inset-0 bg-[var(--bg-primary)] bg-opacity-80 backdrop-blur-sm"
+            @click="showRotateModal = false"
+          ></div>
+          
+          <!-- Modal content - centered in current viewport -->
+          <div 
+            class="relative bg-[var(--bg-secondary)] border border-[var(--accent)] rounded-lg p-8 w-[90%] max-w-[400px]"
+            style="background: rgba(var(--bg-secondary-rgb), 0.95)"
+          >
+            <div class="text-[var(--text-primary)] text-center">
+              <h2 class="text-xl font-medium mb-6">Device Orientation Notice</h2>
+              <p class="mb-8 text-lg">On smaller screen size devices please rotate your device to landscape mode.</p>
+              <button 
+                @click="showRotateModal = false"
+                class="px-6 py-3 bg-[var(--accent)] text-[var(--bg-primary)] rounded-md hover:opacity-90 transition-opacity text-lg"
+              >
+                Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
     </div>
-  </template>
+  </div>
+</template>
     
     <script setup>
     import { ref, nextTick, onMounted, onUnmounted, watch, computed } from 'vue'
@@ -245,8 +279,8 @@
     const router = useRouter()
     const { currentTheme } = useTheme()
 
-    const MIN_WIDTH = 600
-    const MIN_HEIGHT = 350
+    const MIN_WIDTH = window.innerWidth < 768 ? window.innerWidth : 600
+    const MIN_HEIGHT = window.innerWidth < 768 ? window.innerHeight - 48 : 350
     
     const { t, locale } = useI18n()
     
@@ -445,10 +479,18 @@
         isExecuting.value = false
     
         nextTick(() => {
-          terminalContent.value?.scrollTo({
-            top: terminalContent.value.scrollHeight,
-            behavior: 'smooth'
-          })
+          if (terminalContent.value) {
+            // Force a reflow to ensure accurate scrollHeight
+            terminalContent.value.style.display = 'none'
+            terminalContent.value.offsetHeight // Force reflow
+            terminalContent.value.style.display = ''
+            
+            // Scroll after reflow with smooth behavior
+            terminalContent.value.scrollTo({
+              top: terminalContent.value.scrollHeight,
+              behavior: 'smooth'
+            })
+          }
         })
       } else if (e.key === 'Backspace') {
         e.preventDefault()
@@ -537,6 +579,9 @@
       currentCommand.value = cmd
       const e = { key: 'Enter' }
       handleKeyPress(e)
+      nextTick(() => {
+        terminalContent.value?.focus() // Focus terminal after command execution
+      })
     }
     
     const handleSelection = () => {
@@ -547,7 +592,16 @@
     
     const scrollToBottom = () => {
       if (terminalContent.value) {
-        terminalContent.value.scrollTop = terminalContent.value.scrollHeight
+        // Force a reflow to ensure accurate scrollHeight
+        terminalContent.value.style.display = 'none'
+        terminalContent.value.offsetHeight // Force reflow
+        terminalContent.value.style.display = ''
+        
+        // Scroll after reflow with smooth behavior
+        terminalContent.value.scrollTo({
+          top: terminalContent.value.scrollHeight,
+          behavior: 'smooth'
+        })
       }
     }
     
@@ -590,26 +644,88 @@
       isTerminalVisible.value = true
       isMinimized.value = false
       cursorPosition.value = 0
-      // Initialize with just one line
-      //commandHistory.value = [{
-      //  showNeofetch: false
-      //}]
+      position.value = initialPosition.value
+      size.value = initialSize.value
       focusTerminal()
       nextTick(() => {
         const terminalContent = document.querySelector('#terminal-content')
         if (terminalContent) {
           terminalContent.focus()
+          // Force a reflow to ensure accurate scrollHeight
+          terminalContent.style.display = 'none'
+          terminalContent.offsetHeight // Force reflow
+          terminalContent.style.display = ''
+          
+          // Scroll after reflow with smooth behavior
+          terminalContent.scrollTo({
+            top: terminalContent.scrollHeight,
+            behavior: 'smooth'
+          })
         }
       })
     }
     
     onMounted(() => {
-      // Force English locale when HomeV2 is loaded
-      locale.value = 'en'
+      // Initial check for modal - only on page load for smaller screens
+      if (window.innerWidth <= 1024) { // Tablet and smaller
+        showRotateModal.value = window.innerHeight > window.innerWidth
+      }
+
+      const handleResize = () => {
+        if (window.innerWidth <= 1024 && window.innerWidth > window.innerHeight) {
+          // Update size for mobile/tablet landscape
+          const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+          size.value = {
+            width: Math.min(800, window.innerWidth - 80),
+            height: pageHeight - 88
+          }
+          position.value = {
+            x: `calc(50% - ${size.value.width / 2}px)`,
+            y: `calc(50% - ${size.value.height / 2}px)`
+          }
+
+          // Scroll to bottom after resize
+          nextTick(() => {
+            const content = document.querySelector('#terminal-content')
+            if (content) {
+              // Force a reflow
+              content.style.display = 'none'
+              content.offsetHeight // Force reflow
+              content.style.display = ''
+              
+              // Scroll after reflow
+              content.scrollTop = content.scrollHeight
+              content.focus()
+            }
+          })
+        }
+      }
+
+      // Initial size setup
+      handleResize()
+
+      // Initial scroll to bottom
+      nextTick(() => {
+        const content = document.querySelector('#terminal-content')
+        if (content) {
+          // Force a reflow to ensure accurate scrollHeight
+          content.style.display = 'none'
+          content.offsetHeight // Force reflow
+          content.style.display = ''
+          
+          // Scroll after reflow with smooth behavior
+          content.scrollTo({
+            top: content.scrollHeight,
+            behavior: 'smooth'
+          })
+        }
+      })
+
+      window.addEventListener('resize', handleResize)
       
-      terminalContent.value?.focus()
-      scrollToBottom()
-      window.addEventListener('keydown', handleGlobalKeyPress)
+      onUnmounted(() => {
+        window.removeEventListener('resize', handleResize)
+      })
     })
     
     onUnmounted(() => {
@@ -618,6 +734,9 @@
       document.removeEventListener('mouseup', stopDrag)
       document.removeEventListener('mousemove', handleResize)
       document.removeEventListener('mouseup', stopResize)
+      
+      window.removeEventListener('resize', checkOrientation)
+      window.removeEventListener('orientationchange', checkOrientation)
     })
     
     // const initializeTerminal = () => {
@@ -654,21 +773,30 @@
           size.value = { ...lastWindowState.value.size }
         }
         isMaximized.value = false
-        scrollToBottom()
+        nextTick(() => {
+          scrollToBottom()
+          terminalContent.value?.focus() // Focus terminal after unmaximizing
+        })
       } else {
         // Save current state
         lastWindowState.value = {
           position: { ...position.value },
           size: { ...size.value }
         }
-        // Maximize
+        
+        const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+        
+        // Maximize to page size
         position.value = { x: 0, y: 0 }
         size.value = {
           width: window.innerWidth,
-          height: window.innerHeight
+          height: pageHeight // Subtract header height only when maximized
         }
         isMaximized.value = true
-        scrollToBottom()
+        nextTick(() => {
+          scrollToBottom()
+          terminalContent.value?.focus() // Focus terminal after maximizing
+        })
       }
     }
     
@@ -744,10 +872,12 @@
           break
         case 's':
           size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
+          nextTick(() => scrollToBottom()) // Add scroll after height change
           break
         case 'se':
           size.value.width = Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX)
           size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
+          nextTick(() => scrollToBottom()) // Add scroll after height change
           break
         case 'sw':
           newWidthSW = Math.max(MIN_WIDTH, resizeStartPos.value.width - deltaX)
@@ -756,6 +886,7 @@
             size.value.width = newWidthSW
           }
           size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
+          nextTick(() => scrollToBottom()) // Add scroll after height change
           break
       }
     }
@@ -894,6 +1025,67 @@
       drawingZIndex.value = 2
       terminalZIndex.value = 1
     }
+
+    // Add these new refs and computed properties
+    const showRotateModal = ref(false)
+
+    // Add orientation and screen size check
+    const checkOrientation = () => {
+      if (window.innerWidth <= 1024) { // Match terminal breakpoint
+        showRotateModal.value = window.innerHeight > window.innerWidth
+      } else {
+        showRotateModal.value = false
+      }
+    }
+
+    // Update initialSize with more specific breakpoints
+    const initialSize = computed(() => {
+      const isMobileOrTablet = window.innerWidth <= 1024
+      const isLandscape = window.innerWidth > window.innerHeight
+      const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+
+      console.log('Window width:', window.innerWidth)
+      console.log('Is mobile/tablet:', isMobileOrTablet)
+      console.log('Is landscape:', isLandscape)
+
+      if (isMobileOrTablet && isLandscape) {
+        const width = Math.min(800, window.innerWidth - 80)
+        console.log('Setting mobile/tablet landscape size:', { width, height: pageHeight - 88 })
+        return {
+          width,
+          height: pageHeight - 88
+        }
+      } else if (isMobileOrTablet) {
+        const width = window.innerWidth - 40
+        console.log('Setting mobile/tablet portrait size:', { width, height: 500 })
+        return {
+          width,
+          height: 500
+        }
+      }
+
+      console.log('Setting desktop size:', { width: 900, height: 600 })
+      return {
+        width: 900,
+        height: 600
+      }
+    })
+
+    // Update initialPosition to match
+    const initialPosition = computed(() => {
+      if (window.innerWidth <= 1024) { // Tablet and Mobile
+        if (window.innerWidth > window.innerHeight) { // Landscape
+          return { 
+            x: `calc(50% - ${initialSize.value.width / 2}px)`,
+            y: `calc(50% - ${initialSize.value.height / 2}px)`
+          }
+        }
+      }
+      return { 
+        x: 'calc(50% - 450px)', 
+        y: 'calc(50% - 300px)' 
+      }
+    })
     </script>
     
     <style scoped>
@@ -1112,6 +1304,7 @@
     .desktop-icon span {
       word-break: break-word;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       overflow: hidden;
@@ -1120,5 +1313,156 @@
     /* Add selected state */
     .desktop-icon:has(.selected) img {
       filter: brightness(1.25);
+    }
+    
+    /* Add responsive styles */
+    @media (max-width: 768px) {
+      .desktop-icon {
+        min-width: 72px; /* Smaller icons on mobile */
+      }
+
+      #terminal-content {
+        font-size: 14px; /* Slightly smaller font on mobile */
+      }
+
+      /* Adjust neofetch layout for mobile */
+      .flex-wrap {
+        gap: 4px;
+      }
+
+      /* Make profile picture smaller on mobile */
+      .w-200px {
+        width: 150px;
+      }
+
+      .min-w-200px {
+        min-width: 150px;
+      }
+
+      /* Adjust spacing for mobile */
+      .p-6 {
+        padding: 1rem;
+      }
+
+      /* Disable dragging on mobile */
+      [class*="resize-handle"] {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #terminal-content {
+        font-size: 14px;
+      }
+
+      /* Adjust neofetch for mobile */
+      .flex-wrap {
+        gap: 2px;
+      }
+
+      .w-200px {
+        width: 120px;
+      }
+
+      .min-w-200px {
+        min-width: 120px;
+      }
+
+      .p-6 {
+        padding: 0.75rem;
+      }
+
+      /* Hide resize handles on mobile */
+      [class*="resize-handle"] {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1024px) and (orientation: landscape) {
+      #terminal-content {
+        font-size: 14px;
+      }
+
+      .flex-wrap {
+        gap: 4px;
+      }
+
+      /* Adjust neofetch layout for landscape */
+      .w-200px {
+        width: 140px;
+      }
+
+      .min-w-200px {
+        min-width: 140px;
+      }
+
+      .p-6 {
+        padding: 1rem;
+      }
+
+      /* Hide resize handles */
+      [class*="resize-handle"] {
+        display: none;
+      }
+    }
+
+    /* Lock screen rotation for portrait */
+    @media (max-width: 1024px) and (orientation: portrait) {
+      .absolute.inset-0 {
+        min-height: 100dvh;
+      }
+    }
+
+    /* Add transition styles */
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.2s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+      opacity: 0;
+    }
+
+    /* Update modal styles for different breakpoints */
+    @media (max-width: 1024px) {
+      .max-w-sm {
+        max-width: 320px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .max-w-sm {
+        max-width: 280px;
+      }
+      
+      .p-6 {
+        padding: 1rem;
+      }
+      
+      .text-lg {
+        font-size: 1rem;
+      }
+    }
+
+    /* Add specific modal styles for mobile */
+    @media (max-width: 1024px) {
+      .fixed.inset-0 {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        /* Use viewport units to ensure full coverage */
+        height: 100dvh;
+      }
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.2s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+      opacity: 0;
     }
     </style> 
