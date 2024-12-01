@@ -117,11 +117,13 @@
         <div 
           ref="terminalContent"
           id="terminal-content"
-          class="p-6 font-mono text-sm overflow-y-auto bg-[var(--bg-secondary)]"
+          class="p-6 font-mono text-sm overflow-y-auto bg-[var(--bg-secondary)] touch-pan-y"
           :style="{ height: `calc(${size.height}px - 32px)` }"
           @keydown="handleKeyPress"
           @keyup="handleSelection"
           @click="handleSelection"
+          @touchstart="handleMobileInput"
+          @touchmove.passive="handleTouchScroll"
           tabindex="0" 
         >
           <!-- Command History -->
@@ -227,23 +229,20 @@
               <span>{{ currentCommand.slice(cursorPosition) }}</span>
             </div>
           </div>
-        </div>
-
-        <!-- Add mobile resize handle -->
-        <div 
-          v-if="windowWidth <= 1024"
-          class="absolute bottom-0 right-0 w-6 h-6 lg:hidden cursor-se-resize"
-          @mousedown="(e) => startResize('se', e)"
-          @touchstart="(e) => startResize('se', e)"
-        >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 absolute bottom-1 right-1 text-[var(--text-secondary)]" 
-            viewBox="0 0 20 20" 
-            fill="currentColor"
-          >
-            <path d="M6 6L14 14M14 6L6 14" />
-          </svg>
+          
+          <!-- Add hidden input for mobile -->
+          <input
+            ref="mobileInput"
+            type="text"
+            class="opacity-0 absolute left-0 w-1 h-1 -z-10"
+            :value="currentCommand"
+            @input="handleMobileKeyInput"
+            @focus="handleMobileFocus"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
         </div>
       </div>
 
@@ -281,7 +280,7 @@
           >
             <div class="text-[var(--text-primary)] text-center">
               <h2 class="text-xl font-medium mb-6">Device Orientation Notice</h2>
-              <p class="mb-8 text-lg">On smaller screen size devices please rotate your device to landscape mode.</p>
+              <p class="mb-8 text-lg">On smaller screen size devices please rotate your device to landscape mode. (this may not look good on mobile)</p>
               <button 
                 @click="showRotateModal = false"
                 class="px-6 py-3 bg-[var(--accent)] text-[var(--bg-primary)] rounded-md hover:opacity-90 transition-opacity text-lg"
@@ -357,6 +356,13 @@
     const isTerminalExists = computed(() => isTerminalVisible.value || isMinimized.value)
     
     const handleKeyPress = (e) => {
+      const isOnMobile = window.innerWidth <= 1024
+      
+      if (isOnMobile && e.key === 'Unidentified') {
+        // Let the mobile input handler deal with it
+        return
+      }
+      
       if (isExecuting.value) {
         if (e.ctrlKey && e.key.toLowerCase() === 'l') {
           e.preventDefault()
@@ -628,11 +634,8 @@
         terminalContent.value.offsetHeight // Force reflow
         terminalContent.value.style.display = ''
         
-        // Scroll after reflow with smooth behavior
-        terminalContent.value.scrollTo({
-          top: terminalContent.value.scrollHeight,
-          behavior: 'smooth'
-        })
+        // Use same scrolling behavior for both mobile and desktop
+        terminalContent.value.scrollTop = terminalContent.value.scrollHeight
       }
     }
     
@@ -677,6 +680,21 @@
       cursorPosition.value = 0
       position.value = initialPosition.value
       size.value = initialSize.value
+      
+      // Initialize terminal if it's empty
+      if (commandHistory.value.length === 0) {
+        commandHistory.value = [
+          {
+            command: 'ifetch',
+            showNeofetch: true
+          },
+          {
+            command: 'init',
+            output: 'Type \'help\' for a list of available commands.'
+          }
+        ]
+      }
+      
       focusTerminal()
       nextTick(() => {
         const terminalContent = document.querySelector('#terminal-content')
@@ -697,6 +715,18 @@
     }
     
     onMounted(() => {
+      // Initialize terminal on startup
+      commandHistory.value = [
+        {
+          command: 'ifetch',
+          showNeofetch: true
+        },
+        {
+          command: 'init',
+          output: 'Type \'help\' for a list of available commands.'
+        }
+      ]
+
       // Initial check for modal - only on page load for smaller screens
       if (window.innerWidth <= 1024) { // Tablet and smaller
         showRotateModal.value = window.innerHeight > window.innerWidth
@@ -752,7 +782,7 @@
       // Initial size setup
       handleResize()
 
-      // Initial scroll to bottom
+      // Use consistent scroll behavior for both mobile and desktop
       nextTick(() => {
         const content = document.querySelector('#terminal-content')
         if (content) {
@@ -761,11 +791,7 @@
           content.offsetHeight // Force reflow
           content.style.display = ''
           
-          // Scroll after reflow with smooth behavior
-          content.scrollTo({
-            top: content.scrollHeight,
-            behavior: 'smooth'
-          })
+          content.scrollTop = content.scrollHeight
         }
       })
 
@@ -837,7 +863,7 @@
         position.value = { x: 0, y: 0 }
         size.value = {
           width: window.innerWidth,
-          height: pageHeight - 48 // Subtract header height only when maximized
+          height: pageHeight // Subtract header height only when maximized
         }
         isMaximized.value = true
         nextTick(() => {
@@ -923,9 +949,24 @@
       const deltaX = touch.clientX - resizeStartPos.value.x
       const deltaY = touch.clientY - resizeStartPos.value.y
 
-      size.value = {
-        width: Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX),
-        height: Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
+      const isOnMobile = window.innerWidth <= 1024
+      const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
+
+      // Calculate new size with constraints
+      const newWidth = Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX)
+      const newHeight = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
+
+      // Apply mobile-specific constraints
+      if (isOnMobile) {
+        size.value = {
+          width: Math.min(newWidth, window.innerWidth - 40), // Leave some margin
+          height: Math.min(newHeight, pageHeight - 48) // Account for header
+        }
+      } else {
+        size.value = {
+          width: newWidth,
+          height: newHeight
+        }
       }
 
       nextTick(() => scrollToBottom())
@@ -1163,6 +1204,55 @@
         window.removeEventListener('resize', updateWidth)
       })
     })
+
+    // Add new refs
+    const mobileInput = ref(null)
+
+    // Add new methods for mobile input handling
+    const handleMobileInput = (e) => {
+      // Only prevent default and focus input if clicking on the command line area
+      const isCommandArea = e.target.closest('.cursor-text') || 
+                             e.target === terminalContent.value
+
+      if (isCommandArea && !e.target.closest('a, button')) {
+        // Initialize terminal if it's empty
+        if (commandHistory.value.length === 0) {
+          commandHistory.value = [
+            {
+              command: 'ifetch',
+              showNeofetch: true
+            },
+            {
+              command: 'init',
+              output: 'Type \'help\' for a list of available commands.'
+            }
+          ]
+        }
+        
+        mobileInput.value?.focus()
+        nextTick(() => {
+          scrollToBottom()
+        })
+      }
+    }
+
+    const handleMobileKeyInput = (e) => {
+      currentCommand.value = e.target.value
+      cursorPosition.value = e.target.value.length
+    }
+
+    const handleMobileFocus = () => {
+      // Scroll to bottom with a slight delay to account for keyboard appearance
+      setTimeout(() => {
+        scrollToBottom()
+      }, 100)
+    }
+
+    // Update touch scroll handling to remove unused parameter
+    const handleTouchScroll = () => {
+      // Let default touch scrolling behavior work
+      // The .passive modifier above ensures smooth scrolling
+    }
     </script>
     
     <style scoped>
@@ -1558,6 +1648,75 @@
         border-width: 0 0 12px 12px;
         border-color: transparent transparent var(--text-secondary) transparent;
         opacity: 0.5;
+      }
+    }
+
+    /* Add mobile-specific styles */
+    @media (max-width: 1024px) {
+      #terminal-content {
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      /* Hide scrollbar on mobile while keeping functionality */
+      #terminal-content::-webkit-scrollbar {
+        width: 0px;
+      }
+      
+      /* Ensure content is properly padded from bottom on mobile */
+      #terminal-content {
+        padding-bottom: 50vh; /* Add extra padding for keyboard */
+      }
+    }
+
+    /* Add touch-specific styles */
+    @media (max-width: 1024px) {
+      #terminal-content {
+        -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+        overscroll-behavior-y: contain; /* Prevent pull-to-refresh */
+        scroll-behavior: smooth;
+        padding-bottom: 1.5rem !important; /* Override any other padding */
+      }
+      
+      /* Ensure text remains selectable */
+      #terminal-content * {
+        user-select: text;
+      }
+      
+      /* But prevent selection on specific elements */
+      #terminal-content .window-controls,
+      #terminal-content .desktop-icon {
+        user-select: none;
+      }
+    }
+
+    /* Update mobile resize handle styles */
+    @media (max-width: 1024px) {
+      .cursor-se-resize {
+        touch-action: none; /* Prevent scrolling while resizing */
+        z-index: 10; /* Ensure handle is above content */
+      }
+
+      /* Make the touch target larger on mobile */
+      .cursor-se-resize::before {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        right: -12px;
+        width: 24px;
+        height: 24px;
+        touch-action: none;
+      }
+    }
+
+    /* Hide all resize handles on mobile */
+    @media (max-width: 1024px) {
+      [class*="resize-handle"] {
+        display: none !important;
+      }
+      
+      /* Remove resize cursor styles on mobile */
+      .cursor-se-resize {
+        cursor: default;
       }
     }
     </style> 
