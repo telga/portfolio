@@ -1,5 +1,5 @@
 <template>
-  <div class="projects-page container mx-auto px-4 py-8">
+  <div id="projects" class="projects-page container mx-auto px-4 py-8 scroll-mt-[80px] lg:scroll-mt-[100px]">
     <h1 class="text-3xl font-bold mb-8 animate-fade-in" style="color: var(--accent);">
       {{ $t('projects.title') }}
     </h1>

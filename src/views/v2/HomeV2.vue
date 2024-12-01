@@ -1147,27 +1147,20 @@
       const isLandscape = window.innerWidth > window.innerHeight
       const pageHeight = document.querySelector('.flex-1')?.clientHeight || window.innerHeight
 
-      console.log('Window width:', window.innerWidth)
-      console.log('Is mobile/tablet:', isMobileOrTablet)
-      console.log('Is landscape:', isLandscape)
-
       if (isMobileOrTablet && isLandscape) {
         const width = Math.min(800, window.innerWidth - 80)
-        console.log('Setting mobile/tablet landscape size:', { width, height: pageHeight - 88 })
         return {
           width,
           height: pageHeight - 88
         }
       } else if (isMobileOrTablet) {
         const width = window.innerWidth - 40
-        console.log('Setting mobile/tablet portrait size:', { width, height: 500 })
         return {
           width,
           height: 500
         }
       }
 
-      console.log('Setting desktop size:', { width: 900, height: 600 })
       return {
         width: 900,
         height: 600

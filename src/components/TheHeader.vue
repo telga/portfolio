@@ -26,14 +26,15 @@
             :to="item.to" 
             v-show="!item.desktopOnly || (item.desktopOnly && isLargeScreen)"
             class="text-text-primary hover:text-accent text-base transition-colors duration-200 relative group px-2 py-1"
-            :class="{ 'text-accent-secondary': $route.path === item.to }"
+            :class="{ 'text-accent-secondary': isActiveRoute(item.to) }"
+            @click="item.to.hash ? handleNavigation($event, item.to) : null"
           >
             <span class="relative z-10">{{ $t(item.label) }}</span>
             <span 
               class="absolute inset-0 border-b-2 transition-colors duration-200"
               :class="{ 
-                'border-accent-hover': $route.path === item.to,
-                'border-accent opacity-0 group-hover:opacity-100': $route.path !== item.to 
+                'border-accent-hover': isActiveRoute(item.to),
+                'border-accent opacity-0 group-hover:opacity-100': !isActiveRoute(item.to)
               }"
             ></span>
           </router-link>
@@ -84,7 +85,7 @@
             :to="item.to" 
             class="block text-text-primary hover:text-accent text-base transition-colors duration-200 px-2 py-2"
             :class="{ 'active-mobile-link': isActiveRoute(item.to) }"
-            @click="closeMenu"
+            @click="item.to.hash ? handleNavigation($event, item.to) : closeMenu()"
           >
             {{ $t(item.label) }}
           </router-link>
@@ -119,8 +120,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, watch, onMounted, onUnmounted, computed, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 import LoadingScreen from '@/components/LoadingScreen.vue'
@@ -131,6 +132,7 @@ import nordLogo from '/public/images/nordlogo.png'
 import solarizedLogo from '/public/images/solarizedlogo.png'
 
 const route = useRoute()
+const router = useRouter()
 const { currentTheme, toggleTheme } = useTheme()
 const { currentLanguage, toggleLanguage } = useLanguageSwitcher()
 
@@ -139,14 +141,21 @@ const isMenuOpen = ref(false)
 const navItems = [
   { to: '/', label: 'nav.home' },
   //{ to: '/AboutPage', label: 'nav.about' },
-  { to: '/ProjectsPage', label: 'nav.projects' },
-  { to: '/ExperiencesPage', label: 'nav.experiences' },
+  { to: { path: '/', hash: '#projects' }, label: 'nav.experiences' },
   { to: '/GearPage', label: 'nav.gear' },
   { to: '/v2', label: 'nav.v2', desktopOnly: false }
 ]
 
-const isActiveRoute = (path) => {
-  return route.path === path || (path !== '/' && route.path.startsWith(path))
+const isActiveRoute = (to) => {
+  // Never show active state for experiences link
+  if (typeof to === 'object' && to.hash === '#projects') {
+    return false
+  }
+  
+  if (typeof to === 'string') {
+    return route.path === to
+  }
+  return route.path === to.path
 }
 
 const closeMenu = () => {
@@ -203,6 +212,52 @@ const isLargeScreen = computed(() => viewportWidth.value >= 1024)
 const currentLogo = computed(() => {
   return currentTheme.value === 'nord' ? nordLogo : solarizedLogo
 })
+
+// Add this method to handle hash navigation
+const handleNavigation = (event, to) => {
+  event.preventDefault()
+  
+  const scrollToTarget = (targetId) => {
+    const element = document.getElementById(targetId)
+    if (element) {
+      // Add small delay for mobile to ensure menu is closed
+      setTimeout(() => {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    }
+  }
+
+  // If we're not already on the home page, navigate there first
+  if (route.path !== '/') {
+    router.push('/').then(() => {
+      nextTick(() => {
+        scrollToTarget(to.hash.substring(1))
+      })
+    })
+  } else {
+    scrollToTarget(to.hash.substring(1))
+  }
+  
+  // Ensure the URL stays clean without the hash
+  if (window.history.pushState) {
+    window.history.pushState('', '/', '/')
+  }
+  
+  // Close mobile menu if open
+  closeMenu()
+}
+
+// Add this near your other watch statements
+watch(
+  () => route.hash,
+  (newHash) => {
+    if (newHash) {
+      // Clean the URL without affecting scroll position
+      window.history.replaceState('', '', route.path)
+    }
+  },
+  { immediate: true } // This ensures it runs on initial load
+)
 </script>
 
 <style scoped>

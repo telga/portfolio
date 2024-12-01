@@ -29,6 +29,11 @@ export default {
     })
 
     onMounted(() => {
+      // Scroll to top on page refresh
+      if (performance.navigation.type === 1) { // Check if it's a refresh
+        window.scrollTo(0, 0)
+      }
+      
       setFavicon()
       removeJsLoading()
     })

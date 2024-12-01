@@ -80,7 +80,7 @@
         <!-- Projects and Experiences row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <!-- Projects section -->
-          <div id="projects" class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in"
+          <div id="projects" class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in scroll-mt-[260px] md:scroll-mt-[10px]"
                style="animation-delay: 300ms;">
             <h2 class="text-2xl font-bold text-accent mb-4">{{ $t('projects.title') }}</h2>
             <div class="grid grid-cols-1 gap-6">
@@ -151,7 +151,7 @@
                 {{ $t(`experiences.work.items.${key}.duration`) }}
               </p>
               <ul class="mt-4 list-disc list-inside">
-                <li v-for="(responsibility, respKey) in job.responsibilities" :key="respKey" 
+                <li v-for="respKey in Object.keys(job.responsibilities)" :key="respKey" 
                     class="text-sm mt-2 text-text-secondary animate-slide-in-right" 
                     :style="{ animationDelay: `${(key * 100) + (respKey * 50)}ms` }">
                   {{ $t(`experiences.work.items.${key}.responsibilities.${respKey}`) }}
@@ -324,12 +324,7 @@ const initThree = () => {
       const scale = 1.1 / maxDim  // Increased scale from 0.8 to 1.1
       model.scale.multiplyScalar(scale)
       
-      console.log('Initial model setup complete')
-      console.log('Initial scale:', scale)
-      console.log('Initial position:', model.position)
-      
       updateModelPosition = () => {
-        console.log('Model update called')
         model.position.set(0, 0, 0)
         
         if (window.matchMedia('(min-width: 1280px)').matches) {
@@ -346,8 +341,6 @@ const initThree = () => {
         model.updateMatrix()
         controls.target.copy(model.position)
         controls.update()
-        
-        console.log('Final model position:', model.position)
       }
 
       // Initial position
@@ -469,6 +462,11 @@ const updateRendererSize = debounce(() => {
 
 // Update resize observer setup
 onMounted(() => {
+  // Clear hash from URL on page load/refresh
+  if (window.location.hash) {
+    window.history.pushState('', '/', window.location.pathname)
+  }
+  
   nextTick(() => {
     if (!threeCanvas.value) return
     
@@ -525,7 +523,6 @@ const copyEmail = async () => {
   try {
     await navigator.clipboard.writeText('briann2305@gmail.com')
     showToast.value = true
-    console.log('Toast should show:', showToast.value) // Debug log
     
     // Clear any existing timeout
     if (toastTimeout.value) {
