@@ -24,8 +24,8 @@
             <!-- Command Line -->
             <div class="flex">
               <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
-              <div class="text-[var(--text-primary)]"> ></div>
-              <div class="text-[var(--text-primary)] ml-2">{{ entry.command }}</div>
+              <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
+              <div class="text-[var(--text-primary)]">{{ entry.command }}</div>
             </div>
   
             <!-- Command Output -->
@@ -85,21 +85,19 @@
           <!-- Current Command Line -->
           <div class="flex">
             <div class="text-[var(--accent-secondary)]">portfolio@brian-nguyen</div>
-            <div class="text-[var(--text-primary)]">&gt;</div>
-            <input
-              ref="inputRef"
-              type="text"
-              v-model="currentCommand"
-              @keydown="handleKeyPress"
-              @click="handleSelection"
-              @select="handleSelection"
-              class="text-[var(--text-primary)] ml-2 bg-transparent border-none outline-none w-full"
-              :spellcheck="false"
-            />
+            <div class="text-[var(--text-primary)]">&gt;&nbsp;</div>
             <div 
-              class="w-2 h-4 bg-[var(--text-primary)] animate-blink ml-1" 
-              v-show="showCursor && !isExecuting"
-            ></div>
+              class="text-[var(--text-primary)] relative cursor-text"
+              @click="handleClick"
+            >
+              {{ currentCommand.slice(0, cursorPosition) }}
+              <div 
+                class="w-2 h-4 bg-[var(--text-primary)] animate-blink absolute"
+                :style="{ left: `${cursorPosition * 8}px`, top: '0' }"
+                v-show="showCursor && !isExecuting"
+              ></div>
+              {{ currentCommand.slice(cursorPosition) }}
+            </div>
           </div>
         </div>
       </div>
@@ -142,26 +140,36 @@
     }
   
     if (e.ctrlKey) {
-      let selection
       switch (e.key) {
         case 'a':
           e.preventDefault()
-          // Select whole command (visual only)
-          window.getSelection()?.selectAllChildren(e.target)
+          cursorPosition.value = 0
           return
         case 'k':
           e.preventDefault()
-          // Delete from cursor to end of line
-          selection = window.getSelection()
-          if (selection && selection.anchorOffset) {
-            currentCommand.value = currentCommand.value.substring(0, selection.anchorOffset)
-          }
+          currentCommand.value = currentCommand.value.substring(0, cursorPosition.value)
           return
         case 'l':
           e.preventDefault()
           clearTerminal()
           return
       }
+    }
+  
+    // Handle arrow keys
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      if (cursorPosition.value > 0) {
+        cursorPosition.value--
+      }
+      return
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      if (cursorPosition.value < currentCommand.value.length) {
+        cursorPosition.value++
+      }
+      return
     }
   
     if (e.key === 'Enter' && currentCommand.value) {
@@ -262,10 +270,19 @@
       })
     } else if (e.key === 'Backspace') {
       e.preventDefault()
-      currentCommand.value = currentCommand.value.slice(0, -1)
+      if (cursorPosition.value > 0) {
+        currentCommand.value = 
+          currentCommand.value.slice(0, cursorPosition.value - 1) + 
+          currentCommand.value.slice(cursorPosition.value)
+        cursorPosition.value--
+      }
     } else if (e.key.length === 1 && !e.ctrlKey) {
       e.preventDefault()
-      currentCommand.value += e.key
+      currentCommand.value = 
+        currentCommand.value.slice(0, cursorPosition.value) + 
+        e.key + 
+        currentCommand.value.slice(cursorPosition.value)
+      cursorPosition.value++
     }
   }
   
@@ -299,6 +316,20 @@
     if (inputRef.value) {
       cursorPosition.value = inputRef.value.selectionStart || 0
     }
+  }
+  
+  const handleClick = (e) => {
+    const commandElement = e.target
+    const rect = commandElement.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    
+    // Approximate character position based on click location
+    // Assuming monospace font where each character is ~8px wide
+    const clickedPosition = Math.floor(x / 8)
+    cursorPosition.value = Math.min(
+      Math.max(0, clickedPosition),
+      currentCommand.value.length
+    )
   }
   
   onMounted(() => {
@@ -360,5 +391,9 @@
   input::selection {
     background: var(--accent);
     color: var(--bg-primary);
+  }
+  
+  .cursor-text {
+    user-select: none; /* Prevent text selection for better cursor handling */
   }
   </style> 
