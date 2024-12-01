@@ -280,7 +280,7 @@
           >
             <div class="text-[var(--text-primary)] text-center">
               <h2 class="text-xl font-medium mb-6">Device Orientation Notice</h2>
-              <p class="mb-8 text-lg">On smaller screen size devices please rotate your device to landscape mode. (this may not look good on mobile)</p>
+              <p class="mb-8 text-lg">On smaller screen size devices please rotate your device to landscape mode. (this will probably not work on mobile)</p>
               <button 
                 @click="showRotateModal = false"
                 class="px-6 py-3 bg-[var(--accent)] text-[var(--bg-primary)] rounded-md hover:opacity-90 transition-opacity text-lg"
