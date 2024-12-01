@@ -80,4 +80,49 @@ html.dark {
   display: flex;
   flex-direction: column;
 }
+
+/* Toast Container */
+.site-toast-container {
+  --toastify-color-light: var(--bg-secondary);
+  --toastify-color-dark: var(--bg-secondary);
+  --toastify-text-color-light: var(--text-primary);
+  --toastify-text-color-dark: var(--text-primary);
+}
+
+/* Individual Toast */
+.site-toast {
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+  padding: 8px 12px !important;
+  min-height: unset !important;
+  border: 1px solid var(--accent) !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Close Button */
+.site-toast .Vue-Toastification__close-button {
+  color: var(--text-secondary) !important;
+  opacity: 0.7;
+}
+
+.site-toast .Vue-Toastification__close-button:hover {
+  opacity: 1;
+}
+
+/* Toast Animation */
+.toast-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.toast-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
 </style>

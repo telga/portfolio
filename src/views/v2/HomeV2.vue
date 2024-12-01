@@ -9,6 +9,7 @@
       @open-drawing="openDrawing"
       @toggle-drawing="toggleDrawing"
       @theme-switch="handleThemeSwitch"
+      @language-switch="handleLanguageSwitch"
       :isMinimized="isMinimized"
       :isTerminalExists="isTerminalExists"
       :isDrawingMinimized="isDrawingMinimized"
@@ -205,6 +206,10 @@
                     >experience</button>
                   </div>
                 </div>
+                <div>
+                  <span class="text-[var(--accent)]">Language: </span>
+                  <span class="text-[var(--accent-secondary)]">{{ locale === 'en' ? 'English' : '日本語' }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -305,6 +310,7 @@
     import HeaderV2 from '@/components/HeaderV2.vue'
     import { MinusSmallIcon, Square2StackIcon, XMarkIcon, CommandLineIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
     import DrawingWindow from '@/components/DrawingWindow.vue'
+    import { useToast } from 'vue-toastification'
 
     const router = useRouter()
     const { currentTheme } = useTheme()
@@ -355,11 +361,23 @@
     
     const isTerminalExists = computed(() => isTerminalVisible.value || isMinimized.value)
     
+    const validCommands = [
+      'ifetch', 
+      'help', 
+      'about', 
+      'projects', 
+      'exp', 
+      'clear', 
+      'switchtheme', 
+      'regsite',
+      'switchlang',
+      'curlang'
+    ]
+
     const handleKeyPress = (e) => {
       const isOnMobile = window.innerWidth <= 1024
       
       if (isOnMobile && e.key === 'Unidentified') {
-        // Let the mobile input handler deal with it
         return
       }
       
@@ -604,6 +622,21 @@ ${Object.keys(job.responsibilities).map(respKey =>
       if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
         historyIndex.value = -1
       }
+    
+      // Add tab completion
+      if (e.key === 'Tab') {
+        e.preventDefault()
+        if (currentCommand.value) {
+          const matches = validCommands.filter(cmd => 
+            cmd.startsWith(currentCommand.value.toLowerCase())
+          )
+          if (matches.length === 1) {
+            currentCommand.value = matches[0]
+            cursorPosition.value = matches[0].length
+          }
+        }
+        return
+      }
     }
     
     const clearTerminal = () => {
@@ -617,11 +650,17 @@ ${Object.keys(job.responsibilities).map(respKey =>
     const copyEmail = async () => {
       try {
         await navigator.clipboard.writeText('briann2305@gmail.com')
-        const originalCommand = currentCommand.value
-        currentCommand.value = 'Email copied to clipboard!'
-        setTimeout(() => {
-          currentCommand.value = originalCommand
-        }, 2000)
+        toast.success('Email copied to clipboard!', {
+          timeout: 2000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          hideProgressBar: true,
+          icon: false,
+          position: "bottom-right",
+          containerClassName: "terminal-toast-container",
+          style: { marginTop: "52px" }
+        })
       } catch (err) {
         console.error('Failed to copy email')
       }
@@ -1261,6 +1300,39 @@ ${Object.keys(job.responsibilities).map(respKey =>
       // Let default touch scrolling behavior work
       // The .passive modifier above ensures smooth scrolling
     }
+
+    // Add toast instance
+    const toast = useToast()
+
+    // Add handler for language switch event
+    const handleLanguageSwitch = (newLang) => {
+      toast.success(`Switched to ${newLang === 'en' ? 'English' : '日本語'}`, {
+        timeout: 2000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        hideProgressBar: true,
+        icon: false,
+        position: "bottom-right",
+        containerClassName: "terminal-toast-container",
+        style: { marginTop: "52px" }
+      })
+    }
+
+    // Add handler for theme switch event
+    const handleThemeSwitch = (newTheme) => {
+      toast.success(`Switching to ${newTheme} theme...`, {
+        timeout: 2000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        hideProgressBar: true,
+        icon: false,
+        position: "bottom-right",
+        containerClassName: "terminal-toast-container",
+        style: { marginTop: "52px" }
+      })
+    }
     </script>
     
     <style scoped>
@@ -1726,5 +1798,10 @@ ${Object.keys(job.responsibilities).map(respKey =>
       .cursor-se-resize {
         cursor: default;
       }
+    }
+
+    :deep(.terminal-toast-container) {
+      top: 52px !important;
+      right: 12px !important;
     }
     </style> 

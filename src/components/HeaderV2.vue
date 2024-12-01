@@ -1,11 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 import { useTheme } from '@/utils/useTheme'
+import { useI18n } from 'vue-i18n'
 import LoadingScreenV2 from '@/components/LoadingScreenV2.vue'
 
 const { currentTheme } = useTheme()
+const { locale } = useI18n()
 const showLoadingScreen = ref(true)
 const currentTime = ref('')
+const emit = defineEmits(['theme-switch', 'language-switch'])
 
 // Initial loading screen
 onMounted(() => {
@@ -32,7 +35,14 @@ const handleThemeToggle = () => {
   showLoadingScreen.value = true
   const newTheme = currentTheme.value === 'nord' ? 'solarized' : 'nord'
   localStorage.setItem('theme', newTheme)
+  emit('theme-switch', newTheme)
   window.location.reload()
+}
+
+const handleLanguageToggle = () => {
+  const newLang = locale.value === 'en' ? 'jp' : 'en'
+  locale.value = newLang
+  emit('language-switch', newLang)
 }
 </script>
 
@@ -60,6 +70,18 @@ const handleThemeToggle = () => {
       >
         <span class="relative whitespace-nowrap">
           Switch Theme
+          <div 
+            class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+          ></div>
+        </span>
+      </button>
+
+      <button 
+        @click="handleLanguageToggle" 
+        class="h-8 flex items-center px-2 cursor-pointer group"
+      >
+        <span class="relative whitespace-nowrap">
+          {{ locale === 'en' ? 'JP' : 'EN' }}
           <div 
             class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
           ></div>
