@@ -199,11 +199,16 @@
     
     <script setup>
     import { ref, nextTick, onMounted, onUnmounted, watch, computed } from 'vue'
+    import { useRouter } from 'vue-router'
+    import { useTheme } from '@/utils/useTheme'
     import experiencesData from '@/data/experiencesData.js'
     import projectsData from '@/data/projects.json'
     import { useI18n } from 'vue-i18n'
     import HeaderV2 from '@/components/HeaderV2.vue'
     import { MinusSmallIcon, Square2StackIcon, XMarkIcon, CommandLineIcon } from '@heroicons/vue/24/outline'
+
+    const router = useRouter()
+    const { currentTheme } = useTheme()
 
     const MIN_WIDTH = 600
     const MIN_HEIGHT = 350
@@ -293,7 +298,7 @@
     
       if (e.key === 'Enter' && currentCommand.value) {
         const newEntry = { command: currentCommand.value }
-        const validCommands = ['ifetch', 'help', 'about', 'projects', 'exp', 'clear']
+        const validCommands = ['ifetch', 'help', 'about', 'projects', 'exp', 'clear', 'switchtheme', 'regsite']
     
         if (currentCommand.value === 'init') {
           commandHistory.value.push({
@@ -322,12 +327,14 @@
           } else if (currentCommand.value === 'help') {
             newEntry.output = `Available commands:
     
-    ifetch          Display system information and profile
-    about           Show information about me
+    ifetch          Display profile
+    about           Show about information
     projects        View my projects
     exp             View my experience
     help            Show this help message
     clear           Clear the terminal (Ctrl+L)
+    switchtheme     Switch between nord and solarized themes
+    regsite         Go to regular site
     
     Type a command and press Enter to execute`
             commandHistory.value.push(newEntry)
@@ -386,6 +393,18 @@
             if (commandHistory.value.length > MAX_HISTORY) {
               commandHistory.value.shift()
             }
+          } else if (currentCommand.value === 'switchtheme') {
+            const newTheme = currentTheme.value === 'nord' ? 'solarized' : 'nord'
+            localStorage.setItem('theme', newTheme)
+            newEntry.output = `Switching to ${newTheme} theme...`
+            commandHistory.value.push(newEntry)
+            window.location.reload()
+          } else if (currentCommand.value === 'regsite') {
+            newEntry.output = 'Redirecting to regular site...'
+            commandHistory.value.push(newEntry)
+            setTimeout(() => {
+              router.push('/')
+            }, 500)
           } else if (currentCommand.value === 'clear') {
             clearTerminal()
             return
