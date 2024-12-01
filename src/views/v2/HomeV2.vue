@@ -31,23 +31,20 @@
             top: typeof position.y === 'number' ? `${position.y}px` : position.y,
             width: `${size.width}px`,
             height: `${size.height}px`,
-            cursor: isDragging ? 'grabbing' : 'auto'
           }"
-          @mousedown="startDrag"
         >
-          <!-- Resize handles -->
-          <template v-if="!isMaximized">
-            <div class="resize-handle left" @mousedown="(e) => startResize('left', e)"></div>
-            <div class="resize-handle right" @mousedown="(e) => startResize('right', e)"></div>
-            <div class="resize-handle bottom" @mousedown="(e) => startResize('bottom', e)"></div>
-            <div class="resize-handle bottom-left" @mousedown="(e) => startResize('bottom-left', e)"></div>
-            <div class="resize-handle bottom-right" @mousedown="(e) => startResize('bottom-right', e)"></div>
-          </template>
+          <!-- Resize Handles - removed top edge -->
+          <div class="resize-handle resize-e" @mousedown="(e) => startResize('e', e)"></div>
+          <div class="resize-handle resize-w" @mousedown="(e) => startResize('w', e)"></div>
+          <div class="resize-handle resize-s" @mousedown="(e) => startResize('s', e)"></div>
+          <div class="resize-handle resize-se" @mousedown="(e) => startResize('se', e)"></div>
+          <div class="resize-handle resize-sw" @mousedown="(e) => startResize('sw', e)"></div>
           
           <!-- Terminal Header -->
           <div 
-            class="h-8 flex items-center relative select-none bg-[var(--bg-secondary)] border-b border-[var(--accent-hover)]"
+            class="h-8 flex items-center relative select-none bg-[var(--bg-primary)]"
             @mousedown="startDrag"
+            :style="{ cursor: isDragging ? 'grabbing' : 'grab' }"
           >
             <!-- Centered text -->
             <div class="absolute w-full text-center text-[var(--accent)] text-sm pointer-events-none">
@@ -206,6 +203,9 @@
     import { useI18n } from 'vue-i18n'
     import HeaderV2 from '@/components/HeaderV2.vue'
     import { MinusSmallIcon, Square2StackIcon, XMarkIcon, CommandLineIcon } from '@heroicons/vue/24/outline'
+
+    const MIN_WIDTH = 600
+    const MIN_HEIGHT = 350
     
     const { t, locale } = useI18n()
     
@@ -234,15 +234,17 @@
     const dragOffset = ref({ x: 0, y: 0 })
     const position = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
     const size = ref({ width: 900, height: 600 })
-    const resizeEdge = ref(null)
+    const resizeDirection = ref(null)
+    const resizeStartPos = ref(null)
     const isMaximized = ref(false)
-    const previousState = ref({
+    const lastWindowState = ref({
       position: null,
       size: null
     })
     const selectedIcon = ref(false)
     const lastPosition = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
     const lastSize = ref({ width: 900, height: 600 })
+    const isResizing = ref(false)
     
     const isTerminalExists = computed(() => isTerminalVisible.value || isMinimized.value)
     
@@ -532,13 +534,15 @@
     
     const maximizeTerminal = () => {
       if (isMaximized.value) {
-        // Restore previous state
-        position.value = { ...previousState.value.position }
-        size.value = { ...previousState.value.size }
+        // Restore to previous state
+        if (lastWindowState.value.position && lastWindowState.value.size) {
+          position.value = { ...lastWindowState.value.position }
+          size.value = { ...lastWindowState.value.size }
+        }
         isMaximized.value = false
       } else {
         // Save current state
-        previousState.value = {
+        lastWindowState.value = {
           position: { ...position.value },
           size: { ...size.value }
         }
@@ -546,7 +550,7 @@
         position.value = { x: 0, y: 0 }
         size.value = {
           width: window.innerWidth,
-          height: window.innerHeight - 32 // Subtract header height
+          height: window.innerHeight
         }
         isMaximized.value = true
       }
@@ -554,8 +558,7 @@
     
     // Dragging logic
     const startDrag = (e) => {
-      // Only start drag if clicking titlebar and not window controls
-      if (!e.target.closest('.h-8') || e.target.closest('.window-controls')) return
+      if (e.target.closest('.window-controls') || isMaximized.value) return
       
       isDragging.value = true
       dragOffset.value = {
@@ -586,66 +589,65 @@
     }
     
     // Resize logic
-    const isResizing = ref(false)
-    
-    const startResize = (edge, e) => {
-      if (isMaximized.value) return
-      e.preventDefault()
-      resizeEdge.value = edge
+    const startResize = (direction, e) => {
+      if (!e) return
+      
       isResizing.value = true
+      resizeDirection.value = direction
+      
+      const rect = terminalWindow.value.getBoundingClientRect()
+      resizeStartPos.value = {
+        x: e.clientX,
+        y: e.clientY,
+        width: rect.width,
+        height: rect.height,
+        left: rect.left,
+      }
+      
       document.addEventListener('mousemove', handleResize)
       document.addEventListener('mouseup', stopResize)
     }
     
     const handleResize = (e) => {
-      if (!isResizing.value || !terminalWindow.value) return
+      if (!isResizing.value || !resizeStartPos.value) return
 
-      const rect = terminalWindow.value.getBoundingClientRect()
-      const minWidth = 600
-      const minHeight = 400
-      let newWidth, newHeight, deltaX, deltaXBL, newWidthBL, newHeightBL
+      const deltaX = e.clientX - resizeStartPos.value.x
+      const deltaY = e.clientY - resizeStartPos.value.y
+      let newWidth, newWidthSW
 
-      switch (resizeEdge.value) {
-        case 'right':
-          newWidth = Math.max(minWidth, e.clientX - rect.left)
-          size.value.width = newWidth
+      switch (resizeDirection.value) {
+        case 'e':
+          size.value.width = Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX)
           break
-          
-        case 'bottom':
-          newHeight = Math.max(minHeight, e.clientY - rect.top)
-          size.value.height = newHeight
-          break
-          
-        case 'left':
-          deltaX = rect.left - e.clientX
-          newWidth = Math.max(minWidth, rect.width + deltaX)
-          if (newWidth >= minWidth) {
-            position.value.x = e.clientX
+        case 'w':
+          newWidth = Math.max(MIN_WIDTH, resizeStartPos.value.width - deltaX)
+          if (newWidth !== size.value.width) {
+            position.value.x = resizeStartPos.value.left + deltaX
             size.value.width = newWidth
           }
           break
-          
-        case 'bottom-left':
-          deltaXBL = rect.left - e.clientX
-          newWidthBL = Math.max(minWidth, rect.width + deltaXBL)
-          newHeightBL = Math.max(minHeight, e.clientY - rect.top)
-          if (newWidthBL >= minWidth) {
-            position.value.x = e.clientX
-            size.value.width = newWidthBL
-          }
-          size.value.height = newHeightBL
+        case 's':
+          size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
           break
-          
-        case 'bottom-right':
-          size.value.width = Math.max(minWidth, e.clientX - rect.left)
-          size.value.height = Math.max(minHeight, e.clientY - rect.top)
+        case 'se':
+          size.value.width = Math.max(MIN_WIDTH, resizeStartPos.value.width + deltaX)
+          size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
+          break
+        case 'sw':
+          newWidthSW = Math.max(MIN_WIDTH, resizeStartPos.value.width - deltaX)
+          if (newWidthSW !== size.value.width) {
+            position.value.x = resizeStartPos.value.left + deltaX
+            size.value.width = newWidthSW
+          }
+          size.value.height = Math.max(MIN_HEIGHT, resizeStartPos.value.height + deltaY)
           break
       }
     }
     
     const stopResize = () => {
       isResizing.value = false
-      resizeEdge.value = null
+      resizeDirection.value = null
+      resizeStartPos.value = null
       document.removeEventListener('mousemove', handleResize)
       document.removeEventListener('mouseup', stopResize)
     }
@@ -803,44 +805,44 @@
       z-index: 1;
     }
     
-    .resize-handle.left {
-      left: -4px;
-      top: 0;
-      width: 8px;
-      height: 100%;
+    .resize-e {
+      top: 32px; /* Start below titlebar */
+      right: 0;
+      width: 4px;
+      height: calc(100% - 32px);
       cursor: ew-resize;
     }
     
-    .resize-handle.right {
-      right: -4px;
-      top: 0;
-      width: 8px;
-      height: 100%;
+    .resize-w {
+      top: 32px; /* Start below titlebar */
+      left: 0;
+      width: 4px;
+      height: calc(100% - 32px);
       cursor: ew-resize;
     }
     
-    .resize-handle.bottom {
-      bottom: -4px;
-      left: 8px;
-      right: 8px;
-      height: 8px;
+    .resize-s {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
       cursor: ns-resize;
     }
     
-    .resize-handle.bottom-left {
-      bottom: -4px;
-      left: -4px;
-      width: 12px;
-      height: 12px;
-      cursor: sw-resize;
+    .resize-se {
+      bottom: 0;
+      right: 0;
+      width: 8px;
+      height: 8px;
+      cursor: nwse-resize;
     }
     
-    .resize-handle.bottom-right {
-      bottom: -4px;
-      right: -4px;
-      width: 12px;
-      height: 12px;
-      cursor: se-resize;
+    .resize-sw {
+      bottom: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      cursor: nesw-resize;
     }
     
     /* Make handles more visible on hover (optional) */

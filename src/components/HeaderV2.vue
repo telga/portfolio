@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, defineEmits } from 'vue'
+import { useTheme } from '@/utils/useTheme'
+
+const { currentTheme, toggleTheme } = useTheme()
 
 const emit = defineEmits(['open-terminal', 'toggle-terminal'])
 
@@ -27,10 +30,16 @@ onBeforeUnmount(() => {
 const handleConsoleClick = () => {
   emit('toggle-terminal')
 }
+
+const handleThemeToggle = () => {
+  toggleTheme()
+  // Store the current theme in localStorage
+  localStorage.setItem('lastTheme', currentTheme.value)
+}
 </script>
 
 <template>
-  <div class="bg-[var(--bg-primary)] h-8 flex items-center justify-between px-4 text-[#93a1a1] text-sm relative">
+  <div class="bg-[var(--bg-primary)] h-8 flex items-center justify-between px-4 text-[var(--text-primary)] text-sm relative shadow-md">
     <!-- Left section -->
     <div class="w-[200px] flex items-center gap-4">
       <router-link 
@@ -46,7 +55,7 @@ const handleConsoleClick = () => {
       </router-link>
       
       <button 
-        @click="$emit('toggle-theme')" 
+        @click="handleThemeToggle" 
         class="h-8 flex items-center px-2 cursor-pointer group"
       >
         <span class="relative whitespace-nowrap">
