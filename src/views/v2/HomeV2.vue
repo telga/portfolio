@@ -5,18 +5,39 @@
         @toggle-terminal="toggleTerminal"
         :isMinimized="isMinimized"
       />
-      <div class="flex-1 bg-[#2e1f40] flex items-center justify-center">
+      <div class="flex-1 bg-[#2e1f40] relative">
         <!-- Terminal Window -->
-        <div v-if="isTerminalVisible" class="bg-[#002b36] w-[900px] h-[600px] shadow-xl overflow-hidden">
+        <div 
+          v-if="isTerminalVisible" 
+          ref="terminalWindow"
+          class="absolute bg-[#002b36] shadow-xl overflow-hidden"
+          :style="{
+            left: typeof position.x === 'number' ? `${position.x}px` : position.x,
+            top: typeof position.y === 'number' ? `${position.y}px` : position.y,
+            width: `${size.width}px`,
+            height: `${size.height}px`,
+            cursor: isDragging ? 'grabbing' : 'auto'
+          }"
+        >
+          <!-- Resize handles -->
+          <div class="resize-handle left" @mousedown="(e) => startResize('left', e)"></div>
+          <div class="resize-handle right" @mousedown="(e) => startResize('right', e)"></div>
+          <div class="resize-handle bottom" @mousedown="(e) => startResize('bottom', e)"></div>
+          <div class="resize-handle bottom-left" @mousedown="(e) => startResize('bottom-left', e)"></div>
+          <div class="resize-handle bottom-right" @mousedown="(e) => startResize('bottom-right', e)"></div>
+          
           <!-- Terminal Header -->
-          <div class="bg-[#1a1a1a] h-8 flex items-center relative">
+          <div 
+            class="bg-[#1a1a1a] h-8 flex items-center relative select-none"
+            @mousedown="startDrag"
+          >
             <!-- Centered text -->
             <div class="absolute w-full text-center text-gray-300 text-sm pointer-events-none">
               portfolio@brian-nguyen>
             </div>
             
             <!-- Right-aligned buttons -->
-            <div class="flex items-stretch h-full ml-auto">
+            <div class="flex items-stretch h-full ml-auto window-controls">
               <button 
                 @click="minimizeTerminal"
                 class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer relative"
@@ -37,7 +58,8 @@
           
           <!-- Terminal Content -->
           <div 
-            class="p-6 font-mono text-sm h-[calc(100%-32px)] overflow-y-auto bg-[#002b36]" 
+            class="p-6 font-mono text-sm overflow-y-auto bg-[#002b36]"
+            :style="{ height: `calc(${size.height}px - 32px)` }"
             @keydown="handleKeyPress"
             @keyup="handleSelection"
             @click="handleSelection"
@@ -56,12 +78,17 @@
               <!-- Command Output -->
               <div 
                 v-if="entry.output" 
-                class="whitespace-pre-wrap break-words mt-2 text-[var(--text-secondary)] font-mono max-w-[80ch]"
+                class="mt-2 text-[var(--text-secondary)] font-mono whitespace-pre-wrap break-words max-w-full"
               >{{ entry.output }}</div>
               
-              <!-- Neofetch Output -->
-              <div v-if="entry.showNeofetch" class="flex mt-2 gap-8">
-                <div class="w-[35%] aspect-square relative">
+              <!-- Neofetch/ifetch Output -->
+              <div 
+                v-if="entry.showNeofetch" 
+                class="flex flex-wrap mt-2 gap-8"
+                :style="{ maxWidth: `${size.width - 48}px` }"
+              >
+                <!-- Profile Picture -->
+                <div class="w-[200px] min-w-[200px] aspect-square relative">
                   <img 
                     src="/images/userpic.png" 
                     alt="Profile Picture"
@@ -69,9 +96,16 @@
                   />
                 </div>
                 
-                <div class="text-[var(--text-primary)] w-[65%] space-y-1 mt-6">
+                <!-- Info Section -->
+                <div class="text-[var(--text-primary)] space-y-1 mt-6 flex-1 min-w-[300px]">
                   <div><span class="text-[var(--accent)]">Name: </span>Brian Nguyen</div>
-                  <div><span class="text-[var(--accent)]">Github: </span><a href="https://github.com/telga" target="_blank" class="hover:text-[var(--accent-hover)] transition-colors duration-300">telga (link)</a></div>
+                  <div>
+                    <span class="text-[var(--accent)]">Github: </span>
+                    <a href="https://github.com/telga" target="_blank" 
+                       class="hover:text-[var(--accent-hover)] transition-colors duration-300">
+                      telga (link)
+                    </a>
+                  </div>
                   <div>
                     <span class="text-[var(--accent)]">Email: </span>
                     <button 
@@ -79,14 +113,22 @@
                       class="hover:text-[var(--accent-hover)] transition-colors duration-300"
                     >briann2305@gmail.com (link)</button>
                   </div>
-                  <div><span class="text-[var(--accent)]">LinkedIn: </span><a href="https://www.linkedin.com/in/bnguy23/" target="_blank" class="hover:text-[var(--accent-hover)] transition-colors duration-300">bnguy23 (link)</a></div>
-                  <div class="flex">
-                    <span class="text-[var(--accent)]">Skills: </span>
-                    <span class="text-[var(--accent-secondary)] ml-1">Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, Linux (Arch, Ubuntu)</span>
+                  <div>
+                    <span class="text-[var(--accent)]">LinkedIn: </span>
+                    <a href="https://www.linkedin.com/in/bnguy23/" target="_blank" 
+                       class="hover:text-[var(--accent-hover)] transition-colors duration-300">
+                      bnguy23 (link)
+                    </a>
                   </div>
-                  <div class="flex">
-                    <span class="text-[var(--accent)]">Pages: </span>
-                    <div class="flex gap-2 ml-1">
+                  <div class="flex flex-wrap gap-x-2">
+                    <span class="text-[var(--accent)]">Skills:</span>
+                    <span class="text-[var(--accent-secondary)]">
+                      Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, Linux (Arch, Ubuntu)
+                    </span>
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="text-[var(--accent)]">Pages:</span>
+                    <div class="flex gap-2">
                       <button 
                         @click="runCommand('about')" 
                         class="text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-colors duration-300"
@@ -134,7 +176,7 @@
   </template>
     
     <script setup>
-    import { ref, nextTick, onMounted } from 'vue'
+    import { ref, nextTick, onMounted, onUnmounted } from 'vue'
     import experiencesData from '@/data/experiencesData.js'
     import projectsData from '@/data/projects.json'
     import { useI18n } from 'vue-i18n'
@@ -163,6 +205,12 @@
     const inputRef = ref(null)
     const isTerminalVisible = ref(true)
     const isMinimized = ref(false)
+    const terminalWindow = ref(null)
+    const isDragging = ref(false)
+    const dragOffset = ref({ x: 0, y: 0 })
+    const position = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
+    const size = ref({ width: 900, height: 600 })
+    const resizeEdge = ref(null)
     
     const handleKeyPress = (e) => {
       if (isExecuting.value) {
@@ -389,6 +437,8 @@
     const closeTerminal = () => {
       isTerminalVisible.value = false
       isMinimized.value = false
+      position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
+      size.value = { width: 900, height: 600 }
     }
     
     const openTerminal = () => {
@@ -398,6 +448,8 @@
         scrollToBottom()
       } else {
         isTerminalVisible.value = true
+        position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
+        size.value = { width: 900, height: 600 }
         initializeTerminal()
       }
     }
@@ -430,6 +482,110 @@
       isTerminalVisible.value = false
       isMinimized.value = true
     }
+    
+    // Dragging logic
+    const startDrag = (e) => {
+      // Don't start drag if clicking window controls
+      if (e.target.closest('.window-controls')) return
+      
+      isDragging.value = true
+      dragOffset.value = {
+        x: e.clientX - terminalWindow.value.offsetLeft,
+        y: e.clientY - terminalWindow.value.offsetTop
+      }
+      document.addEventListener('mousemove', handleDrag)
+      document.addEventListener('mouseup', stopDrag)
+    }
+    
+    const handleDrag = (e) => {
+      if (!isDragging.value) return
+      
+      const newX = e.clientX - dragOffset.value.x
+      const newY = e.clientY - dragOffset.value.y
+      
+      // Prevent dragging outside viewport
+      position.value = {
+        x: Math.max(0, Math.min(newX, window.innerWidth - size.value.width)),
+        y: Math.max(0, Math.min(newY, window.innerHeight - size.value.height))
+      }
+    }
+    
+    const stopDrag = () => {
+      isDragging.value = false
+      document.removeEventListener('mousemove', handleDrag)
+      document.removeEventListener('mouseup', stopDrag)
+    }
+    
+    // Resize logic
+    const isResizing = ref(false)
+    
+    const startResize = (edge, e) => {
+      e.preventDefault()
+      resizeEdge.value = edge
+      isResizing.value = true
+      document.addEventListener('mousemove', handleResize)
+      document.addEventListener('mouseup', stopResize)
+    }
+    
+    const handleResize = (e) => {
+      if (!isResizing.value || !terminalWindow.value) return
+
+      const rect = terminalWindow.value.getBoundingClientRect()
+      const minWidth = 600
+      const minHeight = 400
+      let newWidth, newHeight, deltaX, deltaXBL, newWidthBL, newHeightBL
+
+      switch (resizeEdge.value) {
+        case 'right':
+          newWidth = Math.max(minWidth, e.clientX - rect.left)
+          size.value.width = newWidth
+          break
+          
+        case 'bottom':
+          newHeight = Math.max(minHeight, e.clientY - rect.top)
+          size.value.height = newHeight
+          break
+          
+        case 'left':
+          deltaX = rect.left - e.clientX
+          newWidth = Math.max(minWidth, rect.width + deltaX)
+          if (newWidth >= minWidth) {
+            position.value.x = e.clientX
+            size.value.width = newWidth
+          }
+          break
+          
+        case 'bottom-left':
+          deltaXBL = rect.left - e.clientX
+          newWidthBL = Math.max(minWidth, rect.width + deltaXBL)
+          newHeightBL = Math.max(minHeight, e.clientY - rect.top)
+          if (newWidthBL >= minWidth) {
+            position.value.x = e.clientX
+            size.value.width = newWidthBL
+          }
+          size.value.height = newHeightBL
+          break
+          
+        case 'bottom-right':
+          size.value.width = Math.max(minWidth, e.clientX - rect.left)
+          size.value.height = Math.max(minHeight, e.clientY - rect.top)
+          break
+      }
+    }
+    
+    const stopResize = () => {
+      isResizing.value = false
+      resizeEdge.value = null
+      document.removeEventListener('mousemove', handleResize)
+      document.removeEventListener('mouseup', stopResize)
+    }
+    
+    onUnmounted(() => {
+      document.removeEventListener('mousemove', handleDrag)
+      document.removeEventListener('mouseup', stopDrag)
+      document.removeEventListener('mousemove', handleResize)
+      document.removeEventListener('mouseup', stopResize)
+    })
     </script>
     
     <style scoped>
@@ -466,6 +622,7 @@
     .whitespace-pre-wrap {
       white-space: pre-wrap;
       word-wrap: break-word;
+      word-break: break-word;
     }
     
     [contenteditable] {
@@ -501,5 +658,105 @@
     .w-screen {
       width: 100vw;
       min-width: 100vw;
+    }
+    
+    .window-controls {
+      z-index: 10;
+    }
+    
+    /* Optional: Add visual indicator for resize handle */
+    [class*="cursor-se-resize"]::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 0 10px 10px;
+      border-color: transparent transparent rgba(255,255,255,0.2) transparent;
+    }
+    
+    .max-w-full {
+      max-width: 100%;
+    }
+    
+    .whitespace-pre {
+      white-space: pre;
+    }
+    
+    .overflow-x-auto {
+      overflow-x: auto;
+    }
+    
+    /* Add responsive styles for ifetch */
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+    
+    .min-w-[200px] {
+      min-width: 200px;
+    }
+    
+    .min-w-[300px] {
+      min-width: 300px;
+    }
+    
+    /* Resize handles */
+    .resize-handle {
+      position: absolute;
+      z-index: 1;
+    }
+    
+    .resize-handle.left {
+      left: -4px;
+      top: 0;
+      width: 8px;
+      height: 100%;
+      cursor: ew-resize;
+    }
+    
+    .resize-handle.right {
+      right: -4px;
+      top: 0;
+      width: 8px;
+      height: 100%;
+      cursor: ew-resize;
+    }
+    
+    .resize-handle.bottom {
+      bottom: -4px;
+      left: 8px;
+      right: 8px;
+      height: 8px;
+      cursor: ns-resize;
+    }
+    
+    .resize-handle.bottom-left {
+      bottom: -4px;
+      left: -4px;
+      width: 12px;
+      height: 12px;
+      cursor: sw-resize;
+    }
+    
+    .resize-handle.bottom-right {
+      bottom: -4px;
+      right: -4px;
+      width: 12px;
+      height: 12px;
+      cursor: se-resize;
+    }
+    
+    /* Make handles more visible on hover (optional) */
+    .resize-handle:hover::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
     }
     </style> 
