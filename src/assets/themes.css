@@ -13,5 +13,6 @@
   --text-primary: theme('colors.solarized.base0');
   --text-secondary: theme('colors.solarized.base1');
   --accent: theme('colors.solarized.blue');
+  --accent-secondary: theme('colors.solarized.green');
   --accent-hover: theme('colors.solarized.cyan');
 }

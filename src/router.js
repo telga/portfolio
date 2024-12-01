@@ -19,10 +19,16 @@ const routes = [
     component: BusinessCard,
     meta: { hideHeaderFooter: true }
   },
+  {
+    path: '/v2',
+    name: 'HomeV2',
+    component: () => import('@/views/v2/HomeV2.vue'),
+    meta: { hideHeaderFooter: true }
+  }
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL || '/'),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 
