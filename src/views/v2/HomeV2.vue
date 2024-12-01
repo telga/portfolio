@@ -50,7 +50,9 @@
             top: typeof position.y === 'number' ? `${position.y}px` : position.y,
             width: `${size.width}px`,
             height: `${size.height}px`,
+            zIndex: terminalZIndex
           }"
+          @mousedown="focusTerminal"
         >
           <!-- Resize Handles - removed top edge -->
           <div class="resize-handle resize-e" @mousedown="(e) => startResize('e', e)"></div>
@@ -221,6 +223,8 @@
           @minimize="minimizeDrawing"
           @maximize="maximizeDrawing"
           @close="closeDrawing"
+          @mousedown="focusDrawing"
+          :style="{ zIndex: drawingZIndex }"
         />
       </div>
     </div>
@@ -578,14 +582,10 @@
     }
     
     const openTerminal = () => {
+      isTerminalExists.value = true
       isTerminalVisible.value = true
       isMinimized.value = false
-      position.value = { x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' }
-      size.value = { width: 900, height: 600 }
-      initializeTerminal()
-      nextTick(() => {
-        terminalContent.value?.focus()
-      })
+      focusTerminal()
     }
     
     onMounted(() => {
@@ -602,24 +602,24 @@
       document.removeEventListener('mouseup', stopResize)
     })
     
-    const initializeTerminal = () => {
-      commandHistory.value = [
-        {
-          command: 'ifetch',
-          showNeofetch: true
-        },
-        {
-          command: 'init',
-          output: 'Type \'help\' for a list of available commands.'
-        }
-      ]
-      currentCommand.value = ''
-      cursorPosition.value = 0
-      isExecuting.value = false
-      nextTick(() => {
-        terminalContent.value?.focus()
-      })
-    }
+    // const initializeTerminal = () => {
+    //   commandHistory.value = [
+    //     {
+    //       command: 'ifetch',
+    //       showNeofetch: true
+    //     },
+    //     {
+    //       command: 'init',
+    //       output: 'Type \'help\' for a list of available commands.'
+    //     }
+    //   ]
+    //   currentCommand.value = ''
+    //   cursorPosition.value = 0
+    //   isExecuting.value = false
+    //   nextTick(() => {
+    //     terminalContent.value?.focus()
+    //   })
+    // }
     
     const minimizeTerminal = () => {
       lastPosition.value = { ...position.value }
@@ -793,6 +793,7 @@
       isDrawingExists.value = true
       isDrawingVisible.value = true
       isDrawingMinimized.value = false
+      focusDrawing()
     }
 
     const closeDrawing = () => {
@@ -843,6 +844,20 @@
       if (drawingIcon) {
         drawingIcon.classList.add('selected')
       }
+    }
+
+    // Add z-index management
+    const terminalZIndex = ref(1)
+    const drawingZIndex = ref(1)
+
+    const focusTerminal = () => {
+      terminalZIndex.value = 2
+      drawingZIndex.value = 1
+    }
+
+    const focusDrawing = () => {
+      drawingZIndex.value = 2
+      terminalZIndex.value = 1
     }
     </script>
     
