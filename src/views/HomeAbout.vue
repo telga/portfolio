@@ -127,7 +127,6 @@
               <p class="text-sm text-text-secondary">
                 {{ $t(`experiences.education.items.${key}.duration`) }}
               </p>
-              <!-- Add details list -->
               <ul class="mt-4 list-disc list-inside">
                 <li v-for="(detail, detailKey) in edu.details" :key="detailKey" 
                     class="text-sm mt-2 animate-slide-in-right" 
@@ -151,6 +150,13 @@
               <p class="text-sm text-text-secondary">
                 {{ $t(`experiences.work.items.${key}.duration`) }}
               </p>
+              <ul class="mt-4 list-disc list-inside">
+                <li v-for="(responsibility, respKey) in job.responsibilities" :key="respKey" 
+                    class="text-sm mt-2 text-text-secondary animate-slide-in-right" 
+                    :style="{ animationDelay: `${(key * 100) + (respKey * 50)}ms` }">
+                  {{ $t(`experiences.work.items.${key}.responsibilities.${respKey}`) }}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
