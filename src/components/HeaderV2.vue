@@ -35,10 +35,27 @@ const handleConsoleClick = () => {
     <div class="w-[200px] flex items-center gap-4">
       <router-link 
         to="/" 
-        class="hover:bg-[var(--accent-hover)] hover:text-[#eee8d5] px-2 py-1 rounded cursor-pointer transition-colors duration-200"
+        class="h-8 flex items-center px-2 cursor-pointer group"
       >
-        Regular Site
+        <span class="relative whitespace-nowrap">
+          Regular Site
+          <div 
+            class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+          ></div>
+        </span>
       </router-link>
+      
+      <button 
+        @click="$emit('toggle-theme')" 
+        class="h-8 flex items-center px-2 cursor-pointer group"
+      >
+        <span class="relative whitespace-nowrap">
+          Switch Theme
+          <div 
+            class="absolute bottom-[-1px] left-0 w-full h-[1px] bg-[var(--accent-hover)] scale-x-0 transition-transform duration-200 group-hover:scale-x-100"
+          ></div>
+        </span>
+      </button>
     </div>
     
     <!-- Center section - Terminal Tab -->

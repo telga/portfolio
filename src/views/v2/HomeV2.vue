@@ -554,7 +554,8 @@
     
     // Dragging logic
     const startDrag = (e) => {
-      if (e.target.closest('.window-controls') || e.target.closest('.resize-handle') || isMaximized.value) return
+      // Only start drag if clicking titlebar and not window controls
+      if (!e.target.closest('.h-8') || e.target.closest('.window-controls')) return
       
       isDragging.value = true
       dragOffset.value = {
