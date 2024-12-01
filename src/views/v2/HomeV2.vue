@@ -406,7 +406,7 @@
     
       if (e.key === 'Enter' && currentCommand.value) {
         const newEntry = { command: currentCommand.value }
-        const validCommands = ['ifetch', 'help', 'about', 'projects', 'exp', 'clear', 'switchtheme', 'regsite']
+        const validCommands = ['ifetch', 'help', 'about', 'projects', 'exp', 'clear', 'switchtheme', 'regsite', 'switchlang', 'curlang']
     
         if (currentCommand.value === 'init') {
           commandHistory.value.push({
@@ -442,6 +442,8 @@
     help            Show this help message
     clear           Clear the terminal (Ctrl+L)
     switchtheme     Switch between nord and solarized themes
+    switchlang      Switch between English and Japanese
+    curlang         Show current language setting
     regsite         Go to regular site
     
     Type a command and press Enter to execute`
@@ -457,7 +459,7 @@
               commandHistory.value.splice(firstUserCommandIndex, 1)
             }
           } else if (currentCommand.value === 'about') {
-            newEntry.output = t('about.bio')
+            newEntry.output = t('about.bio', { locale: 'en' })
             commandHistory.value.push(newEntry)
             if (commandHistory.value.length > MAX_HISTORY) {
               commandHistory.value.shift()
@@ -477,15 +479,17 @@
               commandHistory.value.shift()
             }
           } else if (currentCommand.value === 'exp') {
-            const work = Object.values(experiencesData.work.items)
             
             let output = `Work Experience:\n`
     
-            work.forEach(job => {
-              output += `\n${job.title}
-    ${job.company}, ${job.location}
-    ${job.duration}
-    ${Object.values(job.responsibilities).map(resp => `• ${resp}`).join('\n')}\n`
+            Object.keys(experiencesData.work.items).forEach(key => {
+              const job = experiencesData.work.items[key]
+              output += `\n${t(`experiences.work.items.${key}.title`, { locale: locale.value })}
+${t(`experiences.work.items.${key}.company`, { locale: locale.value })}, ${t(`experiences.work.items.${key}.location`, { locale: locale.value })}
+${job.duration}
+${Object.keys(job.responsibilities).map(respKey => 
+  `• ${t(`experiences.work.items.${key}.responsibilities.${respKey}`, { locale: locale.value })}`
+).join('\n')}\n`
             })
             
             newEntry.output = output
@@ -508,6 +512,17 @@
           } else if (currentCommand.value === 'clear') {
             clearTerminal()
             return
+          } else if (currentCommand.value === 'switchlang') {
+            const newLang = locale.value === 'en' ? 'jp' : 'en'
+            locale.value = newLang
+            newEntry.output = `Switching to ${newLang === 'en' ? 'English' : '日本語'}...`
+            commandHistory.value.push(newEntry)
+          } else if (currentCommand.value === 'curlang') {
+            newEntry.output = `Current language: ${locale.value === 'en' ? 'English' : '日本語'}`
+            commandHistory.value.push(newEntry)
+            if (commandHistory.value.length > MAX_HISTORY) {
+              commandHistory.value.shift()
+            }
           }
         }
     
