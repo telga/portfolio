@@ -240,8 +240,8 @@ const initThree = () => {
       camera.position.set(0, 1.2, 2.4)
       camera.lookAt(0, 0, 0)
     } else if (window.matchMedia('(min-width: 1024px)').matches) {
-      camera.position.set(0, 1.2, 2.8)  // Now matches XL camera position
-      camera.lookAt(0, -0.4, 0)  // Now matches XL lookAt
+      camera.position.set(0, 1.2, 2.4)  // Now matches XL camera position
+      camera.lookAt(0, 1.2, 2.4)  // Now matches XL lookAt
     } else {
       // Mobile/tablet
       camera.position.set(0, 1.5, 2.8)
@@ -261,28 +261,49 @@ const initThree = () => {
     precision: 'highp',
     powerPreference: 'high-performance',
   })
-  // Adjust size to match new container size (96 * 4 = 384)
+  // Enable shadow mapping
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
   renderer.setSize(256, 256)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-  // Improved lighting setup
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1.2) // Increased ambient light
+  // Slightly less warm ambient light
+  const ambientLight = new THREE.AmbientLight(0xfff8f0, 1.2)  // Less warm white
   scene.add(ambientLight)
   
-  // Main directional light
-  const mainLight = new THREE.DirectionalLight(0xffffff, 1.5) // Increased intensity
-  mainLight.position.set(2, 2, 1)
+  // Main directional light - reduced warmth
+  const mainLight = new THREE.DirectionalLight(0xffe8cc, 1.5)  // Less orange, more balanced
+  mainLight.position.set(-1, 4, -1)
+  mainLight.castShadow = true
+  mainLight.shadow.mapSize.width = 2048
+  mainLight.shadow.mapSize.height = 2048
+  mainLight.shadow.camera.near = 0.1
+  mainLight.shadow.camera.far = 10
+  mainLight.shadow.bias = -0.0001
+  mainLight.shadow.normalBias = 0.02
+  mainLight.shadow.radius = 4
   scene.add(mainLight)
 
-  // Fill light from opposite side
-  const fillLight = new THREE.DirectionalLight(0xffffff, 0.8)
-  fillLight.position.set(-2, 0, -2)
+  // Fill light - reduced warmth
+  const fillLight = new THREE.DirectionalLight(0xfff2e6, 0.8)  // More neutral warm
+  fillLight.position.set(1, 3, 1)
   scene.add(fillLight)
 
-  // Top light for better coverage
-  const topLight = new THREE.DirectionalLight(0xffffff, 0.8)
-  topLight.position.set(0, 5, 0)
+  // Top light - very subtle warm tint
+  const topLight = new THREE.DirectionalLight(0xfff6f0, 0.8)  // Almost neutral
+  topLight.position.set(0, 6, 0)
   scene.add(topLight)
+
+  // Adjust ground plane position
+  const groundGeometry = new THREE.PlaneGeometry(10, 10)
+  const groundMaterial = new THREE.ShadowMaterial({ 
+    opacity: 0.3 
+  })
+  const ground = new THREE.Mesh(groundGeometry, groundMaterial)
+  ground.rotation.x = -Math.PI / 2
+  ground.position.y = -0.2  // Changed from -0.5 to -0.1 to be closer to model
+  ground.receiveShadow = true
+  scene.add(ground)
 
   // Load 3D Model with improved smoothing
   const loader = new GLTFLoader()
@@ -329,10 +350,10 @@ const initThree = () => {
           model.position.set(0, -0.2, 0)
         } else if (window.matchMedia('(min-width: 1024px)').matches) {
           // LG breakpoint - moved down by adjusting Y position
-          model.position.set(0, -0.2, 0.2)
+          model.position.set(0, -0.2, 0)
         } else {
           // Mobile/tablet - keep original position
-          model.position.set(0, 0.4, -0.4)
+          model.position.set(0, -0.2, 0)
         }
         
         model.updateMatrix()
