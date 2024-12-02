@@ -157,7 +157,7 @@
             </div>
 
             <!-- Skills section moved here -->
-            <h2 class="text-2xl font-bold text-[var(--accent-hover)] mb-4 mt-8">{{ $t('about.skills') }}</h2>
+            <h2 class="text-2xl font-bold text-[var(--accent)] mb-4 mt-8">{{ $t('about.skills') }}</h2>
             <div class="bg-[var(--bg-primary)] p-4 rounded-md shadow-md animate-slide-in-right"
                  :style="{ animationDelay: '650ms' }">
               <ul class="flex flex-wrap gap-2">
