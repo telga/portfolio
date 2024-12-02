@@ -19,7 +19,7 @@
 
       <!-- Desktop menu (centered for large screens) -->
       <div class="hidden lg:flex flex-grow justify-center">
-        <div class="flex space-x-4">
+        <div class="flex space-x-4 items-center ml-20">
           <router-link 
             v-for="item in navItems" 
             :key="item.to" 

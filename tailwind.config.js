@@ -49,6 +49,9 @@ module.exports = {
       fontFamily: {
         mono: ['"Noto Sans Mono"', '"Noto Sans JP"', 'monospace'],
       },
+      spacing: {
+        '18': '4.5rem',
+      },
     },
   },
   plugins: [],
