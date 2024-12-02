@@ -41,12 +41,12 @@
                    :href="link.url"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="animated-button social-button px-3 py-2 rounded-md bg-[var(--bg-primary)] text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-all duration-200">
+                   class="animated-button social-button px-3 py-2 rounded-md bg-[var(--bg-primary)] text-[var(--accent-secondary)] hover:text-[var(--accent-red)] transition-all duration-200">
                   {{ link.name }}
                 </a>
                 <button v-else
                         @click="copyEmail"
-                        class="animated-button social-button px-3 py-2 rounded-md bg-[var(--bg-primary)] text-[var(--accent-secondary)] hover:text-accent-hover transition-all duration-200">
+                        class="animated-button social-button px-3 py-2 rounded-md bg-[var(--bg-primary)] text-[var(--accent-secondary)] hover:text-[var(--accent-red)] transition-all duration-200">
                   Email
                 </button>
               </template>
@@ -114,7 +114,7 @@
             <div v-for="(edu, key) in education.items" :key="key" 
                  class="bg-bg-primary p-4 rounded-lg shadow-md mb-4 animate-slide-in-right"
                  :style="{ animationDelay: `${450 + key * 100}ms` }">
-              <h3 class="text-lg font-medium text-[var(--accent-secondary)]">
+              <h3 class="text-lg font-bold text-[var(--accent-secondary)]">
                 {{ $t(`experiences.education.items.${key}.degree`) }}
               </h3>
               <p class="text-[var(--accent-hover)]">
@@ -137,7 +137,7 @@
             <div v-for="(job, key) in work.items" :key="key" 
                  class="bg-bg-primary p-4 rounded-lg shadow-md mb-4 animate-slide-in-right"
                  :style="{ animationDelay: `${550 + key * 100}ms` }">
-              <h3 class="text-lg font-medium text-[var(--accent-secondary)]">
+              <h3 class="text-lg font-bold text-[var(--accent-secondary)]">
                 {{ $t(`experiences.work.items.${key}.title`) }}
               </h3>
               <p class="text-[var(--accent-hover)]">
