@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-bg-primary text-text-primary px-2 pt-6 sm:pt-6 lg:pt-6">
+  <div class="min-h-screen bg-bg-primary text-text-primary px-2 pt-8 sm:pt-8 lg:pt-8">
     <div class="max-w-6xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div class="animate-slide-in h-full" style="animation-delay: 100ms;">

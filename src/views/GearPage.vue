@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-bg-primary text-text-primary p-4 md:p-8">
+  <div class="min-h-screen bg-bg-primary text-text-primary px-2 pt-8 sm:pt-8 lg:pt-8">
     <div class="flex flex-col md:flex-row">
       <!-- Buttons -->
       <div class="md:w-56 mb-4 md:mb-0 md:mr-8">
