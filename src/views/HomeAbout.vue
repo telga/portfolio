@@ -1,11 +1,6 @@
 <template>
-  <div class="min-h-screen bg-bg-primary text-text-primary p-4 sm:p-8 lg:p-12">
+  <div class="min-h-screen bg-bg-primary text-text-primary px-2 pt-6 sm:pt-6 lg:pt-6">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl sm:text-5xl font-bold text-accent mb-8 sm:mb-12 animate-slide-in text-center"
-          style="animation-delay: 0ms;">
-        {{ $t('about.title') }}
-      </h1>
-      
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div class="animate-slide-in h-full" style="animation-delay: 100ms;">
           <div class="flex flex-col h-full">
@@ -19,39 +14,41 @@
         <div class="space-y-4">
           <div class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in"
                style="animation-delay: 200ms;">
-            <h2 class="text-2xl font-bold text-accent mb-4">
+            <h3 class="text-3xl sm:text-4xl font-bold text-accent animate-slide-in mb-2"
+                style="animation-delay: 0ms;">
+              {{ $t('about.title') }}
+            </h3>
+            <h4 class="text-xl font-bold text-[var(--accent-secondary)] mb-4">
               {{ $t('about.about') }}
-            </h2>
-            <div class="space-y-6">
-              <p v-for="(paragraph, index) in bioParagraphs" 
-                 :key="index" 
-                 class="text-text-secondary leading-relaxed animate-slide-in-down"
-                 :style="{ animationDelay: `${300 + index * 100}ms` }">
-                {{ paragraph }}
-              </p>
+            </h4>
+            <div class="bg-bg-primary p-4 rounded-lg shadow-md">
+              <div class="space-y-6">
+                <p v-for="(paragraph, index) in bioParagraphs" 
+                   :key="index" 
+                   class="text-text-secondary leading-relaxed animate-slide-in-down"
+                   :style="{ animationDelay: `${300 + index * 100}ms` }">
+                  {{ paragraph }}
+                </p>
+              </div>
             </div>
           </div>
-
-          <!-- <div class="hidden lg:block lg:h-0 xl:h-10"></div> -->
-
           <div class="bg-bg-secondary rounded-lg shadow-lg p-4 lg:mt-12 xl:mt-12 animate-slide-in"
                style="animation-delay: 300ms;">
             <!-- Desktop view -->
             <div class="hidden md:flex flex-wrap justify-center items-center gap-4 text-accent">
-              <template v-for="(link, index) in socialLinks" :key="link.name">
+              <template v-for="(link) in socialLinks" :key="link.name">
                 <a v-if="link.name !== 'Email'"
                    :href="link.url"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="px-3 py-2 rounded-md hover:bg-bg-primary text-[var(--accent-secondary)] hover:text-accent-hover transition-all duration-200">
+                   class="animated-button social-button px-3 py-2 rounded-md bg-[var(--bg-primary)] text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] transition-all duration-200">
                   {{ link.name }}
                 </a>
                 <button v-else
                         @click="copyEmail"
-                        class="px-3 py-2 rounded-md hover:bg-bg-primary text-[var(--accent-secondary)] hover:text-accent-hover transition-all duration-200">
+                        class="animated-button social-button px-3 py-2 rounded-md bg-[var(--bg-primary)] text-[var(--accent-secondary)] hover:text-accent-hover transition-all duration-200">
                   Email
                 </button>
-                <span v-if="index < socialLinks.length - 1" class="text-[var(--text-primary)]">|</span>
               </template>
             </div>
 
@@ -62,12 +59,12 @@
                    :href="link.url"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="flex items-center justify-center py-3 rounded-lg bg-bg-primary text-[var(--accent-secondary)] active:bg-accent active:text-white transition-all duration-200">
+                   class="animated-button social-button flex items-center justify-center py-3 rounded-lg bg-bg-primary text-[var(--accent-secondary)] active:bg-accent active:text-white transition-all duration-200">
                   {{ link.name }}
                 </a>
                 <button v-else
                         @click="copyEmail"
-                        class="flex items-center justify-center py-3 rounded-lg bg-bg-primary text-[var(--accent-secondary)] active:bg-accent active:text-white transition-all duration-200">
+                        class="animated-button social-button flex items-center justify-center py-3 rounded-lg bg-bg-primary text-[var(--accent-secondary)] active:bg-accent active:text-white transition-all duration-200">
                   Email
                 </button>
               </template>
@@ -93,15 +90,15 @@
                    }">
                 <img :src="project.image" :alt="project.title" class="w-full h-36 object-cover">
                 <div class="p-4 flex-grow flex flex-col">
-                  <h3 class="text-lg font-bold mb-2 text-text-primary">{{ project.title }}</h3>
-                  <p class="text-sm text-text-secondary mb-4 flex-grow">{{ project.description }}</p>
+                  <h3 class="text-lg font-bold mb-2 text-[var(--accent-secondary)]">{{ project.title }}</h3>
+                  <p class="text-sm text-[var(--text-secondary)] mb-4 flex-grow">{{ project.description }}</p>
                   <div class="flex justify-between mt-auto">
                     <a :href="project.github" target="_blank" rel="noopener noreferrer" 
-                       class="animated-button github-button text-sm">
+                       class="animated-button github-button text-sm hover:text-[var(--accent)]">
                       {{ $t('projects.github') }}
                     </a>
                     <a :href="project.demo" target="_blank" rel="noopener noreferrer" 
-                       class="animated-button demo-button text-sm">
+                       class="animated-button demo-button text-sm hover:text-[var(--accent-hover)]">
                       {{ $t('projects.demo') }}
                     </a>
                   </div>
@@ -117,10 +114,10 @@
             <div v-for="(edu, key) in education.items" :key="key" 
                  class="bg-bg-primary p-4 rounded-lg shadow-md mb-4 animate-slide-in-right"
                  :style="{ animationDelay: `${450 + key * 100}ms` }">
-              <h3 class="text-lg font-medium text-accent">
+              <h3 class="text-lg font-medium text-[var(--accent-secondary)]">
                 {{ $t(`experiences.education.items.${key}.degree`) }}
               </h3>
-              <p class="text-text-primary">
+              <p class="text-[var(--accent-hover)]">
                 {{ $t(`experiences.education.items.${key}.school`) }}, 
                 {{ $t(`experiences.education.items.${key}.location`) }}
               </p>
@@ -140,10 +137,10 @@
             <div v-for="(job, key) in work.items" :key="key" 
                  class="bg-bg-primary p-4 rounded-lg shadow-md mb-4 animate-slide-in-right"
                  :style="{ animationDelay: `${550 + key * 100}ms` }">
-              <h3 class="text-lg font-medium text-accent">
+              <h3 class="text-lg font-medium text-[var(--accent-secondary)]">
                 {{ $t(`experiences.work.items.${key}.title`) }}
               </h3>
-              <p class="text-text-primary">
+              <p class="text-[var(--accent-hover)]">
                 {{ $t(`experiences.work.items.${key}.company`) }}, 
                 {{ $t(`experiences.work.items.${key}.location`) }}
               </p>
@@ -160,12 +157,12 @@
             </div>
 
             <!-- Skills section moved here -->
-            <h2 class="text-2xl font-bold text-accent mb-4 mt-8">{{ $t('about.skills') }}</h2>
-            <div class="bg-bg-primary p-4 rounded-lg shadow-md animate-slide-in-right"
+            <h2 class="text-2xl font-bold text-[var(--accent-hover)] mb-4 mt-8">{{ $t('about.skills') }}</h2>
+            <div class="bg-[var(--bg-primary)] p-4 rounded-md shadow-md animate-slide-in-right"
                  :style="{ animationDelay: '650ms' }">
               <ul class="flex flex-wrap gap-2">
                 <li v-for="(skill, index) in skills" :key="skill" 
-                    class="bg-bg-secondary text-text-primary px-4 py-2 rounded-full text-sm shadow animate-slide-in"
+                    class="bg-[var(--bg-secondary)] text-[var(--accent-secondary)] px-4 py-2 rounded-md text-sm shadow animate-slide-in"
                     :style="{ animationDelay: `${700 + index * 50}ms` }">
                   {{ skill }}
                 </li>
@@ -201,7 +198,8 @@ const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/telga' },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/bnguy23' },
   { name: 'Instagram', url: 'https://instagram.com/br.ainn' },
-  { name: 'Email', url: 'briann2305@gmail.com' }  // Remove mailto:
+  { name: 'Bluesky', url: 'https://bsky.app/profile/braighn.bsky.social' },
+  { name: 'Email', url: 'briann2305@gmail.com' }
 ]
   
 const bioParagraphs = computed(() => {
@@ -603,13 +601,13 @@ canvas:active {
 }
 
 .github-button {
-  background-color: var(--accent-hover);
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--accent-hover);
 }
 
 .demo-button {
-  background-color: var(--accent);
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--accent);
 }
 
 .animated-button:hover {
@@ -656,5 +654,16 @@ canvas:active {
 /* Ensure toast is always on top */
 .fixed {
   z-index: 9999;
+}
+
+/* Add these new styles */
+.social-button {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.social-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
