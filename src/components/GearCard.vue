@@ -30,7 +30,7 @@
               </div>
             </ul>
           </div>
-          <a 
+          <!-- <a 
             :href="subItem.links?.[this.$i18n.locale] || '#'"
             target="_blank"
             rel="noopener noreferrer"
@@ -38,7 +38,7 @@
             class="inline-block mt-4 bg-bg-secondary font-bold text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] py-2 px-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-0.5"
           >
             {{ $t('gear.viewProduct') }}
-          </a>
+          </a> -->
         </div>
       </div>
     </div>

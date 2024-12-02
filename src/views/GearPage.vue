@@ -9,12 +9,12 @@
               v-for="category in gearData.categories"
               :key="category.name"
               @click="setCurrentCategory(category.name)"
-              class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary focus:outline-none active:scale-95"
+              class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary active:scale-95"
             >
               <span>{{ $t(`gear.categories.${category.name}`) }}</span>
               <span 
-                class="w-2 h-2 rounded-full bg-accent-hover transition-all duration-300 ease-in-out"
-                :class="currentCategory === category.name ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-75'"
+                class="w-2 h-2 rounded-full bg-[var(--accent-secondary)] hover:bg-[var(--accent-hover)] transition-all duration-300 ease-in-out"
+                :class="currentCategory === category.name ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-75 group-hover:bg-[var(--accent-hover)]'"
               ></span>
             </button>
           </div>
