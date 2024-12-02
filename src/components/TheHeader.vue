@@ -10,7 +10,7 @@
       </div>
       
       <!-- Mobile menu button -->
-      <button @click.stop="isMenuOpen = !isMenuOpen" class="lg:hidden text-text-primary hover:text-accent p-2 font-bold">
+      <button @click.stop="toggleMenu" class="lg:hidden text-text-primary hover:text-accent p-2 font-bold">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -104,98 +104,120 @@
     </nav>
 
     <!-- Mobile menu -->
-    <transition
-      enter-active-class="transition-all duration-300 ease-out"
-      enter-from-class="opacity-0 -translate-y-full"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-active-class="transition-all duration-300 ease-in"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-to-class="opacity-0 -translate-y-full"
-    >
-      <div v-if="isMenuOpen" class="lg:hidden bg-bg-secondary p-4">
-        <div class="container mx-auto space-y-4">
-          <!-- Navigation Links -->
-          <div class="bg-bg-primary rounded-lg shadow-md p-4">
-            <div class="space-y-1">
-              <router-link 
-                v-for="item in navItems.filter(item => !item.desktopOnly)" 
-                :key="item.to" 
-                :to="item.to" 
-                class="block text-text-primary hover:text-accent transition-colors duration-200 px-3 py-2 rounded-md hover:bg-bg-secondary"
-                :class="{ 
-                  'bg-bg-secondary': isActiveRoute(item.to),
-                  'active-mobile-link': isActiveRoute(item.to)
-                }"
-                @click="item.to.hash ? handleNavigation($event, item.to) : closeMenu()"
-              >
-                {{ $t(item.label) }}
-              </router-link>
-            </div>
-          </div>
+    <div class="lg:hidden">
+      <!-- Overlay transition -->
+      <transition
+        enter-active-class="transition-opacity duration-300 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-300 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div 
+          v-if="isMenuOpen"
+          class="fixed inset-0 top-16 bg-black bg-opacity-50 z-40"
+          @click="closeMenu"
+        ></div>
+      </transition>
 
-          <!-- Theme and Language Controls -->
-          <div class="bg-bg-primary rounded-lg shadow-md p-4">
-            <div class="flex justify-between items-center">
-              <!-- Theme Toggle Button (Mobile) -->
-              <div class="flex items-center justify-between">
-                <label class="relative inline-block w-[60px] h-[30px]">
-                  <input 
-                    type="checkbox" 
-                    :checked="currentTheme !== 'nord'"
-                    @change="toggleTheme"
-                    class="opacity-0 w-0 h-0"
+      <!-- Menu content transition -->
+      <transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-full"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-300 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-full"
+      >
+        <div v-if="isMenuOpen" class="fixed inset-0 top-16 z-40">
+          <!-- Menu content -->
+          <div class="relative bg-bg-secondary p-4">
+            <div class="container mx-auto space-y-4">
+              <!-- Navigation Links -->
+              <div class="bg-bg-primary rounded-lg shadow-md p-4">
+                <div class="space-y-1">
+                  <router-link 
+                    v-for="item in navItems.filter(item => !item.desktopOnly)" 
+                    :key="item.to" 
+                    :to="item.to" 
+                    class="block text-text-primary hover:text-accent transition-colors duration-200 px-3 py-2 rounded-md hover:bg-bg-secondary"
+                    :class="{ 
+                      'bg-bg-secondary': isActiveRoute(item.to),
+                      'active-mobile-link': isActiveRoute(item.to)
+                    }"
+                    @click="item.to.hash ? handleNavigation($event, item.to) : closeMenu()"
                   >
-                  <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
-                    <oh-vue-icon
-                      name="la-mountain-solid"
-                      class="text-text-primary z-[1] ml-1"
-                      :scale="0.8"
-                    />
-                    <oh-vue-icon
-                      name="wi-solar-eclipse"
-                      class="text-text-primary z-[1] mr-1"
-                      :scale="0.8"
-                    />
-                    <span 
-                      class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
-                      :class="{ 'translate-x-[30px]': currentTheme !== 'nord' }"
-                    >
-                      <oh-vue-icon
-                        :name="currentTheme === 'nord' ? 'la-mountain-solid' : 'wi-solar-eclipse'"
-                        class="text-bg-secondary"
-                        :scale="0.7"
-                      />
-                    </span>
-                  </span>
-                </label>
+                    {{ $t(item.label) }}
+                  </router-link>
+                </div>
               </div>
 
-              <!-- Language Toggle Button (Mobile) -->
-              <div class="flex items-center justify-between">
-                <label class="relative inline-block w-[60px] h-[30px]">
-                  <input 
-                    type="checkbox" 
-                    :checked="currentLanguage === 'jp'"
-                    @change="toggleLanguageWithTransition"
-                    class="opacity-0 w-0 h-0"
-                  >
-                  <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
-                    <span class="text-text-primary z-[1] ml-1 text-sm font-bold">EN</span>
-                    <span class="text-text-primary z-[1] mr-1 text-sm font-bold">JP</span>
-                    <span 
-                      class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
-                      :class="{ 'translate-x-[30px]': currentLanguage === 'jp' }"
-                    >
-                      <span class="text-bg-secondary text-sm font-bold">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
-                    </span>
-                  </span>
-                </label>
+              <!-- Theme and Language Controls -->
+              <div class="bg-bg-primary rounded-lg shadow-md p-4">
+                <div class="flex justify-between items-center">
+                  <!-- Theme Toggle Button (Mobile) -->
+                  <div class="flex items-center justify-between">
+                    <label class="relative inline-block w-[60px] h-[30px]">
+                      <input 
+                        type="checkbox" 
+                        :checked="currentTheme !== 'nord'"
+                        @change="toggleTheme"
+                        class="opacity-0 w-0 h-0"
+                      >
+                      <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
+                        <oh-vue-icon
+                          name="la-mountain-solid"
+                          class="text-text-primary z-[1] ml-1"
+                          :scale="0.8"
+                        />
+                        <oh-vue-icon
+                          name="wi-solar-eclipse"
+                          class="text-text-primary z-[1] mr-1"
+                          :scale="0.8"
+                        />
+                        <span 
+                          class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
+                          :class="{ 'translate-x-[30px]': currentTheme !== 'nord' }"
+                        >
+                          <oh-vue-icon
+                            :name="currentTheme === 'nord' ? 'la-mountain-solid' : 'wi-solar-eclipse'"
+                            class="text-bg-secondary"
+                            :scale="0.7"
+                          />
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+
+                  <!-- Language Toggle Button (Mobile) -->
+                  <div class="flex items-center justify-between">
+                    <label class="relative inline-block w-[60px] h-[30px]">
+                      <input 
+                        type="checkbox" 
+                        :checked="currentLanguage === 'jp'"
+                        @change="toggleLanguageWithTransition"
+                        class="opacity-0 w-0 h-0"
+                      >
+                      <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
+                        <span class="text-text-primary z-[1] ml-1 text-sm font-bold">EN</span>
+                        <span class="text-text-primary z-[1] mr-1 text-sm font-bold">JP</span>
+                        <span 
+                          class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
+                          :class="{ 'translate-x-[30px]': currentLanguage === 'jp' }"
+                        >
+                          <span class="text-bg-secondary text-sm font-bold">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </div>
   </header>
 </template>
 
@@ -249,6 +271,20 @@ const isActiveRoute = (to) => {
 
 const closeMenu = () => {
   isMenuOpen.value = false
+  document.body.classList.remove('overflow-hidden')
+}
+
+const openMenu = () => {
+  isMenuOpen.value = true
+  document.body.classList.add('overflow-hidden')
+}
+
+const toggleMenu = () => {
+  if (isMenuOpen.value) {
+    closeMenu()
+  } else {
+    openMenu()
+  }
 }
 
 const toggleLanguageWithTransition = () => {
