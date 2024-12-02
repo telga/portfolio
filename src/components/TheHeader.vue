@@ -10,7 +10,7 @@
       </div>
       
       <!-- Mobile menu button -->
-      <button @click.stop="isMenuOpen = !isMenuOpen" class="lg:hidden text-text-primary hover:text-accent p-2">
+      <button @click.stop="isMenuOpen = !isMenuOpen" class="lg:hidden text-text-primary hover:text-accent p-2 font-bold">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -19,7 +19,7 @@
 
       <!-- Desktop menu (centered for large screens) -->
       <div class="hidden lg:flex flex-grow justify-center">
-        <div class="flex space-x-4 items-center ml-20">
+        <div class="flex space-x-4 items-center ml-20 font-bold">
           <router-link 
             v-for="item in navItems" 
             :key="item.to" 

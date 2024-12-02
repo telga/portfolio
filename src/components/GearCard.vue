@@ -1,7 +1,7 @@
 <template>
   <div 
     :class="[
-      'bg-bg-secondary rounded-lg shadow-lg p-8 mb-8 animate-fade-in hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1',
+      'bg-bg-secondary rounded-lg shadow-lg p-8 mb-8 animate-fade-in hover:shadow-xl transition-all duration-300 ease-in-out transform',
       { 'cursor-pointer': !isMainOpen }
     ]"
   >
@@ -9,8 +9,8 @@
       @click="toggleMainDropdown"
       class="flex items-center justify-between cursor-pointer"
     >
-      <h2 class="text-2xl font-bold text-accent flex items-center">
-        <component :is="iconMap[props.item.icon]" class="w-6 h-6 mr-2" />
+      <h2 class="text-2xl font-bold text-[--accent-hover] flex items-center">
+        <component :is="iconMap[props.item.icon]" class="w-6 h-6 mr-2 text-[--accent-secondary]" />
         {{ $t(`gear.subcategories.${props.item.name}`) }}
       </h2>
       <ChevronDownIcon 
@@ -20,20 +20,25 @@
     <div v-show="isMainOpen" class="mt-4 animate-slide-down">
       <p class="text-text-primary mb-4">{{ $t(`gear.descriptions.${props.item.name}`) }}</p>
       <div v-for="subItem in props.item.items" :key="subItem.name" class="mt-4">
-        <div class="w-full text-left p-4 bg-bg-primary rounded-lg">
-          <h3 class="text-xl font-semibold text-accent">{{ $t(`gear.items.${subItem.name}.name`) }}</h3>
-        </div>
         <div class="mt-2 p-4 bg-bg-primary rounded-lg animate-slide-down">
+          <h3 class="text-xl font-semibold text-accent">{{ $t(`gear.items.${subItem.name}.name`) }}</h3>
           <p class="mb-4">{{ $t(`gear.items.${subItem.name}.description`) }}</p>
-          <div class="w-48 h-0.5 bg-accent mb-4"></div>
-          <ul class="list-disc list-inside">
-            <li v-for="(spec, specIndex) in subItem.specs || subItem.features" :key="specIndex" class="animate-slide-in" :style="{ animationDelay: `${specIndex * 100}ms` }">
-              {{ $t(`gear.items.${subItem.name}.${subItem.specs ? 'specs' : 'features'}.${specIndex}`, spec) }}
-            </li>
-          </ul>
-          <button @click.stop class="mt-4 bg-bg-secondary text-text-primary py-2 px-4 rounded-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 hover:bg-bg-secondary-hover">
+          <div class="p-4 bg-[var(--bg-secondary)] rounded-lg">
+            <ul class="list-disc list-inside">
+              <div v-for="(spec, specIndex) in subItem.specs || subItem.features" :key="specIndex" class="animate-slide-in" :style="{ animationDelay: `${specIndex * 100}ms` }">
+                {{ $t(`gear.items.${subItem.name}.${subItem.specs ? 'specs' : 'features'}.${specIndex}`, spec) }}
+              </div>
+            </ul>
+          </div>
+          <a 
+            :href="subItem.links?.[this.$i18n.locale] || '#'"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click.stop 
+            class="inline-block mt-4 bg-bg-secondary font-bold text-[var(--accent-secondary)] hover:text-[var(--accent-hover)] py-2 px-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-0.5"
+          >
             {{ $t('gear.viewProduct') }}
-          </button>
+          </a>
         </div>
       </div>
     </div>
