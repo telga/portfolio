@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-bg-primary text-text-primary px-2 pt-8 sm:pt-8 lg:pt-8">
+  <div class="min-h-screen bg-bg-primary text-text-primary px-2 pt-8 sm:pt-8">
     <div class="max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
         <div class="animate-slide-in h-full" style="animation-delay: 100ms;">
-          <div class="flex flex-col h-full">
-            <div class="w-full flex-grow aspect-[4/3] lg:aspect-[3/2] xl:aspect-auto lg:h-[480px] xl:h-[420px] overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative transition-shadow duration-300 hover:shadow-xl">
+          <div class="flex flex-col h-full items-center">
+            <div class="w-full max-w-[500px] xl:max-w-none flex-grow aspect-[4/3] xl:aspect-[3/2] xl:h-[420px] overflow-hidden rounded-lg shadow-lg bg-bg-secondary relative transition-shadow duration-300 hover:shadow-xl">
               <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-secondary/10 pointer-events-none"></div>
               <canvas ref="threeCanvas" class="w-full h-full !min-h-full"></canvas>
             </div>
@@ -75,7 +75,7 @@
 
       <div class="w-full">
         <!-- Projects and Experiences row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
           <!-- Projects section -->
           <div id="projects" class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in scroll-mt-[260px] md:scroll-mt-[10px]"
                style="animation-delay: 300ms;">
@@ -237,10 +237,9 @@ const initThree = () => {
   const updateCameraPosition = () => {
     if (window.matchMedia('(min-width: 1280px)').matches) {
       // XL breakpoint
-      camera.position.set(0, 1.5, 2.8)
+      camera.position.set(0, 1.2, 2.4)
       camera.lookAt(0, 0, 0)
     } else if (window.matchMedia('(min-width: 1024px)').matches) {
-      // LG breakpoint (1024px-1279px)
       camera.position.set(0, 1.2, 2.8)  // Now matches XL camera position
       camera.lookAt(0, -0.4, 0)  // Now matches XL lookAt
     } else {
@@ -294,43 +293,45 @@ const initThree = () => {
       
       model.traverse((node) => {
         if (node.isMesh) {
+          // Basic shadow settings
           node.castShadow = true
           node.receiveShadow = true
           
           if (node.material) {
+            // Keep original material but ensure it's properly updated
             node.material.needsUpdate = true
-            // Restore original material settings
-            node.material.roughness = 0.9
-            node.material.metalness = 0.1
-            node.material.envMapIntensity = 0.5
+            // Ensure textures are properly handled
+            if (node.material.map) {
+              node.material.map.needsUpdate = true
+            }
           }
         }
       })
 
       scene.add(model)
       
-      // Center the model
+      // Center the entire model using bounding box
       const box = new THREE.Box3().setFromObject(model)
       const center = box.getCenter(new THREE.Vector3())
-      model.position.sub(center)
+      model.position.sub(center) // Center the model at origin
       
       // Scale the model
       const size = box.getSize(new THREE.Vector3())
       const maxDim = Math.max(size.x, size.y, size.z)
-      const scale = 1.1 / maxDim  // Increased scale from 0.8 to 1.1
+      const scale = 1.0 / maxDim
       model.scale.multiplyScalar(scale)
       
       updateModelPosition = () => {
         model.position.set(0, 0, 0)
         
         if (window.matchMedia('(min-width: 1280px)').matches) {
-          // XL breakpoint
-          model.position.set(0, 0.3, 0)
+          // XL breakpoint - moved down by adjusting Y position
+          model.position.set(0, -0.2, 0)
         } else if (window.matchMedia('(min-width: 1024px)').matches) {
-          // LG breakpoint (1024px-1279px)
-          model.position.set(0, 0.3, 0.2)  // Now matches XL positioning
+          // LG breakpoint - moved down by adjusting Y position
+          model.position.set(0, -0.2, 0.2)
         } else {
-          // Mobile/tablet
+          // Mobile/tablet - keep original position
           model.position.set(0, 0.4, -0.4)
         }
         
