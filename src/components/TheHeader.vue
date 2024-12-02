@@ -25,11 +25,13 @@
             :key="item.to" 
             :to="item.to" 
             v-show="!item.desktopOnly || (item.desktopOnly && isLargeScreen)"
-            class="text-text-primary hover:text-accent text-base transition-colors duration-200 relative group px-2 py-1"
+            class="text-text-primary hover:text-accent-hover text-base transition-colors duration-200 relative group px-2 py-1"
             :class="{ 'text-accent-secondary': isActiveRoute(item.to) }"
             @click="item.to.hash ? handleNavigation($event, item.to) : null"
           >
-            <span class="relative z-10">{{ $t(item.label) }}</span>
+            <span class="relative z-10"
+              :class="{ 'text-[var(--accent-secondary)]': isActiveRoute(item.to) }"
+            >{{ $t(item.label) }}</span>
             <span 
               class="absolute inset-0 border-b-2 transition-colors duration-200"
               :class="{ 
@@ -152,7 +154,11 @@ const isActiveRoute = (to) => {
     return false
   }
   
+  // Check if we're on home page or gear page
   if (typeof to === 'string') {
+    if ((to === '/' && route.path === '/') || (to === '/GearPage' && route.path === '/GearPage')) {
+      return true
+    }
     return route.path === to
   }
   return route.path === to.path

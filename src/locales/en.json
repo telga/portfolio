@@ -8,14 +8,14 @@
             "first": "brian・",
             "last": "nguyen"
         },
-        "home": "home",
-        "about": "about",
-        "projects": "projects",
-        "experiences": "experience",
-        "skills": "skills",
-        "resume": "resume",
-        "gear": "gear",
-        "v2": "terminal"
+        "home": "Home",
+        "about": "About",
+        "projects": "Projects",
+        "experiences": "Experience",
+        "skills": "Skills",
+        "resume": "Resume",
+        "gear": "Gear",
+        "v2": "Terminal"
     },
     "footer": {
         "copyright": "gaki development"
