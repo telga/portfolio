@@ -88,7 +88,10 @@
                      animationDelay: `${400 + index * 100}ms`,
                      backgroundColor: 'var(--bg-primary)',
                    }">
-                <img :src="project.image" :alt="project.title" class="w-full h-36 object-cover">
+                <div class="relative">
+                  <img :src="project.image" :alt="project.title" class="w-full h-36 object-cover">
+                  <div class="absolute inset-0 bg-black/20"></div>
+                </div>
                 <div class="p-4 flex-grow flex flex-col">
                   <h3 class="text-lg font-bold mb-2 text-[var(--accent-secondary)]">{{ project.title }}</h3>
                   <p class="text-sm text-[var(--text-secondary)] mb-4 flex-grow">{{ project.description }}</p>
