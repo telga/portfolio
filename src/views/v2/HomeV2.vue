@@ -352,7 +352,8 @@
       position: null,
       size: null
     })
-    const selectedIcon = ref(false)
+    const selectedTerminalIcon = ref(false)
+    const selectedDrawingIcon = ref(false)
     const lastPosition = ref({ x: 'calc(50% - 450px)', y: 'calc(50% - 300px)' })
     const lastSize = ref({ width: 900, height: 600 })
     const isResizing = ref(false)
@@ -1064,26 +1065,54 @@ ${Object.keys(job.responsibilities).map(respKey =>
     }
     
     const handleIconClick = () => {
-      selectedIcon.value = true
+      selectedTerminalIcon.value = true
+      selectedDrawingIcon.value = false
       // Deselect when clicking elsewhere
       const handleClickOutside = (e) => {
         if (!e.target.closest('.desktop-icon')) {
-          selectedIcon.value = false
+          selectedTerminalIcon.value = false
           document.removeEventListener('click', handleClickOutside)
         }
       }
-      // Add timeout to prevent immediate deselection
       setTimeout(() => {
         document.addEventListener('click', handleClickOutside)
       }, 0)
     }
     
-    watch(selectedIcon, (newValue) => {
-      const icon = document.querySelector('.desktop-icon')
-      if (newValue) {
-        icon.classList.add('selected')
-      } else {
-        icon.classList.remove('selected')
+    const handleDrawingIconClick = () => {
+      selectedDrawingIcon.value = true
+      selectedTerminalIcon.value = false
+      // Deselect when clicking elsewhere
+      const handleClickOutside = (e) => {
+        if (!e.target.closest('.desktop-icon')) {
+          selectedDrawingIcon.value = false
+          document.removeEventListener('click', handleClickOutside)
+        }
+      }
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside)
+      }, 0)
+    }
+    
+    // Update the watch to handle both icons
+    watch([selectedTerminalIcon, selectedDrawingIcon], ([newTerminalSelected, newDrawingSelected]) => {
+      const terminalIcon = document.querySelector('.desktop-icon')
+      const drawingIcon = document.querySelector('.desktop-icon:nth-child(2)')
+      
+      if (terminalIcon) {
+        if (newTerminalSelected) {
+          terminalIcon.classList.add('selected')
+        } else {
+          terminalIcon.classList.remove('selected')
+        }
+      }
+      
+      if (drawingIcon) {
+        if (newDrawingSelected) {
+          drawingIcon.classList.add('selected')
+        } else {
+          drawingIcon.classList.remove('selected')
+        }
       }
     })
     
@@ -1185,15 +1214,6 @@ ${Object.keys(job.responsibilities).map(respKey =>
       } else if (isDrawingVisible.value) {
         // If visible, just focus
         focusDrawing()
-      }
-    }
-
-    const handleDrawingIconClick = () => {
-      if (!isDrawingExists.value) {
-        openDrawing()
-      } else {
-        isDrawingVisible.value = !isDrawingVisible.value
-        isDrawingMinimized.value = !isDrawingVisible.value
       }
     }
 
