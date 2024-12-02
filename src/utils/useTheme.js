@@ -10,7 +10,7 @@ function applyTheme(theme) {
 }
 
 function applyStoredTheme() {
-  const storedTheme = localStorage.getItem('theme') || 'nord'
+  const storedTheme = localStorage.getItem('theme') || 'solarized'
   applyTheme(storedTheme)
 }
 
