@@ -520,6 +520,10 @@ ${Object.keys(job.responsibilities).map(respKey =>
             localStorage.setItem('theme', newTheme)
             newEntry.output = `Switching to ${newTheme} theme...`
             commandHistory.value.push(newEntry)
+            
+            // Store terminal state before refresh
+            localStorage.setItem('terminalFocused', 'true')
+            
             window.location.reload()
           } else if (currentCommand.value === 'regsite') {
             newEntry.output = 'Redirecting to regular site...'
@@ -780,6 +784,29 @@ ${Object.keys(job.responsibilities).map(respKey =>
           output: 'Type \'help\' for a list of available commands.'
         }
       ]
+
+      // Focus terminal immediately and check stored state
+      nextTick(() => {
+        const content = document.querySelector('#terminal-content')
+        if (content) {
+          content.focus()
+          
+          // Force a reflow to ensure accurate scrollHeight
+          content.style.display = 'none'
+          content.offsetHeight // Force reflow
+          content.style.display = ''
+          
+          // Scroll to bottom
+          content.scrollTop = content.scrollHeight
+
+          // Check if we're coming back from a theme switch
+          const wasTerminalFocused = localStorage.getItem('terminalFocused')
+          if (wasTerminalFocused) {
+            content.focus()
+            localStorage.removeItem('terminalFocused') // Clean up
+          }
+        }
+      })
 
       // Initial check for modal - only on page load for smaller screens
       if (window.innerWidth <= 1024) { // Tablet and smaller

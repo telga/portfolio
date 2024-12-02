@@ -35,7 +35,7 @@
           <MinusSmallIcon class="w-5 h-5 text-gray-300" />
         </button>
         <button 
-          @click="$emit('maximize')"
+          @click="maximizeDrawing"
           class="hover:bg-gray-600 w-11 flex items-center justify-center cursor-pointer"
         >
           <Square2StackIcon class="w-4 h-4 text-gray-300" />
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, defineProps, defineEmits, onUnmounted } from 'vue'
+import { ref, onMounted, watch, defineProps, defineEmits, onUnmounted, nextTick } from 'vue'
 import { 
   MinusSmallIcon, 
   Square2StackIcon, 
@@ -159,6 +159,7 @@ const resizeDirection = ref(null)
 const initialSize = ref({ width: 0, height: 0 })
 const initialPosition = ref({ x: 0, y: 0 })
 const initialMousePosition = ref({ x: 0, y: 0 })
+const resizeStartPos = ref(null)
 
 // Window resizing functions
 const startResize = (direction, e) => {
@@ -169,6 +170,17 @@ const startResize = (direction, e) => {
   initialSize.value = { ...props.size }
   initialPosition.value = { ...props.position }
   initialMousePosition.value = { x: e.clientX, y: e.clientY }
+
+  // Store canvas content before resize
+  if (canvas.value && ctx.value) {
+    const tempCanvas = document.createElement('canvas')
+    const tempCtx = tempCanvas.getContext('2d')
+    tempCanvas.width = canvas.value.width
+    tempCanvas.height = canvas.value.height
+    tempCtx.drawImage(canvas.value, 0, 0)
+    resizeStartPos.value = { tempCanvas, width: canvas.value.width, height: canvas.value.height }
+  }
+
   window.addEventListener('mousemove', handleResize)
   window.addEventListener('mouseup', stopResize)
 }
@@ -197,10 +209,26 @@ const handleResize = (e) => {
 
   emit('update:size', newSize)
   emit('update:position', newPosition)
+
+  // Restore drawing after resize
+  nextTick(() => {
+    if (canvas.value && ctx.value && resizeStartPos.value?.tempCanvas) {
+      ctx.value.drawImage(
+        resizeStartPos.value.tempCanvas,
+        0, 0,
+        resizeStartPos.value.width,
+        resizeStartPos.value.height,
+        0, 0,
+        canvas.value.width,
+        canvas.value.height
+      )
+    }
+  })
 }
 
 const stopResize = () => {
   isResizing.value = false
+  resizeStartPos.value = null
   window.removeEventListener('mousemove', handleResize)
   window.removeEventListener('mouseup', stopResize)
 }
@@ -284,6 +312,28 @@ onUnmounted(() => {
   window.removeEventListener('mousemove', handleResize)
   window.removeEventListener('mouseup', stopResize)
 })
+
+// Before resizing the canvas, store the current drawing
+const maximizeDrawing = () => {
+  // Store the current canvas content
+  if (!canvas.value || !ctx.value) return
+  
+  const tempCanvas = document.createElement('canvas')
+  const tempCtx = tempCanvas.getContext('2d')
+  tempCanvas.width = canvas.value.width
+  tempCanvas.height = canvas.value.height
+  tempCtx.drawImage(canvas.value, 0, 0)
+
+  // Emit maximize event
+  emit('maximize')
+
+  // After the canvas is resized, restore the drawing
+  nextTick(() => {
+    if (!canvas.value || !ctx.value) return
+    ctx.value.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height,
+                       0, 0, canvas.value.width, canvas.value.height)
+  })
+}
 </script>
 
 <style scoped>
