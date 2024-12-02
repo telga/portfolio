@@ -46,27 +46,60 @@
       <!-- Theme and Language toggles -->
       <div class="hidden lg:flex items-center space-x-4">
         <!-- Theme Toggle Button -->
-        <button @click="toggleTheme" :class="[
-          'theme-toggle-btn p-1 ring-2 hover:ring-accent-hover focus:ring-accent rounded-full transition-colors duration-300 focus:outline-none',
-          currentTheme === 'nord' 
-            ? 'bg-solarized-base03 text-solarized-base1 border-solarized-base1' 
-            : 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1',
-          'hover:border-accent active:border-accent-secondary'
-        ]">
-          <svg v-if="currentTheme === 'nord'" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg v-else class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 14.5L8 18l3.5-3.5L15 18l4.5-4.5M4 10l4-4 4 4 4-4 4 4" />
-          </svg>
-        </button>
-        <!-- Language switcher -->
-        <button 
-        @click="toggleLanguageWithTransition" 
-          class="flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none ring-2 focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary hover:ring-accent-hover focus:ring-accent rounded-full px-3 py-1 bg-bg-primary"
-        >
-          <span class="font-medium">{{ currentLanguage === 'en' ? '日本語' : 'english' }}</span>
-        </button>
+        <div class="flex items-center justify-between">
+          <label class="relative inline-block w-[60px] h-[30px]">
+            <input 
+              type="checkbox" 
+              :checked="currentTheme !== 'nord'"
+              @change="toggleTheme"
+              class="opacity-0 w-0 h-0"
+            >
+            <span class="absolute cursor-pointer inset-0 bg-[var(--bg-primary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
+              <oh-vue-icon
+                name="la-mountain-solid"
+                class="text-text-primary z-[1] ml-1"
+                :scale="0.8"
+              />
+              <oh-vue-icon
+                name="wi-solar-eclipse"
+                class="text-text-primary z-[1] mr-1"
+                :scale="0.8"
+              />
+              <span 
+                class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
+                :class="{ 'translate-x-[30px]': currentTheme !== 'nord' }"
+              >
+                <oh-vue-icon
+                  :name="currentTheme === 'nord' ? 'la-mountain-solid' : 'wi-solar-eclipse'"
+                  class="text-bg-secondary"
+                  :scale="0.7"
+                />
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Language Toggle Button -->
+        <div class="flex items-center justify-between">
+          <label class="relative inline-block w-[60px] h-[30px]">
+            <input 
+              type="checkbox" 
+              :checked="currentLanguage === 'jp'"
+              @change="toggleLanguageWithTransition"
+              class="opacity-0 w-0 h-0"
+            >
+            <span class="absolute cursor-pointer inset-0 bg-[var(--bg-primary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
+              <span class="text-text-primary z-[1] ml-1 text-sm font-bold">EN</span>
+              <span class="text-text-primary z-[1] mr-1 text-sm font-bold">JP</span>
+              <span 
+                class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
+                :class="{ 'translate-x-[30px]': currentLanguage === 'jp' }"
+              >
+                <span class="text-bg-secondary text-sm font-bold">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
+              </span>
+            </span>
+          </label>
+        </div>
       </div>
     </nav>
 
@@ -79,42 +112,87 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-full"
     >
-      <div v-if="isMenuOpen" class="lg:hidden bg-bg-secondary">
-        <div class="px-2 pt-2 pb-3 space-y-1">
-          <router-link 
-            v-for="item in navItems.filter(item => !item.desktopOnly)" 
-            :key="item.to" 
-            :to="item.to" 
-            class="block text-text-primary hover:text-accent text-base transition-colors duration-200 px-2 py-2"
-            :class="{ 'active-mobile-link': isActiveRoute(item.to) }"
-            @click="item.to.hash ? handleNavigation($event, item.to) : closeMenu()"
-          >
-            {{ $t(item.label) }}
-          </router-link>
-        </div>
-        <div class="px-2 py-3 border-t border-bg-primary flex justify-between items-center">
-          <!-- Theme Toggle Button (Mobile) -->
-          <button @click="toggleTheme" :class="[
-            'theme-toggle-btn p-1 ring-2 hover:ring-accent-hover focus:ring-accent rounded-full transition-colors duration-300 focus:outline-none',
-            currentTheme === 'nord' 
-              ? 'bg-solarized-base03 text-solarized-base1 border-solarized-base1' 
-              : 'bg-nord-polar-night-1 text-nord-snow-storm-1 border-nord-snow-storm-1',
-            'hover:border-accent active:border-accent-secondary'
-          ]">
-            <svg v-if="currentTheme === 'nord'" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <svg v-else class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 14.5L8 18l3.5-3.5L15 18l4.5-4.5M4 10l4-4 4 4 4-4 4 4" />
-            </svg>
-          </button>
-          <!-- Language Menu (Mobile) -->
-          <button 
-          @click="toggleLanguageWithTransition" 
-            class="flex items-center text-text-primary hover:text-accent transition-colors duration-300 focus:outline-none ring-2 focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-secondary hover:ring-accent-hover focus:ring-accent rounded-full px-3 py-1 bg-bg-primary"
-          >
-            <span class="font-medium">{{ currentLanguage === 'en' ? '日本語' : 'english' }}</span>
-          </button>
+      <div v-if="isMenuOpen" class="lg:hidden bg-bg-secondary p-4">
+        <div class="container mx-auto space-y-4">
+          <!-- Navigation Links -->
+          <div class="bg-bg-primary rounded-lg shadow-md p-4">
+            <div class="space-y-1">
+              <router-link 
+                v-for="item in navItems.filter(item => !item.desktopOnly)" 
+                :key="item.to" 
+                :to="item.to" 
+                class="block text-text-primary hover:text-accent transition-colors duration-200 px-3 py-2 rounded-md hover:bg-bg-secondary"
+                :class="{ 
+                  'bg-bg-secondary': isActiveRoute(item.to),
+                  'active-mobile-link': isActiveRoute(item.to)
+                }"
+                @click="item.to.hash ? handleNavigation($event, item.to) : closeMenu()"
+              >
+                {{ $t(item.label) }}
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Theme and Language Controls -->
+          <div class="bg-bg-primary rounded-lg shadow-md p-4">
+            <div class="flex justify-between items-center">
+              <!-- Theme Toggle Button (Mobile) -->
+              <div class="flex items-center justify-between">
+                <label class="relative inline-block w-[60px] h-[30px]">
+                  <input 
+                    type="checkbox" 
+                    :checked="currentTheme !== 'nord'"
+                    @change="toggleTheme"
+                    class="opacity-0 w-0 h-0"
+                  >
+                  <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
+                    <oh-vue-icon
+                      name="la-mountain-solid"
+                      class="text-text-primary z-[1] ml-1"
+                      :scale="0.8"
+                    />
+                    <oh-vue-icon
+                      name="wi-solar-eclipse"
+                      class="text-text-primary z-[1] mr-1"
+                      :scale="0.8"
+                    />
+                    <span 
+                      class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
+                      :class="{ 'translate-x-[30px]': currentTheme !== 'nord' }"
+                    >
+                      <oh-vue-icon
+                        :name="currentTheme === 'nord' ? 'la-mountain-solid' : 'wi-solar-eclipse'"
+                        class="text-bg-secondary"
+                        :scale="0.7"
+                      />
+                    </span>
+                  </span>
+                </label>
+              </div>
+
+              <!-- Language Toggle Button (Mobile) -->
+              <div class="flex items-center justify-between">
+                <label class="relative inline-block w-[60px] h-[30px]">
+                  <input 
+                    type="checkbox" 
+                    :checked="currentLanguage === 'jp'"
+                    @change="toggleLanguageWithTransition"
+                    class="opacity-0 w-0 h-0"
+                  >
+                  <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
+                    <span class="text-text-primary z-[1] ml-1 text-sm font-bold">EN</span>
+                    <span class="text-text-primary z-[1] mr-1 text-sm font-bold">JP</span>
+                    <span 
+                      class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
+                      :class="{ 'translate-x-[30px]': currentLanguage === 'jp' }"
+                    >
+                      <span class="text-bg-secondary text-sm font-bold">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </transition>
@@ -128,10 +206,15 @@ import { useTheme } from '@/utils/useTheme'
 import { useLanguageSwitcher } from '@/utils/useLanguageSwitcher'
 import LoadingScreen from '@/components/LoadingScreen.vue'
 import { showLoading } from '@/utils/loadingState'
+import { OhVueIcon, addIcons } from 'oh-vue-icons'
+import { WiSolarEclipse, LaMountainSolid, LaGlobeAmericasSolid } from 'oh-vue-icons/icons'
 
 // Import the logo image
 import nordLogo from '/public/images/nordlogo.png'
 import solarizedLogo from '/public/images/solarizedlogo.png'
+
+// Register the icons (add this after imports)
+addIcons(WiSolarEclipse, LaMountainSolid, LaGlobeAmericasSolid)
 
 const route = useRoute()
 const router = useRouter()
@@ -145,7 +228,7 @@ const navItems = [
   //{ to: '/AboutPage', label: 'nav.about' },
   { to: { path: '/', hash: '#projects' }, label: 'nav.experiences' },
   { to: '/GearPage', label: 'nav.gear' },
-  { to: '/v2', label: 'nav.v2', desktopOnly: false }
+  { to: '/v2', label: 'nav.v2', desktopOnly: true }
 ]
 
 const isActiveRoute = (to) => {
@@ -208,7 +291,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleOutsideClick)
-  window.addEventListener('resize', handleResize)
+  window.removeEventListener('resize', handleResize)
 })
 
 // Computed property to check if screen is large enough
@@ -277,7 +360,7 @@ watch(
 }
 
 .active-mobile-link {
-  color: var(--accent);
+  color: var(--accent-secondary);
 }
 
 .lang-toggle-container {
@@ -288,7 +371,7 @@ watch(
   position: relative;
   display: inline-block;
   width: 60px;
-  height: 34px;
+  height: 30px;
 }
 
 .switch input {
@@ -297,34 +380,12 @@ watch(
   height: 0;
 }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--bg-secondary);
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: var(--text-primary);
-  transition: .4s;
-}
-
 input:checked + .slider {
   background-color: var(--accent);
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(30px);
 }
 
 .slider.round {
@@ -333,6 +394,19 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.icon-light, .icon-dark {
+  color: var(--text-primary);
+  z-index: 1;
+}
+
+.icon-light {
+  margin-left: 4px;
+}
+
+.icon-dark {
+  margin-right: 4px;
 }
 
 /* Add this new style for the ガキ text */
