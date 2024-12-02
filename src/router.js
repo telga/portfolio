@@ -17,7 +17,8 @@ const routes = [
   { 
     path: '/BusinessCard', 
     component: BusinessCard,
-    meta: { hideHeaderFooter: true }
+    meta: { hideHeaderFooter: true },
+    redirect: '/'
   },
   {
     path: '/v2',
