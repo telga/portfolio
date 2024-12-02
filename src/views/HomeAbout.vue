@@ -188,9 +188,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { usePortfolioStore } from '@/store/portfolioStore'
 import experiencesData from '@/data/experiencesData.js'
+import { useToast } from 'vue-toastification'
 
 const { t, locale } = useI18n()
 const portfolioStore = usePortfolioStore()
+const toast = useToast()
 
 const skills = ref(['Vue.js', 'React.js', 'Node.js', 'HTML', 'CSS', 'Python', 'Java', 'JavaScript', 'WSL', 'Linux (Arch, Ubuntu)'])
 
@@ -540,17 +542,13 @@ const toastTimeout = ref(null)
 const copyEmail = async () => {
   try {
     await navigator.clipboard.writeText('briann2305@gmail.com')
-    showToast.value = true
-    
-    // Clear any existing timeout
-    if (toastTimeout.value) {
-      clearTimeout(toastTimeout.value)
-    }
-    
-    // Hide toast after 3 seconds
-    toastTimeout.value = setTimeout(() => {
-      showToast.value = false
-    }, 3000)
+    toast.success('Email copied to clipboard!', {
+      toastClassName: 'site-toast',
+      containerClassName: 'site-toast-container',
+      position: "bottom-right",
+      timeout: 2000,
+      hideProgressBar: true
+    })
   } catch (err) {
     console.error('Failed to copy email:', err)
   }
