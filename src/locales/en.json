@@ -3,6 +3,15 @@
     "common": {
         "loading": "Loading..."
     },
+    "pageTitles": {
+        "home": "Home @ Brian Nguyen",
+        "about": "About @ Brian Nguyen",
+        "projects": "Projects @ Brian Nguyen",
+        "experiences": "Experience @ Brian Nguyen",
+        "gear": "Gear @ Brian Nguyen",
+        "businessCard": "Business Card @ Brian Nguyen",
+        "v2": "Terminal @ Brian Nguyen"
+    },
     "nav": {
         "name": {
             "first": "brian・",

@@ -19,6 +19,7 @@ const i18n = createI18n({
   messages: { en, jp }
 })
 
+
 try {
   const app = createApp(App)
   app.use(createPinia())

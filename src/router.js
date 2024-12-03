@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-//import Home from './views/HomePage.vue'
 import About from './views/AboutPage.vue'
 import Projects from './views/ProjectsPage.vue'
 import Experiences from './views/ExperiencesPage.vue'
@@ -7,40 +6,50 @@ import Gear from './views/GearPage.vue'
 import BusinessCard from './views/BusinessCard.vue'
 import HomeAbout from './views/HomeAbout.vue'
 import HomeV2 from './views/v2/HomeV2.vue'
+import { createI18n } from 'vue-i18n'
+import en from './locales/en.json'
+import jp from './locales/jp.json'
+
+// Create i18n instance with the same configuration as main.js
+const i18n = createI18n({
+  legacy: false,
+  locale: localStorage.getItem('userLanguage') || 'en',
+  fallbackLocale: 'en',
+  messages: { en, jp }
+})
 
 const routes = [
-  //{ path: '/', component: Home },
   { 
     path: '/', 
     component: HomeAbout,
-    meta: { title: 'BN : Home' }
+    meta: { titleKey: 'pageTitles.home' }
   },
   { 
     path: '/AboutPage', 
     component: About,
-    meta: { title: 'BN : About' }
+    meta: { titleKey: 'pageTitles.about' }
   },
   { 
     path: '/ProjectsPage', 
     component: Projects,
-    meta: { title: 'BN : Projects' }
+    meta: { titleKey: 'pageTitles.projects' }
   },
   { 
     path: '/ExperiencesPage', 
     component: Experiences,
-    meta: { title: 'BN : Experiences' }
+    meta: { titleKey: 'pageTitles.experiences' }
   },
   { 
     path: '/GearPage', 
     component: Gear,
-    meta: { title: 'BN : Gear' }
+    meta: { titleKey: 'pageTitles.gear' }
   },
   { 
     path: '/BusinessCard', 
     component: BusinessCard,
     meta: { 
       hideHeaderFooter: true,
-      title: 'BN : Business Card'
+      titleKey: 'pageTitles.businessCard'
     },
     redirect: '/'
   },
@@ -50,7 +59,7 @@ const routes = [
     component: HomeV2,
     meta: { 
       hideHeaderFooter: true,
-      title: 'BN : Terminal'  
+      titleKey: 'pageTitles.v2'
     }
   }
 ]
@@ -60,9 +69,39 @@ const router = createRouter({
   routes
 })
 
-// Add navigation guard to update title
+// Watch for localStorage changes
+window.addEventListener('storage', (event) => {
+  if (event.key === 'userLanguage') {
+    i18n.global.locale.value = event.newValue || 'en'
+    // Update title for current route
+    const currentRoute = router.currentRoute.value
+    if (currentRoute.meta.titleKey) {
+      document.title = i18n.global.t(currentRoute.meta.titleKey)
+    }
+  }
+})
+
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || 'BN'
+  try {
+    const titleKey = to.meta.titleKey
+    console.log('Title key:', titleKey)
+    
+    if (titleKey) {
+      // Get current locale from localStorage
+      const currentLocale = localStorage.getItem('userLanguage') || 'en'
+      i18n.global.locale.value = currentLocale
+      
+      const translatedTitle = i18n.global.t(titleKey)
+      console.log('Current locale:', currentLocale)
+      console.log('Translated title:', translatedTitle)
+      document.title = translatedTitle
+    } else {
+      document.title = 'BN'
+    }
+  } catch (error) {
+    console.error('Title translation error:', error)
+    document.title = 'BN'
+  }
   next()
 })
 
