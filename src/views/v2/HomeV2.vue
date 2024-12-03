@@ -184,7 +184,7 @@
                 <div class="flex flex-wrap gap-x-2">
                   <span class="text-[var(--accent)]">Skills:</span>
                   <span class="text-[var(--accent-secondary)]">
-                    Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, Linux (Arch, Ubuntu)
+                    Vue.js, React.js, Node.js, HTML, CSS, Python, Java, JavaScript, WSL, SQL, Linux (Arch, Ubuntu)
                   </span>
                 </div>
                 <div class="flex flex-wrap gap-2">
@@ -504,11 +504,11 @@
             Object.keys(experiencesData.work.items).forEach(key => {
               const job = experiencesData.work.items[key]
               output += `\n${t(`experiences.work.items.${key}.title`, { locale: locale.value })}
-${t(`experiences.work.items.${key}.company`, { locale: locale.value })}, ${t(`experiences.work.items.${key}.location`, { locale: locale.value })}
-${job.duration}
-${Object.keys(job.responsibilities).map(respKey => 
-  `• ${t(`experiences.work.items.${key}.responsibilities.${respKey}`, { locale: locale.value })}`
-).join('\n')}\n`
+              ${t(`experiences.work.items.${key}.company`, { locale: locale.value })}, ${t(`experiences.work.items.${key}.location`, { locale: locale.value })}
+              ${job.duration}
+              ${Object.keys(job.responsibilities).map(respKey => 
+                `• ${t(`experiences.work.items.${key}.responsibilities.${respKey}`, { locale: locale.value })}`
+              ).join('\n')}\n`
             })
             
             newEntry.output = output

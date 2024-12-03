@@ -197,7 +197,7 @@ const { t, locale } = useI18n()
 const portfolioStore = usePortfolioStore()
 const toast = useToast()
 
-const skills = ref(['Vue.js', 'React.js', 'Node.js', 'HTML', 'CSS', 'Python', 'Java', 'JavaScript', 'WSL', 'Linux (Arch, Ubuntu)'])
+const skills = ref(['Vue.js', 'React.js', 'Node.js', 'HTML', 'CSS', 'Python', 'Java', 'JavaScript', 'WSL', 'SQL', 'Linux (Arch, Ubuntu)'])
 
 const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/telga' },
