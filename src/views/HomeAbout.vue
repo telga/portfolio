@@ -203,7 +203,7 @@ const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/telga' },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/bnguy23' },
   { name: 'Instagram', url: 'https://instagram.com/br.ainn' },
-  { name: 'Bluesky', url: 'https://bsky.app/profile/braighn.bsky.social' },
+  { name: 'VSCO', url: 'https://vsco.co/yyclown' },
   { name: 'Email', url: 'briann2305@gmail.com' }
 ]
   
