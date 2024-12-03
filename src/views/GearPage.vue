@@ -4,12 +4,12 @@
       <!-- Buttons -->
       <div class="md:w-56 mb-4 md:mb-0 md:mr-8">
         <div class="md:sticky md:top-8 w-full">
-          <div class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-4 md:mt-[3.75rem]">
+          <div class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-4">
             <button
               v-for="category in gearData.categories"
               :key="category.name"
               @click="setCurrentCategory(category.name)"
-              class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary active:scale-95"
+              class="group flex items-center justify-between flex-1 md:w-full py-3 px-4 rounded-lg transition-all duration-300 ease-in-out text-sm md:text-base bg-bg-secondary text-text-secondary font-bold active:scale-95"
             >
               <span>{{ $t(`gear.categories.${category.name}`) }}</span>
               <span 
@@ -23,10 +23,6 @@
 
       <!-- Main content area -->
       <div class="flex-grow max-w-3xl lg:max-w-4xl xl:max-w-5xl">
-        <h1 class="text-2xl md:text-3xl font-bold mb-6 text-accent animate-slide-in-right">
-          {{ $t(`gear.categories.${currentCategory}`) }}
-        </h1>
-        
         <div v-for="item in currentCategoryItems" :key="item.name">
           <GearCard :item="item" :category="currentCategory" />
         </div>

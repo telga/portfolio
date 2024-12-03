@@ -9,7 +9,7 @@
       @click="toggleMainDropdown"
       class="flex items-center justify-between cursor-pointer"
     >
-      <h2 class="text-2xl font-bold text-[--accent-hover] flex items-center">
+      <h2 class="text-3xl font-bold text-[--accent] flex items-center">
         <component :is="iconMap[props.item.icon]" class="w-6 h-6 mr-2 text-[--accent-secondary]" />
         {{ $t(`gear.subcategories.${props.item.name}`) }}
       </h2>

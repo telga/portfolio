@@ -93,8 +93,8 @@
             "software": "ソフトウェア"
         },
         "subcategories": {
-            "home": "ホーム",
-            "mobile": "モバイル",
+            "home": "家で",
+            "mobile": "外出中",
             "development": "開発",
             "productivity": "生産性",
             "aiTools": "AIツール"
