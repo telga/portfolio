@@ -2,7 +2,7 @@
   <footer class="bg-bg-secondary py-4">
     <div class="container mx-auto px-4">
       <div class="flex justify-between items-center">
-        <p class="text-text-secondary">© {{ currentYear }} {{ $t('footer.copyright') }}</p>
+        <p class="text-text-secondary">{{ $t('footer.copyright') }}</p>
         <div class="flex space-x-4">
           <a v-for="link in socialLinks" 
              :key="link.name" 
@@ -21,12 +21,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { CodeBracketIcon, UserIcon, CameraIcon, EnvelopeIcon, CloudIcon } from '@heroicons/vue/24/outline'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
-const currentYear = computed(() => new Date().getFullYear())
 
 const copyEmail = () => {
   navigator.clipboard.writeText('briann2305@gmail.com')
