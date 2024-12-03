@@ -4,12 +4,13 @@
       'bg-bg-secondary rounded-lg shadow-lg p-8 mb-8 animate-fade-in hover:shadow-xl transition-all duration-300 ease-in-out transform',
       { 'cursor-pointer': !isMainOpen }
     ]"
+    @click="handleClick"
   >
     <div 
-      @click="toggleMainDropdown"
-      class="flex items-center justify-between cursor-pointer"
+      class="flex items-center justify-between"
+      id="gear-card-dropdown-close-section"
     >
-      <h2 class="text-3xl font-bold text-[--accent] flex items-center">
+      <h2 class="text-3xl font-bold text-[--accent] flex items-center select-none">
         <component :is="iconMap[props.item.icon]" class="w-6 h-6 mr-2 text-[--accent-secondary]" />
         {{ $t(`gear.subcategories.${props.item.name}`) }}
       </h2>
@@ -53,7 +54,7 @@ import {
 
 const props = defineProps({
   item: Object,
-  category: String // Add this prop to distinguish between hardware and software
+  category: String
 });
 
 const iconMap = {
@@ -72,8 +73,18 @@ const toggleMainDropdown = () => {
   isMainOpen.value = !isMainOpen.value;
 };
 
+const handleClick = (event) => {
+  if (isMainOpen.value) {
+    const target = event.target;
+    if (target.closest('#gear-card-dropdown-close-section')) {
+      toggleMainDropdown();
+    }
+  } else {
+    toggleMainDropdown();
+  }
+};
+
 onMounted(() => {
-  // Open 'home' card for hardware and 'development' card for software by default
   if ((props.category === 'hardware' && props.item.name === 'home') || 
       (props.category === 'software' && props.item.name === 'development')) {
     isMainOpen.value = true;

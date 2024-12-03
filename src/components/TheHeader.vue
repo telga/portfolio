@@ -25,7 +25,7 @@
             :key="item.to" 
             :to="item.to" 
             v-show="!item.desktopOnly || (item.desktopOnly && isLargeScreen)"
-            class="text-text-primary hover:text-accent-hover text-base transition-colors duration-200 relative group px-2 py-1"
+            class="text-text-primary hover:text-accent-hover text-base transition-colors duration-200 relative group px-2 py-1 select-none"
             :class="{ 'text-accent-secondary': isActiveRoute(item.to) }"
             @click="item.to.hash ? handleNavigation($event, item.to) : null"
           >
@@ -89,13 +89,13 @@
               class="opacity-0 w-0 h-0"
             >
             <span class="absolute cursor-pointer inset-0 bg-[var(--bg-primary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
-              <span class="text-text-primary z-[1] ml-1 text-sm font-bold">EN</span>
-              <span class="text-text-primary z-[1] mr-1 text-sm font-bold">JP</span>
+              <span class="text-text-primary z-[1] ml-1 text-sm font-bold select-none">EN</span>
+              <span class="text-text-primary z-[1] mr-1 text-sm font-bold select-none">JP</span>
               <span 
                 class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
                 :class="{ 'translate-x-[30px]': currentLanguage === 'jp' }"
               >
-                <span class="text-bg-secondary text-sm font-bold">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
+                <span class="text-bg-secondary text-sm font-bold select-none">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
               </span>
             </span>
           </label>
@@ -141,7 +141,7 @@
                     v-for="item in navItems.filter(item => !item.desktopOnly)" 
                     :key="item.to" 
                     :to="item.to" 
-                    class="block text-text-primary hover:text-accent transition-colors duration-200 px-3 py-2 rounded-md hover:bg-bg-secondary"
+                    class="block text-text-primary hover:text-accent transition-colors duration-200 px-3 py-2 rounded-md hover:bg-bg-secondary select-none"
                     :class="{ 
                       'bg-bg-secondary': isActiveRoute(item.to),
                       'active-mobile-link': isActiveRoute(item.to)
@@ -200,13 +200,13 @@
                         class="opacity-0 w-0 h-0"
                       >
                       <span class="absolute cursor-pointer inset-0 bg-[var(--bg-secondary)] transition-all duration-300 flex items-center justify-between px-1 rounded-md">
-                        <span class="text-text-primary z-[1] ml-1 text-sm font-bold">EN</span>
-                        <span class="text-text-primary z-[1] mr-1 text-sm font-bold">JP</span>
+                        <span class="text-text-primary z-[1] ml-1 text-sm font-bold select-none">EN</span>
+                        <span class="text-text-primary z-[1] mr-1 text-sm font-bold select-none">JP</span>
                         <span 
                           class="absolute w-6 h-6 left-[3px] bottom-[3px] bg-[var(--accent-secondary)] transition-transform duration-300 rounded-md z-[2] flex items-center justify-center"
                           :class="{ 'translate-x-[30px]': currentLanguage === 'jp' }"
                         >
-                          <span class="text-bg-secondary text-sm font-bold">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
+                          <span class="text-bg-secondary text-sm font-bold select-none">{{ currentLanguage === 'en' ? 'EN' : 'JP' }}</span>
                         </span>
                       </span>
                     </label>
