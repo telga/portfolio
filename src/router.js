@@ -84,22 +84,25 @@ window.addEventListener('storage', (event) => {
 router.beforeEach((to, from, next) => {
   try {
     const titleKey = to.meta.titleKey
-    console.log('Title key:', titleKey)
     
     if (titleKey) {
       // Get current locale from localStorage
       const currentLocale = localStorage.getItem('userLanguage') || 'en'
       i18n.global.locale.value = currentLocale
       
-      const translatedTitle = i18n.global.t(titleKey)
-      console.log('Current locale:', currentLocale)
-      console.log('Translated title:', translatedTitle)
-      document.title = translatedTitle
+      // Wrap the translation in a try-catch to silently handle any translation errors
+      try {
+        const translatedTitle = i18n.global.t(titleKey)
+        document.title = translatedTitle
+      } catch {
+        // Fallback to default title without logging the error
+        document.title = 'BN'
+      }
     } else {
       document.title = 'BN'
     }
-  } catch (error) {
-    console.error('Title translation error:', error)
+  } catch {
+    // Remove error logging and silently set default title
     document.title = 'BN'
   }
   next()

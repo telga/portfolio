@@ -40,9 +40,9 @@ export default {
 
     const setFavicon = () => {
       const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
-      link.type = 'image/png'
+      link.type = 'image/x-icon'
       link.rel = 'shortcut icon'
-      link.href = require('/public/images/userpic.png')
+      link.href = '/favicon.ico'
       document.getElementsByTagName('head')[0].appendChild(link)
     }
 
