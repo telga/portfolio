@@ -9,28 +9,60 @@ import HomeAbout from './views/HomeAbout.vue'
 
 const routes = [
   //{ path: '/', component: Home },
-  { path: '/', component: HomeAbout },
-  { path: '/AboutPage', component: About },
-  { path: '/ProjectsPage', component: Projects },
-  { path: '/ExperiencesPage', component: Experiences },
-  { path: '/GearPage', component: Gear },
+  { 
+    path: '/', 
+    component: HomeAbout,
+    meta: { title: 'BN : Home' }
+  },
+  { 
+    path: '/AboutPage', 
+    component: About,
+    meta: { title: 'BN : About' }
+  },
+  { 
+    path: '/ProjectsPage', 
+    component: Projects,
+    meta: { title: 'BN : Projects' }
+  },
+  { 
+    path: '/ExperiencesPage', 
+    component: Experiences,
+    meta: { title: 'BN : Experiences' }
+  },
+  { 
+    path: '/GearPage', 
+    component: Gear,
+    meta: { title: 'BN : Gear' }
+  },
   { 
     path: '/BusinessCard', 
     component: BusinessCard,
-    meta: { hideHeaderFooter: true },
+    meta: { 
+      hideHeaderFooter: true,
+      title: 'BN : Business Card'
+    },
     redirect: '/'
   },
   {
     path: '/v2',
     name: 'HomeV2',
     component: () => import('@/views/v2/HomeV2.vue'),
-    meta: { hideHeaderFooter: true }
+    meta: { 
+      hideHeaderFooter: true,
+      title: 'BN : Terminal'  
+    }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+})
+
+// Add navigation guard to update title
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || 'BN'
+  next()
 })
 
 export default router
