@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --dest build",
     "lint": "vue-cli-service lint",
-    "deploy": "npm run build && echo brianguyen.works > build/CNAME && gh-pages -d build"
+    "deploy": "npm run build && echo brianguyen.works > build/CNAME && gh-pages -d build && node scripts/generateSitemap.js",
+    "generate-sitemap": "node scripts/generateSitemap.js"
   },
   "dependencies": {
     "core-js": "^3.8.3",
