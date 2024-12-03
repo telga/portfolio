@@ -6,6 +6,7 @@ import Experiences from './views/ExperiencesPage.vue'
 import Gear from './views/GearPage.vue'
 import BusinessCard from './views/BusinessCard.vue'
 import HomeAbout from './views/HomeAbout.vue'
+import HomeV2 from './views/v2/HomeV2.vue'
 
 const routes = [
   //{ path: '/', component: Home },
@@ -46,7 +47,7 @@ const routes = [
   {
     path: '/v2',
     name: 'HomeV2',
-    component: () => import('@/views/v2/HomeV2.vue'),
+    component: HomeV2,
     meta: { 
       hideHeaderFooter: true,
       title: 'BN : Terminal'  
