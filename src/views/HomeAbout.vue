@@ -214,16 +214,15 @@ const bioParagraphs = computed(() => {
 const threeCanvas = ref(null)
 let scene, camera, renderer, controls, model
 let resizeObserver = null
-let animationFrameId = null  // Add this to track animation frame
+let animationFrameId = null
+let updateModelPosition = null
+let updateGroundPosition = null
 
 let autoRotate = true
 const normalRotationSpeed = 0.003 // Slower default rotation speed
 let currentRotationSpeed = 0.2 // Start with fast rotation
 const slowdownFactor = 0.95 // Controls how quickly it slows down
 const minRotationSpeed = normalRotationSpeed // Target rotation speed
-
-// Declare updateModelPosition at script level
-let updateModelPosition = null
 
 // Setup Three.js scene
 const initThree = () => {
@@ -246,11 +245,11 @@ const initThree = () => {
       camera.lookAt(0, 0, 0)
     } else if (window.matchMedia('(min-width: 1024px)').matches) {
       camera.position.set(0, 1.2, 2.4)  // Now matches XL camera position
-      camera.lookAt(0, 1.2, 2.4)  // Now matches XL lookAt
+      camera.lookAt(0, 0, 0)
     } else {
       // Mobile/tablet
-      camera.position.set(0, 1.5, 2.8)
-      camera.lookAt(0, -0.4, 0)
+      camera.position.set(0, 1.2, 2.4)
+      camera.lookAt(0, 0, 0)
     }
     camera.updateProjectionMatrix()
   }
@@ -306,9 +305,22 @@ const initThree = () => {
   })
   const ground = new THREE.Mesh(groundGeometry, groundMaterial)
   ground.rotation.x = -Math.PI / 2
-  ground.position.y = -0.2  // Changed from -0.5 to -0.1 to be closer to model
+  
+  // Define the update function
+  updateGroundPosition = () => {
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      ground.position.y = -0.2  // For desktop
+    } else {
+      ground.position.y = 0  // For mobile
+    }
+  }
+  
+  updateGroundPosition()
   ground.receiveShadow = true
   scene.add(ground)
+  
+  // Add resize listener for ground position
+  window.addEventListener('resize', updateGroundPosition)
 
   // Load 3D Model with improved smoothing
   const loader = new GLTFLoader()
@@ -349,6 +361,7 @@ const initThree = () => {
       
       updateModelPosition = () => {
         model.position.set(0, 0, 0)
+        model.updateMatrix()
         
         if (window.matchMedia('(min-width: 1280px)').matches) {
           // XL breakpoint - moved down by adjusting Y position
@@ -358,11 +371,10 @@ const initThree = () => {
           model.position.set(0, -0.2, 0)
         } else {
           // Mobile/tablet - keep original position
-          model.position.set(0, -0.2, 0)
+          model.position.set(0, 0, 0)
         }
         
-        model.updateMatrix()
-        controls.target.copy(model.position)
+        controls.target.set(0, 0, 0)
         controls.update()
       }
 
@@ -521,6 +533,7 @@ onBeforeUnmount(() => {
   if (updateModelPosition) {
     window.removeEventListener('resize', updateModelPosition)
   }
+  window.removeEventListener('resize', updateGroundPosition)
 })
 
 const education = computed(() => experiencesData.education)
