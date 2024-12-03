@@ -26,6 +26,7 @@ export default {
 
     onBeforeMount(() => {
       applyStoredTheme()
+      setMetaTags()
     })
 
     onMounted(() => {
@@ -51,6 +52,20 @@ export default {
       setTimeout(() => {
         document.documentElement.classList.remove('js-loading');
       }, 0);
+    }
+
+    const setMetaTags = () => {
+      // Set Open Graph image
+      const ogImage = document.createElement('meta')
+      ogImage.setAttribute('property', 'og:image')
+      ogImage.setAttribute('content', 'https://brianguyen.works/images/userpic.png')
+      document.head.appendChild(ogImage)
+
+      // Set Twitter Card image
+      const twitterImage = document.createElement('meta')
+      twitterImage.setAttribute('name', 'twitter:image')
+      twitterImage.setAttribute('content', 'https://brianguyen.works/images/userpic.png')
+      document.head.appendChild(twitterImage)
     }
 
     return {}
