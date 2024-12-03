@@ -18,11 +18,11 @@
       />
     </div>
     <div v-show="isMainOpen" class="mt-4 animate-slide-down">
-      <p class="text-text-primary mb-4">{{ $t(`gear.descriptions.${props.item.name}`) }}</p>
+      <p class="text-[--text-primary] mb-4">{{ $t(`gear.descriptions.${props.item.name}`) }}</p>
       <div v-for="subItem in props.item.items" :key="subItem.name" class="mt-4">
         <div class="mt-2 p-4 bg-bg-primary rounded-lg animate-slide-down">
-          <h3 class="text-xl font-semibold text-accent">{{ $t(`gear.items.${subItem.name}.name`) }}</h3>
-          <p class="mb-4">{{ $t(`gear.items.${subItem.name}.description`) }}</p>
+          <h3 class="text-xl font-semibold text-[--accent-secondary]">{{ $t(`gear.items.${subItem.name}.name`) }}</h3>
+          <p class="mb-4 text-[--accent-hover]">{{ $t(`gear.items.${subItem.name}.description`) }}</p>
           <div class="p-4 bg-[var(--bg-secondary)] rounded-lg">
             <ul class="list-disc list-inside">
               <div v-for="(spec, specIndex) in subItem.specs || subItem.features" :key="specIndex" class="animate-slide-in" :style="{ animationDelay: `${specIndex * 100}ms` }">
