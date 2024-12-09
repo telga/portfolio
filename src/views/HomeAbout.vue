@@ -77,7 +77,7 @@
         <!-- Projects and Experiences row -->
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
           <!-- Projects section -->
-          <div id="projects" class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in scroll-mt-[266px] md:scroll-mt-[10px]"
+          <div id="projects" class="bg-bg-secondary rounded-lg shadow-lg p-6 animate-slide-in scroll-mt-[10px] md:scroll-mt-[10px]"
                style="animation-delay: 300ms;">
             <h2 class="text-2xl font-bold text-accent mb-4">{{ $t('projects.title') }}</h2>
             <div class="grid grid-cols-1 gap-6">
