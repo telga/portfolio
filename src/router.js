@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import About from './views/AboutPage.vue'
-import Projects from './views/ProjectsPage.vue'
-import Experiences from './views/ExperiencesPage.vue'
 import Gear from './views/GearPage.vue'
 import BusinessCard from './views/BusinessCard.vue'
 import HomeAbout from './views/HomeAbout.vue'
 import HomeV2 from './views/v2/HomeV2.vue'
+import GalleryPage from './views/GalleryPage.vue'
 import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
 import jp from './locales/jp.json'
@@ -25,21 +23,6 @@ const routes = [
     meta: { titleKey: 'pageTitles.home' }
   },
   { 
-    path: '/AboutPage', 
-    component: About,
-    meta: { titleKey: 'pageTitles.about' }
-  },
-  { 
-    path: '/ProjectsPage', 
-    component: Projects,
-    meta: { titleKey: 'pageTitles.projects' }
-  },
-  { 
-    path: '/ExperiencesPage', 
-    component: Experiences,
-    meta: { titleKey: 'pageTitles.experiences' }
-  },
-  { 
     path: '/GearPage', 
     component: Gear,
     meta: { titleKey: 'pageTitles.gear' }
@@ -52,6 +35,11 @@ const routes = [
       titleKey: 'pageTitles.businessCard'
     },
     redirect: '/'
+  },
+  {
+    path: '/GalleryPage',
+    component: GalleryPage,
+    meta: { titleKey: 'pageTitles.gallery' }
   },
   {
     path: '/v2',

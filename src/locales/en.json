@@ -262,5 +262,9 @@
             }
         },
         "viewProduct": "View product"
+    },
+    "gallery": {
+        "title": "Gallery",
+        "description": "Moments of my life in Japan"
     }
 }

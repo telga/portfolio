@@ -11,6 +11,7 @@ import './assets/tailwind.css'
 
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import VueLazyload from 'vue-lazyload'
 
 const i18n = createI18n({
   legacy: false,
@@ -32,6 +33,12 @@ try {
       enter: "toast-enter",
       leave: "toast-leave"
     }
+  })
+  app.use(VueLazyload, {
+    preLoad: 1.3,
+    error: '/path-to-error-image.jpg',
+    loading: '/path-to-loading-image.jpg',
+    attempt: 1
   })
   app.mount('#app')
 } catch (error) {

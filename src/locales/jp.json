@@ -262,5 +262,9 @@
             }
         },
         "viewProduct": "製品を見る"
+    },
+    "gallery": {
+        "title": "ギャラリー",
+        "description": "日本での思い出"
     }
 }
