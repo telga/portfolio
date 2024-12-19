@@ -218,11 +218,15 @@ let animationFrameId = null
 let updateModelPosition = null
 let updateGroundPosition = null
 
-let autoRotate = true
+const autoRotate = {
+  value: true
+}
 const normalRotationSpeed = 0.003 // Slower default rotation speed
 let currentRotationSpeed = 0.2 // Start with fast rotation
 const slowdownFactor = 0.95 // Controls how quickly it slows down
-const minRotationSpeed = normalRotationSpeed // Target rotation speed
+//const minRotationSpeed = normalRotationSpeed // Target rotation speed
+let initialSpinComplete = false
+const initialRotationSpeed = 0.2
 
 // Setup Three.js scene
 const initThree = () => {
@@ -383,6 +387,13 @@ const initThree = () => {
 
       // Update on resize
       window.addEventListener('resize', updateModelPosition)
+
+      // After adding model to scene
+      model.rotation.y = 0
+      currentRotationSpeed = initialRotationSpeed
+      initialSpinComplete = false
+      autoRotate.value = true
+      controls.autoRotate = false
     },
     undefined,
     (error) => {
@@ -402,7 +413,7 @@ const initThree = () => {
 
   // Update autoRotate based on controls
   controls.addEventListener('start', () => {
-    autoRotate = false
+    autoRotate.value = false
     controls.autoRotate = false
   })
 }
@@ -413,17 +424,14 @@ const animate = () => {
   
   animationFrameId = requestAnimationFrame(animate)
   
-  if (model && autoRotate && !controls.autoRotate) {
+  if (model && !initialSpinComplete) {
     model.rotation.y += currentRotationSpeed
+    currentRotationSpeed *= slowdownFactor
     
-    if (currentRotationSpeed > minRotationSpeed) {
-      currentRotationSpeed *= slowdownFactor
-      
-      if (currentRotationSpeed < minRotationSpeed) {
-        currentRotationSpeed = minRotationSpeed
-        controls.autoRotate = true
-        autoRotate = false
-      }
+    if (currentRotationSpeed <= normalRotationSpeed) {
+      currentRotationSpeed = normalRotationSpeed
+      initialSpinComplete = true
+      controls.autoRotate = true
     }
   }
   
