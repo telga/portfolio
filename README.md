@@ -12,4 +12,3 @@ Personal portfolio site for me.
 
 ## Roadmap
 - Hygraph integration for projects and gear pages
-- update on 3d model
