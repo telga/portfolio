@@ -41,7 +41,7 @@ const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/telga', icon: CodeBracketIcon },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/bnguy23', icon: UserIcon },
   { name: 'Instagram', url: 'https://instagram.com/br.ainn', icon: CameraIcon },
-  //{ name: 'VSCO', url: 'https://vsco.co/yyclown', icon: CloudIcon },
+  { name: 'VSCO', url: 'https://vsco.co/yyclown', icon: CloudIcon },
   { name: 'Email', action: copyEmail, icon: EnvelopeIcon },
 ]
 </script>

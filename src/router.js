@@ -17,7 +17,7 @@ const i18n = createI18n({
 })
 
 const routes = [
-  { 
+  {
     path: '/', 
     component: HomeAbout,
     meta: { titleKey: 'pageTitles.home' }
