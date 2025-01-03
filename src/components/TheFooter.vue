@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { CodeBracketIcon, UserIcon, CameraIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
+import { CodeBracketIcon, UserIcon, CameraIcon, EnvelopeIcon, CloudIcon } from '@heroicons/vue/24/outline'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
