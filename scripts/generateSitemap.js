@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-function generateSitemap(domain = 'https://brianguyen.works') {
+function generateSitemap(domain = 'https://telga.github.io/portfolio') {
     // Remove trailing slash if present
     domain = domain.replace(/\/$/, '');
     

@@ -58,13 +58,13 @@ export default {
       // Set Open Graph image
       const ogImage = document.createElement('meta')
       ogImage.setAttribute('property', 'og:image')
-      ogImage.setAttribute('content', 'https://brianguyen.works/images/userpic.png')
+      ogImage.setAttribute('content', 'https://telga.github.io/portfolio/images/userpic.png')
       document.head.appendChild(ogImage)
 
       // Set Twitter Card image
       const twitterImage = document.createElement('meta')
       twitterImage.setAttribute('name', 'twitter:image')
-      twitterImage.setAttribute('content', 'https://brianguyen.works/images/userpic.png')
+      twitterImage.setAttribute('content', 'https://telga.github.io/portfolio/images/userpic.png')
       document.head.appendChild(twitterImage)
     }
 
